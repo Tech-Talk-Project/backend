@@ -1,4 +1,4 @@
-package com.example.backend.entity;
+package com.example.backend.entity.member;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
