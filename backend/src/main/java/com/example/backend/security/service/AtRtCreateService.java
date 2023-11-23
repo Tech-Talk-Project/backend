@@ -1,8 +1,6 @@
 package com.example.backend.security.service;
 
-import com.example.backend.entity.member.Member;
-import com.example.backend.repository.MemberAuthorityRepository;
-import com.example.backend.security.dto.AtRt;
+import com.example.backend.security.dto.AtRtDto;
 import com.example.backend.security.jwt.JwtClaimReader;
 import com.example.backend.security.jwt.JwtCreator;
 import com.example.backend.security.repository.AccessTokenRepository;
@@ -18,7 +16,7 @@ public class AtRtCreateService {
     private final JwtCreator jwtCreator;
     private final JwtClaimReader jwtClaimReader;
 
-    public AtRt create(Long memberId) {
+    public AtRtDto create(Long memberId) {
         String accessToken = jwtCreator.createAccessToken(memberId);
         String refreshToken = jwtCreator.createRefreshToken(memberId);
         Long accessTokenExpirationInMilliseconds = jwtClaimReader.getExpirationInMilliseconds(accessToken);
@@ -27,11 +25,11 @@ public class AtRtCreateService {
         accessTokenRepository.mapAtToRt(accessToken, refreshToken);
         refreshTokenRepository.mapRtToAt(refreshToken, accessToken);
 
-        return new AtRt(accessToken, refreshToken,
+        return new AtRtDto(accessToken, refreshToken,
                 accessTokenExpirationInMilliseconds, refreshTokenExpirationInMilliseconds);
     }
 
-    public AtRt refresh(String refreshToken) {
+    public AtRtDto refresh(String refreshToken) {
         Long memberId = jwtClaimReader.getMemberId(refreshToken);
 
         String oldAccessToken = refreshTokenRepository.getAt(refreshToken);
