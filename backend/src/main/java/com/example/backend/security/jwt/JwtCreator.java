@@ -1,7 +1,6 @@
 package com.example.backend.security.jwt;
 
 import com.example.backend.entity.member.Authority;
-import com.example.backend.entity.member.Member;
 import com.example.backend.repository.MemberAuthorityRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -27,7 +27,7 @@ public class JwtCreator {
     private Long refreshTokenValidityInSeconds;
     private Key key;
 
-    private final MemberAuthorityRepository memberRepository;
+    private final MemberAuthorityRepository memberAuthorityRepository;
 
     @PostConstruct
     protected void init() {
@@ -50,12 +50,10 @@ public class JwtCreator {
     }
 
     private String createToken(Long memberId, Date validity) {
-        Member member = memberRepository.findByIdWithAuthorities(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("this member is not registered."));
+        List<Authority> authorities = memberAuthorityRepository.findAuthoritiesByMemberId(memberId);
         return Jwts.builder()
-                .setSubject(member.getEmail())
-                .claim("memberId", member.getId())
-                .claim("authorities", member.getAuthorities().stream()
+                .claim("memberId", memberId)
+                .claim("authorities", authorities.stream()
                         .map(Authority::getName)
                         .collect(Collectors.joining(",")))
                 .signWith(key, SignatureAlgorithm.HS512)

@@ -1,6 +1,5 @@
 package com.example.backend.security.service;
 
-import com.example.backend.entity.member.Member;
 import com.example.backend.repository.MemberAuthorityRepository;
 import com.example.backend.security.jwt.JwtClaimReader;
 import com.example.backend.security.jwt.JwtValidator;
@@ -15,20 +14,18 @@ import java.util.Collection;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationCreateService {
-    private final MemberAuthorityRepository memberRepository;
+    private final MemberAuthorityRepository memberAuthorityRepository;
     private final JwtValidator jwtValidator;
     private final JwtClaimReader jwtClaimReader;
 
     private Authentication createAuthentication(String token) {
         Long memberId = jwtClaimReader.getMemberId(token);
-        Member member = memberRepository.findByIdWithAuthorities(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("this member is not registered."));
-
-        Collection<GrantedAuthority> authorities = member.getAuthorities().stream()
+        Collection<GrantedAuthority> authorities = memberAuthorityRepository.findAuthoritiesByMemberId(memberId)
+                .stream()
                 .map(authority -> (GrantedAuthority) authority::getName)
                 .toList();
 
-        return new UsernamePasswordAuthenticationToken(member, token, authorities);
+        return new UsernamePasswordAuthenticationToken(memberId, token, authorities);
     }
 
     public Authentication createAuthenticationByAt(String accessToken) {
