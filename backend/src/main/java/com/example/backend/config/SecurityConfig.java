@@ -68,6 +68,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(authorize ->
                 authorize
+                        .requestMatchers("/admin").hasAuthority(EAuthority.ROLE_ADMIN.name())
                         .requestMatchers("/user").hasAuthority(EAuthority.ROLE_USER.name())
                         .anyRequest().permitAll());
 

@@ -19,7 +19,7 @@ public class JwtValidator {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtClaimReader jwtClaimReader;
 
-    private boolean validateToken(String jwtToken) {
+    private void validateToken(String jwtToken) {
         try {
             jwtClaimReader.getClaims(jwtToken);
         } catch (SignatureException e) {
@@ -38,22 +38,19 @@ public class JwtValidator {
             log.error("JWT claims string is empty.");
             throw new InvalidJwtException(jwtToken, "JWT claims string is empty.");
         }
-        return true;
     }
 
-    public boolean validateRefreshToken(String refreshToken) {
+    public void validateRefreshToken(String refreshToken) {
         validateToken(refreshToken);
         if (!refreshTokenRepository.isExist(refreshToken)) {
             throw new InvalidJwtException(refreshToken, "refresh token expired or deleted.");
         }
-        return true;
     }
 
-    public boolean validateAccessToken(String accessToken) {
+    public void validateAccessToken(String accessToken) {
         validateToken(accessToken);
         if (!accessTokenRepository.isExist(accessToken)) {
             throw new InvalidJwtException(accessToken, "access token expired or deleted.");
         }
-        return true;
     }
 }

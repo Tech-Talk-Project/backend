@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class UserProfileExtractorFactory {
-    public static UserProfileExtractor get(OAuth2Provider provider) {
-        switch (provider) {
+    public static UserProfileExtractor get(OAuth2Provider oAuth2Provider) {
+        switch (oAuth2Provider) {
             case GOOGLE:
                 return new GoogleUserProfileExtractor();
             case NAVER:

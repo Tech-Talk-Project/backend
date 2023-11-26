@@ -1,11 +1,12 @@
 package com.example.backend.entity.member;
 
+import com.example.backend.oauth2.OAuth2Provider;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
     @Id
     @GeneratedValue
@@ -20,5 +21,13 @@ public class Member {
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
-    private OAuthProvider oAuthProvider;
+    private OAuth2Provider oAuth2Provider;
+
+    @Builder
+    public Member(String name, String email, String imageUrl, OAuth2Provider oAuth2Provider) {
+        this.name = name;
+        this.email = email;
+        this.imageUrl = imageUrl;
+        this.oAuth2Provider = oAuth2Provider;
+    }
 }

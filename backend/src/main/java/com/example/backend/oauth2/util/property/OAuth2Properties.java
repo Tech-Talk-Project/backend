@@ -9,8 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter @Setter
 public class OAuth2Properties {
 
-    public OAuth2Property get(OAuth2Provider provider) {
-        switch (provider) {
+    public OAuth2Property get(OAuth2Provider oAuth2Provider) {
+        switch (oAuth2Provider) {
             case GITHUB:
                 return github;
             case NAVER:
