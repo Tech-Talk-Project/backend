@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AtRtCreateService {
+public class AtRtService {
     private final AccessTokenRepository accessTokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtCreator jwtCreator;
@@ -37,5 +37,20 @@ public class AtRtCreateService {
         refreshTokenRepository.delete(refreshToken);
 
         return create(memberId);
+    }
+
+    public void deleteAll(String accessToken, String refreshToken) {
+        if (accessToken != null && refreshToken != null) {
+            accessTokenRepository.delete(accessToken);
+            refreshTokenRepository.delete(refreshToken);
+        } else if (accessToken != null) {
+            String pairRefreshToken = accessTokenRepository.getRt(accessToken);
+            accessTokenRepository.delete(accessToken);
+            refreshTokenRepository.delete(pairRefreshToken);
+        } else if (refreshToken != null) {
+            String pairAccessToken = refreshTokenRepository.getAt(refreshToken);
+            accessTokenRepository.delete(pairAccessToken);
+            refreshTokenRepository.delete(refreshToken);
+        }
     }
 }

@@ -9,7 +9,7 @@ import com.example.backend.security.dto.AtRtDto;
 import com.example.backend.security.jwt.JwtValidator;
 import com.example.backend.security.repository.AccessTokenRepository;
 import com.example.backend.security.repository.RefreshTokenRepository;
-import com.example.backend.security.service.AtRtCreateService;
+import com.example.backend.security.service.AtRtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     private final OAuth2UserProfileService oAuth2UserProfileService;
     private final MemberRegisterService memberRegisterService;
-    private final AtRtCreateService atRtCreateService;
+    private final AtRtService atRtService;
     private final JwtValidator jwtValidator;
-    private final AccessTokenRepository accessTokenRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public LoginSuccessDto login(String code, OAuth2Provider OAuth2Provider) {
@@ -33,27 +31,16 @@ public class AuthService {
                 memberRegisterService.getOrCreateMember(userProfile, OAuth2Provider);
 
         Long memberId = registerSuccessDto.getMember().getId();
-        AtRtDto atRtDto = atRtCreateService.create(memberId);
+        AtRtDto atRtDto = atRtService.create(memberId);
         return new LoginSuccessDto(registerSuccessDto, atRtDto);
     }
 
     public void logout(String accessToken, String refreshToken) {
-        if (accessToken != null && refreshToken != null) {
-            accessTokenRepository.delete(accessToken);
-            refreshTokenRepository.delete(refreshToken);
-        } else if (accessToken != null) {
-            String pairRefreshToken = accessTokenRepository.getRt(accessToken);
-            accessTokenRepository.delete(accessToken);
-            refreshTokenRepository.delete(pairRefreshToken);
-        } else if (refreshToken != null) {
-            String pairAccessToken = refreshTokenRepository.getAt(refreshToken);
-            accessTokenRepository.delete(pairAccessToken);
-            refreshTokenRepository.delete(refreshToken);
-        }
+        atRtService.deleteAll(accessToken, refreshToken);
     }
 
     public AtRtDto refresh(String refreshToken) {
         jwtValidator.validateRefreshToken(refreshToken);
-        return atRtCreateService.refresh(refreshToken);
+        return atRtService.refresh(refreshToken);
     }
 }
