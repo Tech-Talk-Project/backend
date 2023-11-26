@@ -22,7 +22,7 @@ public class AccessTokenRepository {
                 accessTokenValidityInSeconds);
     }
 
-    public String getAt(String accessToken) {
+    public String getRt(String accessToken) {
         // 서비스 안에서 at 는 만료될 수 있기 때문에 에러를 던지지 않고 null 을 반환합니다.
         return redisRepository.get(getKey(accessToken)).orElse(null);
     }
