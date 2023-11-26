@@ -29,12 +29,24 @@ public class AuthController {
         String refreshToken = loginSuccessDto.getAtRtDto().getRefreshToken();
         long refreshTokenExpirationFromNowInSeconds =
                 loginSuccessDto.getAtRtDto().getRefreshTokenExpirationInMilliseconds() / 1000L;
-        HttpCookie cookie = getHttpCookie(refreshToken, refreshTokenExpirationFromNowInSeconds);
+        HttpCookie cookie = getRefreshTokenCookie(refreshToken, refreshTokenExpirationFromNowInSeconds);
 
         return ResponseEntity
                 .ok()
                 .header("Set-Cookie", cookie.toString())
                 .body(new LoginResponseDto(loginSuccessDto));
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader(value = "Authorization", required = false) String accessTokenInHeader,
+                                         @CookieValue(required = false) String refreshToken) {
+        String accessToken = getAccessToken(accessTokenInHeader);
+        authService.logout(accessToken, refreshToken);
+        HttpCookie refreshTokenCookie = getRefreshTokenCookie("", 0L);
+        return ResponseEntity
+                .ok()
+                .header("Set-Cookie", refreshTokenCookie.toString())
+                .body("logout success");
     }
 
     @GetMapping("/refresh")
@@ -43,7 +55,7 @@ public class AuthController {
         String newRefreshToken = atRtDto.getRefreshToken();
         long newRefreshTokenExpirationFromNowInSeconds =
                 atRtDto.getRefreshTokenExpirationInMilliseconds() / 1000L;
-        HttpCookie cookie = getHttpCookie(newRefreshToken, newRefreshTokenExpirationFromNowInSeconds);
+        HttpCookie cookie = getRefreshTokenCookie(newRefreshToken, newRefreshTokenExpirationFromNowInSeconds);
 
         return ResponseEntity
                 .ok()
@@ -51,7 +63,7 @@ public class AuthController {
                 .body(new RefreshResponseDto(atRtDto));
     }
 
-    private HttpCookie getHttpCookie(String refreshToken, long refreshTokenExpirationFromNowInSeconds) {
+    private HttpCookie getRefreshTokenCookie(String refreshToken, long refreshTokenExpirationFromNowInSeconds) {
         HttpCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .path("/")
                 .maxAge(refreshTokenExpirationFromNowInSeconds)
@@ -59,5 +71,12 @@ public class AuthController {
                 .httpOnly(true)
                 .build();
         return cookie;
+    }
+
+    private String getAccessToken(String accessTokenInHeader) {
+        String BEARER_PREFIX = "Bearer ";
+        if (accessTokenInHeader.length() < BEARER_PREFIX.length())
+            return "";
+        return accessTokenInHeader.substring(BEARER_PREFIX.length());
     }
 }
