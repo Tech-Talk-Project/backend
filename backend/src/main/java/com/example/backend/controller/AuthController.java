@@ -3,17 +3,16 @@ package com.example.backend.controller;
 import com.example.backend.auth.dto.LoginSuccessDto;
 import com.example.backend.auth.dto.request.LoginRequestDto;
 import com.example.backend.auth.dto.response.LoginResponseDto;
+import com.example.backend.auth.dto.response.RefreshResponseDto;
 import com.example.backend.auth.service.AuthService;
 import com.example.backend.oauth2.OAuth2Provider;
+import com.example.backend.security.dto.AtRtDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -36,6 +35,20 @@ public class AuthController {
                 .ok()
                 .header("Set-Cookie", cookie.toString())
                 .body(new LoginResponseDto(loginSuccessDto));
+    }
+
+    @GetMapping("/refresh")
+    public ResponseEntity<RefreshResponseDto> refresh(@CookieValue String refreshToken) {
+        AtRtDto atRtDto = authService.refresh(refreshToken);
+        String newRefreshToken = atRtDto.getRefreshToken();
+        long newRefreshTokenExpirationFromNowInSeconds =
+                atRtDto.getRefreshTokenExpirationInMilliseconds() / 1000L;
+        HttpCookie cookie = getHttpCookie(newRefreshToken, newRefreshTokenExpirationFromNowInSeconds);
+
+        return ResponseEntity
+                .ok()
+                .header("Set-Cookie", cookie.toString())
+                .body(new RefreshResponseDto(atRtDto));
     }
 
     private HttpCookie getHttpCookie(String refreshToken, long refreshTokenExpirationFromNowInSeconds) {
