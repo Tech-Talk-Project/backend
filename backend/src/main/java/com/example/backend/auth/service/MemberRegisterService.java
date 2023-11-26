@@ -6,6 +6,7 @@ import com.example.backend.entity.member.Member;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
 import com.example.backend.repository.MemberRepository;
+import com.example.backend.service.MemberCreateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberRegisterService {
     private final MemberRepository memberRepository;
+    private final MemberCreateService memberCreateService;
     
     @Transactional
     public RegisterSuccessDto getOrCreateMember(UserProfileDto userProfileDto, OAuth2Provider oAuth2Provider) {
@@ -35,22 +37,12 @@ public class MemberRegisterService {
         }
         // 처음 가입한 경우 - 로그인 성공
         else {
-            member = createMember(userProfileDto, oAuth2Provider);
+            member = memberCreateService.createUser(userProfileDto, oAuth2Provider);
             return new RegisterSuccessDto(member, true);
         }
     }
     
     private boolean isDuplicateOAuth2Provider(Member member, OAuth2Provider oAuth2Provider) {
         return !member.getOAuth2Provider().equals(oAuth2Provider);
-    }
-    
-    private Member createMember(UserProfileDto userProfileDto, OAuth2Provider oAuth2Provider) {
-        Member member = Member.builder()
-                .email(userProfileDto.getEmail())
-                .name(userProfileDto.getName())
-                .imageUrl(userProfileDto.getImageUrl())
-                .oAuth2Provider(oAuth2Provider)
-                .build();
-        return memberRepository.save(member);
     }
 }
