@@ -26,9 +26,9 @@ public class AuthService {
                 oAuth2UserProfileService.getUserProfile(code, OAuth2Provider);
         RegisterSuccessDto registerSuccessDto =
                 memberRegisterService.getOrCreateMember(userProfile, OAuth2Provider);
-        Member member = registerSuccessDto.getMember();
-        boolean firstLogin = registerSuccessDto.isFirstLogin();
-        AtRtDto atRtDto = atRtCreateService.create(member.getId());
-        return new LoginSuccessDto(member, atRtDto, firstLogin);
+
+        Long memberId = registerSuccessDto.getMember().getId();
+        AtRtDto atRtDto = atRtCreateService.create(memberId);
+        return new LoginSuccessDto(registerSuccessDto, atRtDto);
     }
 }

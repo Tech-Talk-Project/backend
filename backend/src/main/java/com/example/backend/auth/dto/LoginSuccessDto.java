@@ -15,4 +15,10 @@ public class LoginSuccessDto {
         this.atRtDto = atRtDto;
         this.firstLogin = firstLogin;
     }
+
+    public LoginSuccessDto(RegisterSuccessDto registerSuccessDto, AtRtDto atRtDto) {
+        this.member = registerSuccessDto.getMember();
+        this.atRtDto = atRtDto;
+        this.firstLogin = registerSuccessDto.isFirstLogin();
+    }
 }
