@@ -14,4 +14,9 @@ public class TestController {
         Long memberId = (Long) principal;
         return memberId;
     }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
+    }
 }
