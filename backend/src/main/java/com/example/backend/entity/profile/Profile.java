@@ -17,12 +17,9 @@ public class Profile {
     @Id @GeneratedValue
     @Column(name = "profile_id")
     private Long id;
-
-    private String nickname;
-
-    private String job;
-
-    private String email;
+    
+    @Embedded
+    private Info info;
 
     private String introduction;
 
@@ -38,8 +35,10 @@ public class Profile {
     private Set<ProfileSkill> profileCategories = new HashSet<>();
 
     public Profile(String nickname, String email, String imageUrl) {
-        this.nickname = nickname;
-        this.email = email;
+        this.info = Info.builder()
+                .nickname(nickname)
+                .email(email)
+                .build();
         this.imageUrl = imageUrl;
     }
 }
