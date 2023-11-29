@@ -4,6 +4,7 @@ import com.example.backend.entity.member.Authority;
 import com.example.backend.entity.member.EAuthority;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.member.MemberAuthority;
+import com.example.backend.entity.profile.Profile;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
 import com.example.backend.repository.member.AuthorityRepository;
@@ -22,12 +23,16 @@ public class MemberCreateService {
     private final MemberAuthorityRepository memberAuthorityRepository;
 
     public Member createUser(UserProfileDto userProfileDto, OAuth2Provider oAuth2Provider) {
+        String email = userProfileDto.getEmail();
+        String name = userProfileDto.getName();
+        String imageUrl = userProfileDto.getImageUrl();
         Member member = Member.builder()
-                .email(userProfileDto.getEmail())
-                .name(userProfileDto.getName())
-                .imageUrl(userProfileDto.getImageUrl())
+                .email(email)
+                .name(name)
                 .oAuth2Provider(oAuth2Provider)
                 .build();
+        Profile profile = new Profile(name, email, imageUrl);
+        member.createProfile(profile);
         memberRepository.save(member);
         Authority authority = authorityRepository.findByEAuthority(EAuthority.ROLE_USER)
                 .orElseThrow(() -> new IllegalArgumentException("ROLE_USER 권한이 존재하지 않습니다."));
