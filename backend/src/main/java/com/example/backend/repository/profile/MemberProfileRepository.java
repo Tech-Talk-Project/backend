@@ -1,9 +1,6 @@
 package com.example.backend.repository.profile;
 
-import com.example.backend.entity.profile.Profile;
-import com.example.backend.entity.profile.QLink;
-import com.example.backend.entity.profile.QProfile;
-import com.example.backend.entity.profile.QProfileSkill;
+import com.example.backend.entity.profile.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -35,5 +32,24 @@ public class MemberProfileRepository {
                 .where(member.id.eq(memberId))
                 .fetchOne()
                 .getProfile();
+    }
+
+    @Transactional
+    public void updateProfileInfo(Long memberId, String nickname, String job) {
+        Long profileId = getProfileIdByMemberID(memberId);
+        query
+                .update(profile)
+                .set(profile.info.nickname, nickname)
+                .set(profile.info.job, job)
+                .where(profile.id.eq(profileId))
+                .execute();
+    }
+
+    private Long getProfileIdByMemberID(Long memberId) {
+        return query
+                .select(member.profile.id)
+                .from(member)
+                .where(member.id.eq(memberId))
+                .fetchOne();
     }
 }

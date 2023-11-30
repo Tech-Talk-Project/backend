@@ -14,7 +14,10 @@ public class ProfileUpdateService {
     private final MemberProfileRepository memberProfileRepository;
 
     public void updateInfo(Long memberId, UpdateInfoRequestDto updateInfoRequestDto) {
-        Profile profileWithInfo = memberProfileRepository.findProfileWithInfo(memberId);
-        profileWithInfo.updateInfo(updateInfoRequestDto);
+        String nickname = updateInfoRequestDto.getName();
+        String job =  updateInfoRequestDto.getJob();
+        memberProfileRepository.updateProfileInfo(memberId, nickname, job);
+//        Profile profileWithInfo = memberProfileRepository.findProfileWithInfo(memberId);
+//        profileWithInfo.updateInfo(updateInfoRequestDto);
     }
 }
