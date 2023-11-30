@@ -32,7 +32,7 @@ public class Profile {
     private List<Link> links = new ArrayList<>();
 
     @OneToMany(mappedBy = "profile")
-    private Set<ProfileSkill> profileCategories = new HashSet<>();
+    private Set<ProfileSkill> profileSkills = new HashSet<>();
 
     public Profile(String nickname, String email, String imageUrl) {
         this.info = Info.builder()
