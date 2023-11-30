@@ -3,6 +3,7 @@ package com.example.backend.entity.profile;
 import lombok.*;
 
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Info {
     private String nickname;
     private String job;
