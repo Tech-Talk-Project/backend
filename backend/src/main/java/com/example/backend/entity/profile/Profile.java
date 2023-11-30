@@ -1,5 +1,6 @@
 package com.example.backend.entity.profile;
 
+import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,5 +41,11 @@ public class Profile {
                 .email(email)
                 .build();
         this.imageUrl = imageUrl;
+    }
+
+    public void updateInfo(UpdateInfoRequestDto updateInfoRequestDto) {
+        String nickname = updateInfoRequestDto.getName();
+        String job =  updateInfoRequestDto.getJob();
+        this.info.updateInfo(nickname, job);
     }
 }

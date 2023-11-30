@@ -15,4 +15,9 @@ public class Info {
         this.job = job;
         this.email = email;
     }
+
+    public void updateInfo(String nickname, String job) {
+        this.nickname = nickname;
+        this.job = job;
+    }
 }
