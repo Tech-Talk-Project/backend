@@ -27,4 +27,13 @@ public class MemberProfileRepository {
                 .fetchOne()
                 .getProfile();
     }
+
+    public Profile findProfileWithInfo(Long memberId) {
+        return query
+                .selectFrom(member)
+                .leftJoin(member.profile, profile).fetchJoin()
+                .where(member.id.eq(memberId))
+                .fetchOne()
+                .getProfile();
+    }
 }
