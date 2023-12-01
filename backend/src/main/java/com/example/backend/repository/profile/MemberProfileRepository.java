@@ -62,4 +62,13 @@ public class MemberProfileRepository {
                 .where(member.id.eq(memberId))
                 .fetchOne();
     }
+
+    public void updateProfileDescription(Long memberId, String detailedDescription) {
+        Long profileId = getProfileIdByMemberID(memberId);
+        query
+                .update(profile)
+                .set(profile.detailedDescription, detailedDescription)
+                .where(profile.id.eq(profileId))
+                .execute();
+    }
 }

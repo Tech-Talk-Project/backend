@@ -1,5 +1,6 @@
 package com.example.backend.service.profile;
 
+import com.example.backend.controller.dto.request.UpdateDescRequestDto;
 import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
 import com.example.backend.controller.dto.request.UpdateIntroductionRequestDto;
 import com.example.backend.entity.profile.Profile;
@@ -23,5 +24,10 @@ public class ProfileUpdateService {
     public void updateIntroduction(Long memberId, UpdateIntroductionRequestDto updateIntroductionRequestDto) {
         String introduction = updateIntroductionRequestDto.getIntroduction();
         memberProfileRepository.updateProfileIntroduction(memberId, introduction);
+    }
+
+    public void updateDescription(Long memberId, UpdateDescRequestDto updateDescRequestDto) {
+        String detailedDescription = updateDescRequestDto.getDetailedDescription();
+        memberProfileRepository.updateProfileDescription(memberId, detailedDescription);
     }
 }

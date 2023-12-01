@@ -1,5 +1,6 @@
 package com.example.backend.controller.user.profile;
 
+import com.example.backend.controller.dto.request.UpdateDescRequestDto;
 import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
 import com.example.backend.controller.dto.request.UpdateIntroductionRequestDto;
 import com.example.backend.service.profile.ProfileUpdateService;
@@ -28,6 +29,13 @@ public class ProfileUpdateController {
     public ResponseEntity<String> updateIntroduction(@RequestBody UpdateIntroductionRequestDto updateIntroductionRequestDto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         profileUpdateService.updateIntroduction(memberId, updateIntroductionRequestDto);
+        return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/update/description")
+    public ResponseEntity<String> updateDescription(@RequestBody UpdateDescRequestDto updateDescRequestDto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        profileUpdateService.updateDescription(memberId, updateDescRequestDto);
         return ResponseEntity.ok("success");
     }
 }
