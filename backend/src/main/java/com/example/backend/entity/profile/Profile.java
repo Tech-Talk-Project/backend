@@ -29,7 +29,7 @@ public class Profile {
     @Lob
     private String detailedDescription;
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Link> links = new ArrayList<>();
 
     @OneToMany(mappedBy = "profile")
