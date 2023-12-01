@@ -17,7 +17,7 @@ public class MemberProfileRepository {
     public Profile findProfileWithAll(Long memberId) {
         return query
                 .selectFrom(member)
-                .leftJoin(member.profile, profile).fetchJoin()
+                .join(member.profile, profile).fetchJoin()
                 .leftJoin(profile.links, QLink.link).fetchJoin()
                 .leftJoin(profile.profileSkills, QProfileSkill.profileSkill).fetchJoin()
                 .where(member.id.eq(memberId))
@@ -28,7 +28,7 @@ public class MemberProfileRepository {
     public Profile findProfileWithInfo(Long memberId) {
         return query
                 .selectFrom(member)
-                .leftJoin(member.profile, profile).fetchJoin()
+                .join(member.profile, profile).fetchJoin()
                 .where(member.id.eq(memberId))
                 .fetchOne()
                 .getProfile();
@@ -41,6 +41,16 @@ public class MemberProfileRepository {
                 .update(profile)
                 .set(profile.info.nickname, nickname)
                 .set(profile.info.job, job)
+                .where(profile.id.eq(profileId))
+                .execute();
+    }
+
+    @Transactional
+    public void updateProfileIntroduction(Long memberId, String introduction) {
+        Long profileId = getProfileIdByMemberID(memberId);
+        query
+                .update(profile)
+                .set(profile.introduction, introduction)
                 .where(profile.id.eq(profileId))
                 .execute();
     }

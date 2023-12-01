@@ -1,6 +1,7 @@
 package com.example.backend.controller.user.profile;
 
 import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
+import com.example.backend.controller.dto.request.UpdateIntroductionRequestDto;
 import com.example.backend.service.profile.ProfileUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,13 @@ public class ProfileUpdateController {
     public ResponseEntity<String> updateInfo(@RequestBody UpdateInfoRequestDto updateInfoRequestDto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         profileUpdateService.updateInfo(memberId, updateInfoRequestDto);
+        return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/update/introduction")
+    public ResponseEntity<String> updateIntroduction(@RequestBody UpdateIntroductionRequestDto updateIntroductionRequestDto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        profileUpdateService.updateIntroduction(memberId, updateIntroductionRequestDto);
         return ResponseEntity.ok("success");
     }
 }
