@@ -1,20 +1,25 @@
 package com.example.backend.service.profile;
 
-import com.example.backend.controller.dto.request.UpdateDescRequestDto;
-import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
-import com.example.backend.controller.dto.request.UpdateIntroductionRequestDto;
-import com.example.backend.controller.dto.request.UpdateLinksRequestDto;
+import com.example.backend.controller.dto.request.*;
+import com.example.backend.entity.profile.ESkill;
 import com.example.backend.entity.profile.Profile;
+import com.example.backend.entity.profile.Skill;
 import com.example.backend.repository.profile.MemberProfileRepository;
+import com.example.backend.repository.profile.SkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ProfileUpdateService {
     private final MemberProfileRepository memberProfileRepository;
+    private final SkillRepository skillRepository;
 
     public void updateInfo(Long memberId, UpdateInfoRequestDto updateInfoRequestDto) {
         String nickname = updateInfoRequestDto.getName();
@@ -35,5 +40,19 @@ public class ProfileUpdateService {
     public void updateLinks(Long memberId, UpdateLinksRequestDto updateLinksRequestDto) {
         Profile profileWithLinks = memberProfileRepository.findProfileWithLinks(memberId);
         profileWithLinks.updateLinks(updateLinksRequestDto.getLinks());
+    }
+
+    public void updateSkills(Long memberId, UpdateSkillsRequestDto updateSkillsRequestDto) {
+        Profile profileWithSkills = memberProfileRepository.findProfileWithSkills(memberId);
+        List<ESkill> eSkills =
+                updateSkillsRequestDto.getSkills().stream().map(ESkill::from).toList();
+        List<Skill> skills = eSkills.stream().map(this::getSkill).toList();
+        profileWithSkills.updateProfileSkills(skills);
+    }
+
+    private Skill getSkill(ESkill eSkill) {
+        return skillRepository.findByESkill(eSkill).orElseThrow(
+                () -> new IllegalArgumentException("there is no skill : " + eSkill)
+        );
     }
 }

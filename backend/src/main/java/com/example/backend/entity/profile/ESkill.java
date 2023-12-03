@@ -82,5 +82,14 @@ public enum ESkill {
     public String getName() {
         return name;
     }
+
+    public static ESkill from(String name) {
+        for (ESkill skill : ESkill.values()) {
+            if (skill.getName().equalsIgnoreCase(name)) {
+                return skill;
+            }
+        }
+        throw new IllegalArgumentException("there is no skill about " + name);
+    }
 }
 

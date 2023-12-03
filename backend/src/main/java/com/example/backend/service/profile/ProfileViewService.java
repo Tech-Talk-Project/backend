@@ -2,7 +2,6 @@ package com.example.backend.service.profile;
 
 import com.example.backend.controller.dto.response.ProfileViewResponseDto;
 import com.example.backend.entity.profile.Profile;
-import com.example.backend.repository.member.MemberRepository;
 import com.example.backend.repository.profile.MemberProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

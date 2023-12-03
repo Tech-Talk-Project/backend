@@ -1,12 +1,9 @@
 package com.example.backend.controller.dto.response;
 
 import com.example.backend.controller.dto.InfoDto;
-import com.example.backend.entity.profile.ESkill;
 import com.example.backend.entity.profile.Link;
 import com.example.backend.entity.profile.Profile;
-import com.example.backend.entity.profile.ProfileSkill;
 import lombok.Data;
-import lombok.ToString;
 
 import java.util.List;
 import java.util.Set;
@@ -21,7 +18,7 @@ public class ProfileViewResponseDto {
 
     private List<String> links;
 
-    private Set<ESkill> skills;
+    private Set<String> skills;
 
     private String detailedDescription;
 
@@ -30,7 +27,7 @@ public class ProfileViewResponseDto {
         this.introduction = profile.getIntroduction();
         this.detailedDescription = profile.getDetailedDescription();
         this.skills = profile.getProfileSkills().stream().map(
-                profileSkill -> profileSkill.getSkill().getESkill()
+                profileSkill -> profileSkill.getSkill().getESkill().getName()
         ).collect(Collectors.toSet());
         this.links = profile.getLinks().stream().map(Link::getUrl).collect(Collectors.toList());
     }

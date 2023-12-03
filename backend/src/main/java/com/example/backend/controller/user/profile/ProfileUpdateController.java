@@ -1,9 +1,6 @@
 package com.example.backend.controller.user.profile;
 
-import com.example.backend.controller.dto.request.UpdateDescRequestDto;
-import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
-import com.example.backend.controller.dto.request.UpdateIntroductionRequestDto;
-import com.example.backend.controller.dto.request.UpdateLinksRequestDto;
+import com.example.backend.controller.dto.request.*;
 import com.example.backend.service.profile.ProfileUpdateService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +42,13 @@ public class ProfileUpdateController {
     public ResponseEntity<String> updateLinks(@Valid @RequestBody UpdateLinksRequestDto updateLinksRequestDto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         profileUpdateService.updateLinks(memberId, updateLinksRequestDto);
+        return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/skills")
+    public ResponseEntity<String> updateSkills(@Valid @RequestBody UpdateSkillsRequestDto updateSkillsRequestDto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        profileUpdateService.updateSkills(memberId, updateSkillsRequestDto);
         return ResponseEntity.ok("success");
     }
 }

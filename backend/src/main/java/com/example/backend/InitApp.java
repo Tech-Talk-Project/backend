@@ -14,10 +14,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class InitApp {
     private final InitAuthority initAuthority;
+    private final InitSkill initSkill;
 
     @PostConstruct
     public void init() {
         initAuthority.init();
+        initSkill.init();
     }
 
     @Component

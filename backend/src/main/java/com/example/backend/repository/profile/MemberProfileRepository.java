@@ -11,6 +11,7 @@ import java.util.List;
 import static com.example.backend.entity.member.QMember.*;
 import static com.example.backend.entity.profile.QLink.*;
 import static com.example.backend.entity.profile.QProfile.*;
+import static com.example.backend.entity.profile.QProfileSkill.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class MemberProfileRepository {
                 .selectFrom(member)
                 .innerJoin(member.profile, profile).fetchJoin()
                 .leftJoin(profile.links, link).fetchJoin()
-                .leftJoin(profile.profileSkills, QProfileSkill.profileSkill).fetchJoin()
+                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
                 .where(member.id.eq(memberId))
                 .fetchOne()
                 .getProfile();
@@ -83,5 +84,15 @@ public class MemberProfileRepository {
                 .set(profile.detailedDescription, detailedDescription)
                 .where(profile.id.eq(profileId))
                 .execute();
+    }
+
+    public Profile findProfileWithSkills(Long memberId) {
+        return query
+                .selectFrom(member)
+                .innerJoin(member.profile, profile).fetchJoin()
+                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
+                .where(member.id.eq(memberId))
+                .fetchOne()
+                .getProfile();
     }
 }

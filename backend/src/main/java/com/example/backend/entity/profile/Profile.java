@@ -53,4 +53,15 @@ public class Profile {
     private void addLink(String link) {
         this.links.add(new Link(link, this));
     }
+
+    public void updateProfileSkills(List<Skill> skills) {
+        this.profileSkills.clear();
+        for (Skill skill : skills) {
+            addProfileSkill(skill);
+        }
+    }
+
+    private void addProfileSkill(Skill skill) {
+        this.profileSkills.add(new ProfileSkill(skill, this));
+    }
 }
