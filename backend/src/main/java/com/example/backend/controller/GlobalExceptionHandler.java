@@ -1,7 +1,9 @@
 package com.example.backend.controller;
 
 import com.example.backend.auth.exception.DuplicateOAuth2ProviderException;
+import com.example.backend.oauth2.exception.OAuth2InvalidEmailException;
 import com.example.backend.security.exception.InvalidJwtException;
+import com.example.backend.security.exception.InvalidRefreshToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             IllegalArgumentException.class,
             IllegalStateException.class,
-            MissingRequestCookieException.class
+            MissingRequestCookieException.class,
+            InvalidRefreshToken.class
     })
     @ResponseBody
     public ResponseEntity<Object> handleBadRequestException(Exception ex) {
@@ -46,6 +49,16 @@ public class GlobalExceptionHandler {
         log.error("Conflict", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
+    //422
+    @ExceptionHandler({
+            OAuth2InvalidEmailException.class
+    })
+    public ResponseEntity<Object> handleUnprocessableEntityException(Exception ex) {
+        log.error("Unprocessable Entity", ex);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
 
     // 500
     @ExceptionHandler(Exception.class)

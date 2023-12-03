@@ -1,7 +1,7 @@
 package com.example.backend.security.jwt;
 
 import com.example.backend.entity.member.Authority;
-import com.example.backend.repository.MemberAuthorityRepository;
+import com.example.backend.repository.member.MemberAuthorityRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;

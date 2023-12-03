@@ -5,7 +5,7 @@ import com.example.backend.auth.exception.DuplicateOAuth2ProviderException;
 import com.example.backend.entity.member.Member;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
-import com.example.backend.repository.MemberRepository;
+import com.example.backend.repository.member.MemberRepository;
 import com.example.backend.service.MemberCreateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.example.backend.security.service;
 
-import com.example.backend.repository.MemberAuthorityRepository;
+import com.example.backend.repository.member.MemberAuthorityRepository;
 import com.example.backend.security.jwt.JwtClaimReader;
 import com.example.backend.security.jwt.JwtValidator;
 import lombok.RequiredArgsConstructor;
