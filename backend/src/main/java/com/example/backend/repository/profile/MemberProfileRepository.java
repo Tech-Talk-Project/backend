@@ -1,5 +1,6 @@
 package com.example.backend.repository.profile;
 
+import com.example.backend.entity.dto.ProfileWithAllDto;
 import com.example.backend.entity.profile.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +19,22 @@ import static com.example.backend.entity.profile.QProfileSkill.*;
 @Transactional(readOnly = true)
 public class MemberProfileRepository {
     private final JPAQueryFactory query;
-    public Profile findProfileWithAll(Long memberId) {
-        return query
+    public ProfileWithAllDto findProfileWithAll(Long memberId) {
+        Profile defaultProfile = query
                 .selectFrom(member)
                 .innerJoin(member.profile, profile).fetchJoin()
-                .leftJoin(profile.links, link).fetchJoin()
-                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
                 .where(member.id.eq(memberId))
                 .fetchOne()
                 .getProfile();
+        List<Link> links = query
+                .selectFrom(link)
+                .where(link.profile.id.eq(defaultProfile.getId()))
+                .fetch();
+        List<ProfileSkill> profileSkills = query
+                .selectFrom(profileSkill)
+                .where(profileSkill.profile.id.eq(defaultProfile.getId()))
+                .fetch();
+        return new ProfileWithAllDto(defaultProfile, links, profileSkills);
     }
 
     public Profile findProfileWithInfo(Long memberId) {

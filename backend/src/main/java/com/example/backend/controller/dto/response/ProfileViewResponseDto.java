@@ -1,6 +1,7 @@
 package com.example.backend.controller.dto.response;
 
 import com.example.backend.controller.dto.InfoDto;
+import com.example.backend.entity.dto.ProfileWithAllDto;
 import com.example.backend.entity.profile.Link;
 import com.example.backend.entity.profile.Profile;
 import lombok.Data;
@@ -24,14 +25,17 @@ public class ProfileViewResponseDto {
 
     private String detailedDescription;
 
-    public ProfileViewResponseDto(Profile profile) {
-        this.info = new InfoDto(profile.getInfo().getNickname(), profile.getInfo().getJob(), profile.getInfo().getEmail());
+    public ProfileViewResponseDto(ProfileWithAllDto profileWithAllDto) {
+        Profile profile = profileWithAllDto.getProfile();
+        this.info = new InfoDto(profile.getInfo());
         this.imageUrl = profile.getImageUrl();
         this.introduction = profile.getIntroduction();
+        this.links = profileWithAllDto.getLinks().stream()
+                .map(Link::getUrl)
+                .collect(Collectors.toList());
+        this.skills = profileWithAllDto.getProfileSkills().stream()
+                .map(profileSkill -> profileSkill.getSkill().getName())
+                .collect(Collectors.toSet());
         this.detailedDescription = profile.getDetailedDescription();
-        this.skills = profile.getProfileSkills().stream().map(
-                profileSkill -> profileSkill.getSkill().getESkill().getName()
-        ).collect(Collectors.toSet());
-        this.links = profile.getLinks().stream().map(Link::getUrl).collect(Collectors.toList());
     }
 }
