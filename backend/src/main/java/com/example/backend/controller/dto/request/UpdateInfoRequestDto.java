@@ -7,6 +7,5 @@ import lombok.Data;
 public class UpdateInfoRequestDto {
     @NotNull
     private String name;
-    @NotNull
     private String job;
 }
