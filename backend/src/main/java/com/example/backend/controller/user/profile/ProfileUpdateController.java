@@ -14,26 +14,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user/profile")
+@RequestMapping("/user/profile/update")
 @RequiredArgsConstructor
 public class ProfileUpdateController {
     private final ProfileUpdateService profileUpdateService;
 
-    @PostMapping("/update/info")
+    @PostMapping("/info")
     public ResponseEntity<String> updateInfo(@Valid @RequestBody UpdateInfoRequestDto updateInfoRequestDto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         profileUpdateService.updateInfo(memberId, updateInfoRequestDto);
         return ResponseEntity.ok("success");
     }
 
-    @PostMapping("/update/introduction")
+    @PostMapping("/introduction")
     public ResponseEntity<String> updateIntroduction(@Valid @RequestBody UpdateIntroductionRequestDto updateIntroductionRequestDto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         profileUpdateService.updateIntroduction(memberId, updateIntroductionRequestDto);
         return ResponseEntity.ok("success");
     }
 
-    @PostMapping("/update/description")
+    @PostMapping("/description")
     public ResponseEntity<String> updateDescription(@Valid @RequestBody UpdateDescRequestDto updateDescRequestDto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         profileUpdateService.updateDescription(memberId, updateDescRequestDto);
