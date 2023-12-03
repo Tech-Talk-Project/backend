@@ -43,9 +43,5 @@ public class Profile {
         this.imageUrl = imageUrl;
     }
 
-    public void updateInfo(UpdateInfoRequestDto updateInfoRequestDto) {
-        String nickname = updateInfoRequestDto.getName();
-        String job =  updateInfoRequestDto.getJob();
-        this.info.updateInfo(nickname, job);
-    }
+    
 }
