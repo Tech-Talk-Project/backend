@@ -32,7 +32,7 @@ public class Profile {
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Link> links = new ArrayList<>();
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProfileSkill> profileSkills = new HashSet<>();
 
     public Profile(String nickname, String email, String imageUrl) {
@@ -43,5 +43,14 @@ public class Profile {
         this.imageUrl = imageUrl;
     }
 
-    
+    public void updateLinks(List<String> links) {
+        this.links.clear();
+        for (String link : links) {
+            addLink(link);
+        }
+    }
+
+    private void addLink(String link) {
+        this.links.add(new Link(link, this));
+    }
 }

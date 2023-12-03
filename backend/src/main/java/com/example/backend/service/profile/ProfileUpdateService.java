@@ -3,6 +3,7 @@ package com.example.backend.service.profile;
 import com.example.backend.controller.dto.request.UpdateDescRequestDto;
 import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
 import com.example.backend.controller.dto.request.UpdateIntroductionRequestDto;
+import com.example.backend.controller.dto.request.UpdateLinksRequestDto;
 import com.example.backend.entity.profile.Profile;
 import com.example.backend.repository.profile.MemberProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,10 @@ public class ProfileUpdateService {
     public void updateDescription(Long memberId, UpdateDescRequestDto updateDescRequestDto) {
         String detailedDescription = updateDescRequestDto.getDetailedDescription();
         memberProfileRepository.updateProfileDescription(memberId, detailedDescription);
+    }
+
+    public void updateLinks(Long memberId, UpdateLinksRequestDto updateLinksRequestDto) {
+        Profile profileWithLinks = memberProfileRepository.findProfileWithLinks(memberId);
+        profileWithLinks.updateLinks(updateLinksRequestDto.getLinks());
     }
 }

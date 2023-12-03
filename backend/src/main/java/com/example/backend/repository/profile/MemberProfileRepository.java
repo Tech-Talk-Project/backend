@@ -6,7 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.example.backend.entity.member.QMember.*;
+import static com.example.backend.entity.profile.QLink.*;
 import static com.example.backend.entity.profile.QProfile.*;
 
 @Repository
@@ -17,8 +20,8 @@ public class MemberProfileRepository {
     public Profile findProfileWithAll(Long memberId) {
         return query
                 .selectFrom(member)
-                .join(member.profile, profile).fetchJoin()
-                .leftJoin(profile.links, QLink.link).fetchJoin()
+                .innerJoin(member.profile, profile).fetchJoin()
+                .leftJoin(profile.links, link).fetchJoin()
                 .leftJoin(profile.profileSkills, QProfileSkill.profileSkill).fetchJoin()
                 .where(member.id.eq(memberId))
                 .fetchOne()
@@ -28,7 +31,17 @@ public class MemberProfileRepository {
     public Profile findProfileWithInfo(Long memberId) {
         return query
                 .selectFrom(member)
-                .join(member.profile, profile).fetchJoin()
+                .innerJoin(member.profile, profile).fetchJoin()
+                .where(member.id.eq(memberId))
+                .fetchOne()
+                .getProfile();
+    }
+
+    public Profile findProfileWithLinks(Long memberId) {
+        return query
+                .selectFrom(member)
+                .innerJoin(member.profile, profile).fetchJoin()
+                .leftJoin(profile.links, link).fetchJoin()
                 .where(member.id.eq(memberId))
                 .fetchOne()
                 .getProfile();
