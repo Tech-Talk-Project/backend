@@ -14,6 +14,8 @@ public class ProfileViewResponseDto {
 
     private InfoDto info;
 
+    private String imageUrl;
+
     private String introduction;
 
     private List<String> links;
@@ -24,6 +26,7 @@ public class ProfileViewResponseDto {
 
     public ProfileViewResponseDto(Profile profile) {
         this.info = new InfoDto(profile.getInfo().getNickname(), profile.getInfo().getJob(), profile.getInfo().getEmail());
+        this.imageUrl = profile.getImageUrl();
         this.introduction = profile.getIntroduction();
         this.detailedDescription = profile.getDetailedDescription();
         this.skills = profile.getProfileSkills().stream().map(
