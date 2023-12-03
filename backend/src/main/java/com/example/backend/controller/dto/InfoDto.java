@@ -11,5 +11,6 @@ public class InfoDto {
     public InfoDto(String name, String job, String email) {
         this.name = name;
         this.job = job;
+        this.email = email;
     }
 }
