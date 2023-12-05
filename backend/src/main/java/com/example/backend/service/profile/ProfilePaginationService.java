@@ -3,7 +3,6 @@ package com.example.backend.service.profile;
 import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
 import com.example.backend.entity.profile.ESkill;
 import com.example.backend.entity.profile.Profile;
-import com.example.backend.entity.profile.Skill;
 import com.example.backend.repository.profile.ProfilePaginationRepository;
 import com.example.backend.repository.profile.SkillRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +24,19 @@ public class ProfilePaginationService {
 
         List<ESkill> eSkills = strSkills.stream().map(String::toUpperCase).map(ESkill::from).toList();
 
-        LocalDateTime cursorDateTime = LocalDateTime.parse(cursor);
-        List<Profile> profiles = profilePaginationRepository
-                .pagingAfterCursor(cursorDateTime, limit, eSkills);
+        LocalDateTime cursorDateTime;
+        if (cursor == null) {
+            cursorDateTime = LocalDateTime.now();
+        } else {
+            cursorDateTime = LocalDateTime.parse(cursor);
+        }
+
+        List<Profile> profiles;
+        if (eSkills.isEmpty()) {
+            profiles = profilePaginationRepository.pagingAfterCursor(cursorDateTime, limit);
+        } else {
+            profiles = profilePaginationRepository.pagingBySkillsAfterCursor(cursorDateTime, limit, eSkills);
+        }
         return new ProfilePaginationResponseDto(profiles);
     }
 

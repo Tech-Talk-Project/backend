@@ -1,7 +1,6 @@
 package com.example.backend.repository.profile;
 
 import com.example.backend.entity.profile.*;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -20,7 +19,7 @@ import static com.example.backend.entity.profile.QSkill.*;
 public class ProfilePaginationRepository {
     private final JPAQueryFactory query;
 
-    public List<Profile> pagingAfterCursor(
+    public List<Profile> pagingBySkillsAfterCursor(
             LocalDateTime cursor, int limit, List<ESkill> eSkills) {
 
 
@@ -45,6 +44,17 @@ public class ProfilePaginationRepository {
                         profile.id.in(subQuery),
                         profile.updatedAt.lt(cursor)
                 )
+                .orderBy(profile.updatedAt.desc())
+                .limit(limit)
+                .fetch();
+    }
+
+    public List<Profile> pagingAfterCursor(LocalDateTime cursor, int limit) {
+        return query
+                .selectFrom(profile)
+                .innerJoin(profile.profileSkills, profileSkill).fetchJoin()
+                .innerJoin(profileSkill.skill, skill).fetchJoin()
+                .where(profile.updatedAt.lt(cursor))
                 .orderBy(profile.updatedAt.desc())
                 .limit(limit)
                 .fetch();
