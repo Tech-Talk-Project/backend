@@ -1,6 +1,6 @@
 package com.example.backend.entity.profile;
 
-import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
+import com.example.backend.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Profile {
+public class Profile extends BaseEntity {
     @Id @GeneratedValue
     @Column(name = "profile_id")
     private Long id;
