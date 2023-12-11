@@ -22,7 +22,7 @@ public class ProfilePaginationService {
     public ProfilePaginationResponseDto getProfilesAfterCursor(
             String cursor, int limit, List<String> strSkills) {
 
-        List<ESkill> eSkills = strSkills.stream().map(String::toUpperCase).map(ESkill::from).toList();
+        List<ESkill> eSkills = strSkills.stream().map(ESkill::from).toList();
 
         LocalDateTime cursorDateTime;
         if (cursor == null) {
