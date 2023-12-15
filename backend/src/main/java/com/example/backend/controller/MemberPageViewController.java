@@ -3,7 +3,6 @@ package com.example.backend.controller;
 import com.example.backend.controller.dto.request.MembersViewRequestDto;
 import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
 import com.example.backend.service.profile.ProfilePaginationService;
-import com.example.backend.service.profile.ProfileViewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class MemberViewController {
+public class MemberPageViewController {
     private final ProfilePaginationService profilePaginationService;
 
     @GetMapping("/members")
