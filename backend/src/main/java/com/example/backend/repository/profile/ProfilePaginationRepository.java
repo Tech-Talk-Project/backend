@@ -37,8 +37,8 @@ public class ProfilePaginationRepository {
         // eSkills 를 모두 포함하고 있는 profile 중 커서 기반 페이지네이션을 이용해 limit 만큼 가져온다.
         return query
                 .selectFrom(profile)
-                .innerJoin(profile.profileSkills, profileSkill).fetchJoin()
-                .innerJoin(profileSkill.skill, skill).fetchJoin()
+                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
+                .leftJoin(profileSkill.skill, skill).fetchJoin()
                 .where(
                         profile.id.in(subQuery),
                         profile.updatedAt.lt(cursor)
@@ -51,8 +51,8 @@ public class ProfilePaginationRepository {
     public List<Profile> pagingAfterCursor(LocalDateTime cursor, int limit) {
         return query
                 .selectFrom(profile)
-                .innerJoin(profile.profileSkills, profileSkill).fetchJoin()
-                .innerJoin(profileSkill.skill, skill).fetchJoin()
+                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
+                .leftJoin(profileSkill.skill, skill).fetchJoin()
                 .where(profile.updatedAt.lt(cursor))
                 .orderBy(profile.updatedAt.desc())
                 .limit(limit)
