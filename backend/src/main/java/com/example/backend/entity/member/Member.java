@@ -1,5 +1,6 @@
 package com.example.backend.entity.member;
 
+import com.example.backend.entity.BaseEntity;
 import com.example.backend.entity.profile.Profile;
 import com.example.backend.oauth2.OAuth2Provider;
 import jakarta.persistence.*;
@@ -8,7 +9,7 @@ import lombok.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "member_id")

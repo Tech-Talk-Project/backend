@@ -46,13 +46,7 @@ public class ProfileUpdateService {
         Profile profileWithSkills = memberProfileRepository.findProfileWithSkills(memberId);
         List<ESkill> eSkills =
                 updateSkillsRequestDto.getSkills().stream().map(ESkill::from).toList();
-        List<Skill> skills = eSkills.stream().map(this::getSkill).toList();
+        List<Skill> skills = eSkills.stream().map(skillRepository::findByESkill).toList();
         profileWithSkills.updateProfileSkills(skills);
-    }
-
-    private Skill getSkill(ESkill eSkill) {
-        return skillRepository.findByESkill(eSkill).orElseThrow(
-                () -> new IllegalArgumentException("there is no skill : " + eSkill)
-        );
     }
 }

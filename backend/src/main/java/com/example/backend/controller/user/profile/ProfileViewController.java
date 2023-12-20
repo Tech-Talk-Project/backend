@@ -17,7 +17,6 @@ public class ProfileViewController {
 
     @GetMapping
     public ResponseEntity<ProfileViewResponseDto> getProfile() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(profileViewService.gerProfile(memberId));
     }
