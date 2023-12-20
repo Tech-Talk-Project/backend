@@ -17,7 +17,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ProfilePaginationService {
     private final ProfilePaginationRepository profilePaginationRepository;
-    private final SkillRepository skillRepository;
 
     public ProfilePaginationResponseDto getProfilesAfterCursor(
             String cursor, int limit, List<String> strSkills) {
