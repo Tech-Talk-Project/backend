@@ -6,7 +6,7 @@ import com.example.backend.service.profile.ProfilePaginationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +17,7 @@ import java.util.List;
 public class MemberPageViewController {
     private final ProfilePaginationService profilePaginationService;
 
-    @GetMapping("/members")
+    @PostMapping("/members")
     public ResponseEntity<ProfilePaginationResponseDto> getProfilesAfterCursor(
             @Valid @RequestBody MembersViewRequestDto membersViewRequestDto
             ) {
