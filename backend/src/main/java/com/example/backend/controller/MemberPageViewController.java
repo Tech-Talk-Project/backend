@@ -25,7 +25,7 @@ public class MemberPageViewController {
         int limit = membersViewRequestDto.getLimit();
         List<String> skills = membersViewRequestDto.getSkills();
         ProfilePaginationResponseDto profilesAfterCursor =
-                profilePaginationService.getProfilesAfterCursor(cursor, limit, skills);
+                profilePaginationService.getProfilesAfterCursorBySkills(cursor, limit, skills);
         return ResponseEntity.ok(profilesAfterCursor);
     }
 }

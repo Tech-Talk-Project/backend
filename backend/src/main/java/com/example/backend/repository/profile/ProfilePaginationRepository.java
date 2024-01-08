@@ -22,7 +22,9 @@ public class ProfilePaginationRepository {
 
     public List<Profile> pagingBySkillsAfterCursor(
             LocalDateTime cursor, int limit, List<ESkill> eSkills) {
-
+        if (eSkills.isEmpty()) {
+            return pagingAfterCursor(cursor, limit);
+        }
 
         // eSKills 를 모두 포함하는 profile 을 찾는다.
         JPAQuery<Long> subQuery = query.select(profile.id)
