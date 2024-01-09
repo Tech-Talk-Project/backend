@@ -27,6 +27,7 @@ public class Profile extends BaseEntity {
     private String imageUrl;
 
     @Lob
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String detailedDescription;
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
