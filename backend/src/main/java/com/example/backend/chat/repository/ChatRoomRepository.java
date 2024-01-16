@@ -27,6 +27,12 @@ public class ChatRoomRepository {
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 
+    public void pullMemberIdFromJoinedMemberIds(String chatRoomId, Long memberId) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        Update update = new Update().pull("joinedMemberIds", memberId);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
+
     public void save(ChatRoom chatRoom) {
         mongoTemplate.save(chatRoom);
     }
