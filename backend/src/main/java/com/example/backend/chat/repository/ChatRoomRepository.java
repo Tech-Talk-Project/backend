@@ -22,4 +22,8 @@ public class ChatRoomRepository {
     public void save(ChatRoom chatRoom) {
         mongoTemplate.save(chatRoom);
     }
+
+    public ChatRoom findById(String chatRoomId) {
+        return mongoTemplate.findById(chatRoomId, ChatRoom.class);
+    }
 }

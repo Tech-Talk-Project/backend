@@ -15,7 +15,7 @@ import java.util.List;
 public class ChatRoomManageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
-    public void createChatRoom(String title, List<Long> joinedMemberIds) {
+    public ChatRoom createChatRoom(String title, List<Long> joinedMemberIds) {
         ChatRoom chatRoom = new ChatRoom(title, joinedMemberIds);
         chatRoomRepository.save(chatRoom);
 
@@ -26,7 +26,7 @@ public class ChatRoomManageService {
                     new ChatMember.JoinedChatRoom(chatRoom.getId(), new Date())
             );
         });
-    }
 
-    
+        return chatRoom;
+    }
 }

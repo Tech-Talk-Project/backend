@@ -19,6 +19,7 @@ public class ChatMember {
         this.id = id;
     }
 
+    @Getter
     public static class JoinedChatRoom {
         private String chatRoomId;
         private Date lastAccessTime;

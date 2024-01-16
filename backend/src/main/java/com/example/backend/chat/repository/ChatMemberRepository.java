@@ -24,4 +24,8 @@ public class ChatMemberRepository  {
     public void save(ChatMember chatMember) {
         mongoTemplate.save(chatMember);
     }
+
+    public ChatMember findById(Long memberId) {
+        return mongoTemplate.findById(memberId, ChatMember.class);
+    }
 }
