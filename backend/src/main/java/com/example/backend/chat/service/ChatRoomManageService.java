@@ -29,4 +29,14 @@ public class ChatRoomManageService {
 
         return chatRoom;
     }
+
+    public void addNewMembers(String chatRoomId, List<Long> newMemberIds) {
+        chatRoomRepository.appendMemberIdsIntoJoinedMemberIds(chatRoomId, newMemberIds);
+        newMemberIds.forEach(memberId -> {
+            chatMemberRepository.appendJoinedChatRoomToJoinedChatRooms(
+                    memberId,
+                    new ChatMember.JoinedChatRoom(chatRoomId, new Date())
+            );
+        });
+    }
 }
