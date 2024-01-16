@@ -60,4 +60,36 @@ class ChatRoomManageServiceTest {
         assertThat(findChatMember3.getJoinedChatRooms().size()).isEqualTo(1);
         assertThat(findChatMember3.getJoinedChatRooms().get(0).getChatRoomId()).isEqualTo(chatRoom.getId());
     }
+
+    @DisplayName("채팅방에 새로운 멤버 추가 테스트")
+    @Test
+    void testNewMemberAppended() {
+        // given
+        String title = "테스트 채팅방";
+        ChatMember chatMember1 = new ChatMember(1L);
+        ChatMember chatMember2 = new ChatMember(2L);
+        ChatMember chatMember3 = new ChatMember(3L);
+        chatMemberRepository.save(chatMember1);
+        chatMemberRepository.save(chatMember2);
+        chatMemberRepository.save(chatMember3);
+
+        ChatRoom chatRoom = chatRoomManageService.createChatRoom(title, List.of(1L));
+
+        // when
+        chatRoomManageService.addNewMembers(chatRoom.getId(), List.of(2L, 3L));
+
+        // then
+        // 새로운 멤버가 채팅방에 추가되었는지 확인합니다.
+        ChatRoom findChatRoom = chatRoomRepository.findById(chatRoom.getId());
+        assertThat(findChatRoom.getJoinedMemberIds()).containsExactly(1L, 2L, 3L);
+
+        // 새로운 멤버가 채팅방에 참여한 것으로 추가되었는지 확인합니다.
+        ChatMember findChatMember2 = chatMemberRepository.findById(2L);
+        assertThat(findChatMember2.getJoinedChatRooms().size()).isEqualTo(1);
+        assertThat(findChatMember2.getJoinedChatRooms().get(0).getChatRoomId()).isEqualTo(chatRoom.getId());
+
+        ChatMember findChatMember3 = chatMemberRepository.findById(3L);
+        assertThat(findChatMember3.getJoinedChatRooms().size()).isEqualTo(1);
+        assertThat(findChatMember3.getJoinedChatRooms().get(0).getChatRoomId()).isEqualTo(chatRoom.getId());
+    }
 }
