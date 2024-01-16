@@ -23,6 +23,16 @@ spring :
       host: localhost
       port: 6379
 
+    # mongodb
+    mongodb:
+      username: root
+      password: root
+      host: localhost
+      port: 27017
+      database: techtalk
+      authentication-database: admin
+      auto-index-creation: true
+
 # oauth
 oauth2:
   github:
