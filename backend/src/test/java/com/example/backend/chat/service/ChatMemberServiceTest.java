@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,5 +54,28 @@ class ChatMemberServiceTest {
 
         ChatRoom findChatRoom = chatRoomRepository.findById(chatRoom.getId());
         assertThat(findChatRoom.getJoinedMemberIds()).containsExactly(2L, 3L);
+    }
+
+    @DisplayName("채팅방 떠나기(끄기) 테스트")
+    @Test
+    void leaveChatRoomTest() {
+        // given
+        String title = "테스트 채팅방";
+        ChatMember chatMember1 = new ChatMember(1L);
+
+        chatMemberRepository.save(chatMember1);
+
+        ChatRoom chatRoom = chatRoomManageService.createChatRoom(title, List.of(1L));
+
+        // when
+        Date beforeLeaveTime = chatMemberRepository.findById(1L).getJoinedChatRooms().get(0).getLastAccessTime();
+        chatMemberService.leaveChatRoom(1L, chatRoom.getId());
+
+        // then
+        chatMemberRepository.findById(1L).getJoinedChatRooms().forEach(joinedChatRoom -> {
+            if (joinedChatRoom.getChatRoomId().equals(chatRoom.getId())) {
+                assertThat(joinedChatRoom.getLastAccessTime()).isAfter(beforeLeaveTime);
+            }
+        });
     }
 }
