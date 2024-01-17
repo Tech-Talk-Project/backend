@@ -11,8 +11,9 @@ public class ChatMemberService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
 
-
-
+    public void leaveChatRoom(Long memberId, String chatRoomID) {
+        chatMemberRepository.updateJoinedChatRoomLeaveTime(memberId, chatRoomID);
+    }
     public void exitChatRoom(String chatRoomId, Long memberId) {
         chatRoomRepository.pullMemberIdFromJoinedMemberIds(chatRoomId, memberId);
         chatMemberRepository.pullJoinedChatRoomFromJoinedChatRooms(memberId, chatRoomId);
