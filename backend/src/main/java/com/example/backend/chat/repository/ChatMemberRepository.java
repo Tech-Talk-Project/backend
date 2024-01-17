@@ -20,7 +20,7 @@ public class ChatMemberRepository  {
     public void appendJoinedChatRoomToJoinedChatRooms(Long memberId, ChatMember.JoinedChatRoom joinedChatRoom) {
         Query query = new Query(Criteria.where("_id").is(memberId));
         Update update = new Update().addToSet("joinedChatRooms", joinedChatRoom);
-        mongoTemplate.updateFirst(query, update, ChatMember.class);
+        mongoTemplate.upsert(query, update, ChatMember.class);
     }
 
     public void updateJoinedChatRoomLeaveTime(Long memberId, String ChatRoomId) {
