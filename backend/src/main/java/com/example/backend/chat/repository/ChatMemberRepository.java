@@ -41,6 +41,10 @@ public class ChatMemberRepository  {
     }
 
     public ChatMember findById(Long memberId) {
-        return mongoTemplate.findById(memberId, ChatMember.class);
+        ChatMember chatMember = mongoTemplate.findById(memberId, ChatMember.class);
+        if (chatMember == null) {
+            throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
+        }
+        return chatMember;
     }
 }
