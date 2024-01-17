@@ -1,6 +1,7 @@
 package com.example.backend.chat.dto;
 
 import com.example.backend.chat.domain.ChatRoom;
+import com.example.backend.service.profile.dto.SimpleMemberProfileDto;
 import lombok.Data;
 
 import java.util.Date;
@@ -10,15 +11,15 @@ import java.util.List;
 public class ChatRoomByMemberDto {
     private String chatRoomId;
     private String title;
-    private Integer joinedMemberCount;
+    private List<SimpleMemberProfileDto> joinedMembers;
     private Integer unreadCount;
     private List<ChatRoom.LastMessage> lastMessages;
 
 
-    public ChatRoomByMemberDto(ChatRoom chatRoom, Date lastAccessTime) {
+    public ChatRoomByMemberDto(ChatRoom chatRoom, Date lastAccessTime, List<SimpleMemberProfileDto> joinedMembers) {
         this.chatRoomId = chatRoom.getId();
         this.title = chatRoom.getTitle();
-        this.joinedMemberCount = chatRoom.getJoinedMemberIds().size();
+        this.joinedMembers = joinedMembers;
         this.unreadCount = getUnreadCount(chatRoom.getLastMessages(), lastAccessTime);
         this.lastMessages = chatRoom.getLastMessages();
     }

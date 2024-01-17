@@ -5,6 +5,9 @@ import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
+import com.example.backend.entity.member.Member;
+import com.example.backend.repository.profile.MemberProfileRepository;
+import com.example.backend.service.profile.dto.SimpleMemberProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,7 @@ import java.util.List;
 public class ChatRoomListService {
     private final ChatMemberRepository chatMemberRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final MemberProfileRepository memberProfileRepository;
 
     public List<ChatRoomByMemberDto> getChatRoomList(Long memberId) {
         ChatMember chatMember = chatMemberRepository.findById(memberId);
@@ -30,12 +34,20 @@ public class ChatRoomListService {
         for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
             ChatRoom chatRoom = chatRoomRepository.findById(joinedChatRoom.getChatRoomId());
             Date lastAccessTime = joinedChatRoom.getLastAccessTime();
-            chatRoomByMemberDtoList.add(new ChatRoomByMemberDto(chatRoom, lastAccessTime));
+            chatRoomByMemberDtoList.add(
+                    new ChatRoomByMemberDto(chatRoom, lastAccessTime, getJoinedMembers(chatRoom.getJoinedMemberIds())));
         }
-
 
         return chatRoomByMemberDtoList;
     }
 
+    private List<SimpleMemberProfileDto> getJoinedMembers(List<Long> joinedMemberIds) {
+        List<SimpleMemberProfileDto> simpleMemberProfileDtoList = new ArrayList<>();
+        for (Long memberId : joinedMemberIds) {
+            Member member = memberProfileRepository.findByIdWithProfileInfo(memberId);
+            simpleMemberProfileDtoList.add(new SimpleMemberProfileDto(member));
+        }
+        return simpleMemberProfileDtoList;
+    }
 
 }
