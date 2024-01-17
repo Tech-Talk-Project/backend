@@ -1,7 +1,6 @@
 package com.example.backend.chat.repository;
 
 import com.example.backend.chat.domain.ChatRoom;
-import com.example.backend.chat.dto.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -28,11 +27,11 @@ public class ChatRoomRepository {
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 
-    public void appendChatMessageDtoIntoLastMessages(String chatRoomId, ChatMessageDto chatMessageDto) {
+    public void appendLastMessageDtoIntoLastMessages(String chatRoomId, ChatRoom.LastMessage lastMessage) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         Update update = new Update().push("lastMessages")
                 .slice(-100)
-                .each(chatMessageDto);
+                .each(lastMessage);
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 

@@ -1,7 +1,7 @@
 package com.example.backend.chat.service;
 
 import com.example.backend.chat.domain.ChatMessage;
-import com.example.backend.chat.dto.ChatMessageDto;
+import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.repository.ChatMessageRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class ChatMessageService {
         ChatMessage chatMessage = new ChatMessage(chatRoomId, senderId, message);
         chatMessageRepository.save(chatMessage);
 
-        ChatMessageDto chatMessageDto = new ChatMessageDto(chatMessage);
-        chatRoomRepository.appendChatMessageDtoIntoLastMessages(chatRoomId, chatMessageDto);
+        ChatRoom.LastMessage lastMessage = new ChatRoom.LastMessage(chatMessage);
+        chatRoomRepository.appendLastMessageDtoIntoLastMessages(chatRoomId, lastMessage);
     }
 }

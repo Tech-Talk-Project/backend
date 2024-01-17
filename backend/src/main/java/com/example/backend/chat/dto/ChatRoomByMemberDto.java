@@ -12,7 +12,7 @@ public class ChatRoomByMemberDto {
     private String title;
     private Integer joinedMemberCount;
     private Integer unreadCount;
-    private List<ChatMessageDto> lastMessages;
+    private List<ChatRoom.LastMessage> lastMessages;
 
 
     public ChatRoomByMemberDto(ChatRoom chatRoom, Date lastAccessTime) {
@@ -23,7 +23,7 @@ public class ChatRoomByMemberDto {
         this.lastMessages = chatRoom.getLastMessages();
     }
 
-    private Integer getUnreadCount(List<ChatMessageDto> lastMessages, Date lastReadDate) {
+    private Integer getUnreadCount(List<ChatRoom.LastMessage> lastMessages, Date lastReadDate) {
         // binary search - upperbound
         int lo = 0;
         int hi = lastMessages.size() - 1;
