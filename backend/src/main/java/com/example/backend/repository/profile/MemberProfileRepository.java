@@ -1,6 +1,7 @@
 package com.example.backend.repository.profile;
 
 import com.example.backend.entity.dto.ProfileWithAllDto;
+import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -37,13 +38,12 @@ public class MemberProfileRepository {
         return new ProfileWithAllDto(defaultProfile, links, profileSkills);
     }
 
-    public Profile findProfileWithInfo(Long memberId) {
+    public Member findByIdWithProfileInfo(Long memberId) {
         return query
                 .selectFrom(member)
                 .innerJoin(member.profile, profile).fetchJoin()
                 .where(member.id.eq(memberId))
-                .fetchOne()
-                .getProfile();
+                .fetchOne();
     }
 
     public Profile findProfileWithLinks(Long memberId) {
