@@ -1,6 +1,7 @@
 package com.example.backend.chat.repository;
 
 import com.example.backend.chat.domain.ChatRoom;
+import com.example.backend.chat.dto.ChatMessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -27,6 +28,14 @@ public class ChatRoomRepository {
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 
+    public void appendChatMessageDtoIntoLastMessages(String chatRoomId, ChatMessageDto chatMessageDto) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        Update update = new Update().push("lastMessages")
+                .slice(-100)
+                .each(chatMessageDto);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
+
     public void pullMemberIdFromJoinedMemberIds(String chatRoomId, Long memberId) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         Update update = new Update().pull("joinedMemberIds", memberId);
@@ -38,6 +47,10 @@ public class ChatRoomRepository {
     }
 
     public ChatRoom findById(String chatRoomId) {
-        return mongoTemplate.findById(chatRoomId, ChatRoom.class);
+        ChatRoom chatRoom = mongoTemplate.findById(chatRoomId, ChatRoom.class);
+        if (chatRoom == null) {
+            throw new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.");
+        }
+        return chatRoom;
     }
 }

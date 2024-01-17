@@ -13,4 +13,6 @@ public class ChatMessageRepository {
     public void save(ChatMessage chatMessage) {
         mongoTemplate.save(chatMessage);
     }
+
+
 }
