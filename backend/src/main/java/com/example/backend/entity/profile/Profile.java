@@ -1,6 +1,7 @@
 package com.example.backend.entity.profile;
 
 import com.example.backend.entity.BaseEntity;
+import com.example.backend.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,6 +19,9 @@ public class Profile extends BaseEntity {
     @Id @GeneratedValue
     @Column(name = "profile_id")
     private Long id;
+
+    @OneToOne(mappedBy = "profile")
+    private Member member;
     
     @Embedded
     private Info info;

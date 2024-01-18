@@ -17,6 +17,7 @@ public class ProfilePaginationResponseDto {
 
     @Getter @Setter
     private static class ProfileData {
+        private Long memberId;
         private String name;
         private String job;
         private String introduction;
@@ -33,6 +34,7 @@ public class ProfilePaginationResponseDto {
         }
         for (Profile profile : profiles) {
             ProfileData profileData = new ProfileData();
+            profileData.setMemberId(profile.getMember().getId());
             profileData.setName(profile.getInfo().getNickname());
             profileData.setJob(profile.getInfo().getJob());
             profileData.setIntroduction(profile.getIntroduction());
