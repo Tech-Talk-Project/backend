@@ -20,6 +20,7 @@ public class OAuth2UserProfileService {
     private final OAuth2AccessTokenFetcher oAuth2AccessTokenFetcher;
     private final OAuth2UserAttributesFetcher oAuth2UserAttributesFetcher;
     private final OAuth2Properties oAuth2Properties;
+    private final UserProfileExtractorFactory userProfileExtractorFactory;
 
     public UserProfileDto getUserProfile(String code, OAuth2Provider oAuth2Provider) {
         OAuth2Property oAuth2Property = oAuth2Properties.get(oAuth2Provider);
@@ -30,7 +31,7 @@ public class OAuth2UserProfileService {
         Map<String, Object> attributes = oAuth2UserAttributesFetcher.fetch(
                 accessTokenResponse.getAccessToken(), oAuth2Property);
 
-        UserProfileExtractor userProfileExtractor = UserProfileExtractorFactory.get(oAuth2Provider);
+        UserProfileExtractor userProfileExtractor = userProfileExtractorFactory.get(oAuth2Provider);
         return userProfileExtractor.extract(attributes);
     }
 }
