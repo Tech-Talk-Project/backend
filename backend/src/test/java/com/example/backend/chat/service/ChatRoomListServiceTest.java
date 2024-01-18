@@ -1,16 +1,19 @@
 package com.example.backend.chat.service;
 
 import com.example.backend.chat.domain.ChatMember;
+import com.example.backend.chat.domain.ChatMessage;
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
 import com.example.backend.service.MemberCreateService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -35,6 +38,16 @@ class ChatRoomListServiceTest {
 
     @Autowired
     MemberCreateService memberCreateService;
+
+    @Autowired
+    MongoTemplate mongoTemplate;
+
+    @AfterEach
+    void tearDown() {
+        mongoTemplate.dropCollection(ChatMessage.class);
+        mongoTemplate.dropCollection(ChatMember.class);
+        mongoTemplate.dropCollection(ChatRoom.class);
+    }
 
     @DisplayName("채팅방 목록 조회 - 참여 중인 채팅방을 전부 보여주는지")
     @Test
