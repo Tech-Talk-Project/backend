@@ -72,6 +72,12 @@ dependencies {
 
 	//mongo
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+	//rabbitmq
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+	// thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 tasks.named('bootBuildImage') {

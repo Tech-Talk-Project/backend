@@ -33,6 +33,13 @@ spring :
       authentication-database: admin
       auto-index-creation: true
 
+  # rabbitmq
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 # oauth
 oauth2:
   github:
@@ -65,3 +72,12 @@ gcs :
     name : techtalk-bucket
   project :
     id : project-moa-384615
+
+# rabbitmq
+rabbitmq:
+  queue:
+    name: techtalk-queue
+  exchange:
+    name: techtalk-exchange
+  routing-key:
+    name: techtalk-routing-key

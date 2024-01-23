@@ -13,11 +13,12 @@ public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
 
-    public void send(String chatRoomId, Long senderId, String message) {
+    public ChatMessage send(String chatRoomId, Long senderId, String message) {
         ChatMessage chatMessage = new ChatMessage(chatRoomId, senderId, message);
         chatMessageRepository.save(chatMessage);
 
         ChatRoom.LastMessage lastMessage = new ChatRoom.LastMessage(chatMessage);
         chatRoomRepository.appendLastMessageDtoIntoLastMessages(chatRoomId, lastMessage);
+        return chatMessage;
     }
 }
