@@ -1,4 +1,4 @@
-package com.example.backend.controller.user.chat;
+package com.example.backend.chat.controller;
 
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
