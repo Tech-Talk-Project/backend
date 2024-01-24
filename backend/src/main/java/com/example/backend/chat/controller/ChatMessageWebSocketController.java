@@ -1,5 +1,6 @@
-package com.example.backend.chat.controller.dto;
+package com.example.backend.chat.controller;
 
+import com.example.backend.chat.controller.dto.ChatMessageDto;
 import com.example.backend.chat.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @RequiredArgsConstructor
-public class ChatMessageController {
+public class ChatMessageWebSocketController {
     private final RabbitTemplate rabbitTemplate;
     private final ChatMessageService chatMessageService;
 
