@@ -74,6 +74,6 @@ public class ChatRoomRepository {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         query.fields().exclude("backupMessages");
 
-        ChatRoom chatRoom = mongoTemplate.findOne(query, ChatRoom.class);
+        return mongoTemplate.findOne(query, ChatRoom.class);
     }
 }
