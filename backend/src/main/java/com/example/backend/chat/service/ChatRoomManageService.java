@@ -18,18 +18,15 @@ public class ChatRoomManageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final MemberProfileRepository memberProfileRepository;
+    private final ChatMessageService chatMessageService;
     private final Long ADMIN_ID = -1L;
 
 
     public ChatRoom createChatRoom(String title, List<Long> joinedMemberIds) {
         ChatRoom chatRoom = new ChatRoom(title, joinedMemberIds);
-        chatRoom.getLastMessages().add(
-                new ChatRoom.LastMessage(
-                        ADMIN_ID,
-                        new Date(),
-                        getFirstMessageForMemberName(joinedMemberIds)
-                ));
         chatRoomRepository.save(chatRoom);
+
+        chatMessageService.send(chatRoom.getId(), ADMIN_ID, getFirstMessageForMemberName(joinedMemberIds));
 
         // 채팅방 생성 후, 채팅방에 참여한 멤버들의 joinedChatRoomIds 에 채팅방 ID 를 추가합니다.
         joinedMemberIds.forEach(memberId -> {
