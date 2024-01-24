@@ -1,4 +1,4 @@
-package com.example.backend.controller.user.chat.dto.response;
+package com.example.backend.chat.controller.dto.response;
 
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
 import lombok.Data;
