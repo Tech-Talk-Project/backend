@@ -1,12 +1,12 @@
 package com.example.backend.chat.controller;
 
+import com.example.backend.chat.controller.dto.request.ChatRoomCreateRequestDto;
+import com.example.backend.chat.controller.dto.response.ChatRoomListResponseDto;
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
 import com.example.backend.chat.service.ChatRoomListService;
 import com.example.backend.chat.service.ChatRoomManageService;
-import com.example.backend.controller.user.chat.dto.request.ChatRoomCreateRequestDto;
 import com.example.backend.controller.user.chat.dto.response.ChatRoomCreateResponseDto;
-import com.example.backend.controller.user.chat.dto.response.ChatRoomListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +23,8 @@ public class ChatRoomController {
 
     @PostMapping("/create")
     public ResponseEntity<ChatRoomCreateResponseDto> createRoom(@RequestBody ChatRoomCreateRequestDto requestDto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        requestDto.getMemberIds().add(memberId);
         ChatRoom chatRoom = chatRoomManageService.createChatRoom(requestDto.getTitle(), requestDto.getMemberIds());
         return ResponseEntity.ok(new ChatRoomCreateResponseDto(chatRoom));
     }
