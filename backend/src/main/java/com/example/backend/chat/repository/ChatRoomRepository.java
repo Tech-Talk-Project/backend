@@ -27,10 +27,27 @@ public class ChatRoomRepository {
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 
-    public void appendLastMessageDtoIntoLastMessages(String chatRoomId, ChatRoom.LastMessage lastMessage) {
+    public void appendLastMessage(String chatRoomId, ChatRoom.LastMessage lastMessage) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        Update update = new Update()
+                .push("lastMessages").slice(-100).each(lastMessage)
+                .push("backupMessages").slice(-10000).each(lastMessage);
+
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
+
+    public void appendLastMessageIntoLastMessages(String chatRoomId, ChatRoom.LastMessage lastMessage) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         Update update = new Update().push("lastMessages")
                 .slice(-100)
+                .each(lastMessage);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
+
+    public void appendLastMessageIntoBackupMessages(String chatRoomId, ChatRoom.LastMessage lastMessage) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        Update update = new Update().push("backupMessages")
+                .slice(-10000)
                 .each(lastMessage);
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
@@ -51,5 +68,12 @@ public class ChatRoomRepository {
             throw new IllegalArgumentException("해당 채팅방이 존재하지 않습니다.");
         }
         return chatRoom;
+    }
+
+    public ChatRoom findByIdWithoutBackupMessages(String chatRoomId) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        query.fields().exclude("backupMessages");
+
+        ChatRoom chatRoom = mongoTemplate.findOne(query, ChatRoom.class);
     }
 }

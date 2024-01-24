@@ -17,8 +17,11 @@ public class ChatRoom {
     private String title;
     private List<Long> joinedMemberIds = new ArrayList<>();
 
-    // 100개까지만 저장하고 그 이전 메세지의 경우 ChatMessage 를 커서 기반으로 페이징합니다.
+    // 100개 까지만 저장
     private List<LastMessage> lastMessages = new ArrayList<>();
+
+    // 10,000개 까지만 저장
+    private List<LastMessage> backupMessages = new ArrayList<>();
 
     public ChatRoom(String title, List<Long> joinedMemberIds) {
         this.title = title;
@@ -36,12 +39,6 @@ public class ChatRoom {
             this.senderId = senderId;
             this.sendTime = sendTime;
             this.content = content;
-        }
-
-        public LastMessage(ChatMessage chatMessage) {
-            this.senderId = chatMessage.getSenderId();
-            this.sendTime = chatMessage.getSendTime();
-            this.content = chatMessage.getContent();
         }
     }
 }
