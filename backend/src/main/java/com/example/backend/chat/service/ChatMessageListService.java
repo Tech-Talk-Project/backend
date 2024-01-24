@@ -1,6 +1,7 @@
 package com.example.backend.chat.service;
 
 import com.example.backend.chat.domain.ChatRoom;
+import com.example.backend.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,25 +17,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ChatMessageListService {
-    private final MongoTemplate mongoTemplate;
+    private final ChatRoomRepository chatRoomRepository;
+
+    public List<ChatRoom.LastMessage> getLastMessages(String chatRoomId) {
+        return chatRoomRepository.getLastMessages(chatRoomId);
+    }
 
     public List<ChatRoom.LastMessage> getChatMessageListAfterCursor(String chatRoomId, Date cursor) {
-        MatchOperation matchStage = Aggregation.match(Criteria.where("_id").is(chatRoomId)
-                .and("backupMessages.sendTime").lt(cursor));
-        Aggregation aggregation = Aggregation.newAggregation(
-                matchStage,
-                Aggregation.unwind("backupMessages"),
-                Aggregation.match(Criteria.where("backupMessages.sendTime").lt(cursor)),
-                Aggregation.sort(Sort.Direction.DESC, "backupMessages.sendTime"),
-                Aggregation.limit(100),
-                Aggregation.project().and("backupMessages.senderId").as("senderId")
-                        .and("backupMessages.sendTime").as("sendTime")
-                        .and("backupMessages.content").as("content")
-        );
-
-        AggregationResults<ChatRoom.LastMessage> results =
-                mongoTemplate.aggregate(aggregation, ChatRoom.class, ChatRoom.LastMessage.class);
-
-        return results.getMappedResults();
+        return chatRoomRepository.getChatMessageListAfterCursor(chatRoomId, cursor);
     }
 }
