@@ -40,7 +40,7 @@ public class ChatRoomSearchService {
             Integer memberCount = chatRoom.getJoinedMemberIds().size();
             Integer unreadCount = getUnreadCount(chatRoom.getLastMessages(), lastAccessTime);
             chatRoomByMemberDtoList.add(
-                    new ChatRoomByMemberDto(chatRoom, unreadCount, memberCount));
+                    new ChatRoomByMemberDto(chatRoom, memberCount, unreadCount));
         }
 
         chatRoomByMemberDtoList.sort((dto1, dto2) ->
