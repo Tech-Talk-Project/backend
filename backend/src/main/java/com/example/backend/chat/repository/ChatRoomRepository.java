@@ -88,7 +88,6 @@ public class ChatRoomRepository {
         Aggregation aggregation = Aggregation.newAggregation(
                 matchStage,
                 Aggregation.unwind("backupMessages"),
-                Aggregation.match(Criteria.where("backupMessages.sendTime").lt(cursor)),
                 Aggregation.sort(Sort.Direction.DESC, "backupMessages.sendTime"),
                 Aggregation.limit(100),
                 Aggregation.project().and("backupMessages.senderId").as("senderId")
