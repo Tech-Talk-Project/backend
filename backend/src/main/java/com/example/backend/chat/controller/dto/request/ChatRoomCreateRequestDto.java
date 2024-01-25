@@ -1,4 +1,4 @@
-package com.example.backend.controller.user.chat.dto.request;
+package com.example.backend.chat.controller.dto.request;
 
 import lombok.Data;
 

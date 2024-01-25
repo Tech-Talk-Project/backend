@@ -1,5 +1,7 @@
 package com.example.backend.service;
 
+import com.example.backend.chat.domain.ChatMember;
+import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.entity.member.Authority;
 import com.example.backend.entity.member.EAuthority;
 import com.example.backend.entity.member.Member;
@@ -21,6 +23,7 @@ public class MemberCreateService {
     private final MemberRepository memberRepository;
     private final AuthorityRepository authorityRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
+    private final ChatMemberRepository chatMemberRepository;
 
     public Member createUser(UserProfileDto userProfileDto, OAuth2Provider oAuth2Provider) {
         String email = userProfileDto.getEmail();
@@ -37,6 +40,7 @@ public class MemberCreateService {
         Authority authority = authorityRepository.findByEAuthority(EAuthority.ROLE_USER)
                 .orElseThrow(() -> new IllegalArgumentException("ROLE_USER 권한이 존재하지 않습니다."));
         memberAuthorityRepository.save(new MemberAuthority(member, authority));
+        chatMemberRepository.save(new ChatMember(member.getId()));
         return member;
     }
 }

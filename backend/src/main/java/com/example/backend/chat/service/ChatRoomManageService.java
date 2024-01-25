@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -18,21 +19,21 @@ public class ChatRoomManageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final MemberProfileRepository memberProfileRepository;
+    private final ChatMessageService chatMessageService;
     private final Long ADMIN_ID = -1L;
 
-
     public ChatRoom createChatRoom(String title, List<Long> joinedMemberIds) {
-        ChatRoom chatRoom = new ChatRoom(title, joinedMemberIds);
-        chatRoom.getLastMessages().add(
-                new ChatRoom.LastMessage(
-                        ADMIN_ID,
-                        new Date(),
-                        getFirstMessageForMemberName(joinedMemberIds)
-                ));
+        List<Long> joinedMemberIdsWithoutDuplicate = new HashSet<>(joinedMemberIds).stream().toList();
+        if (title == null || title.isEmpty()) {
+            title = createAutoTitle(joinedMemberIdsWithoutDuplicate);
+        }
+        ChatRoom chatRoom = new ChatRoom(title, joinedMemberIdsWithoutDuplicate);
         chatRoomRepository.save(chatRoom);
 
+        chatMessageService.send(chatRoom.getId(), ADMIN_ID, getFirstMessageForMemberName(joinedMemberIds));
+
         // 채팅방 생성 후, 채팅방에 참여한 멤버들의 joinedChatRoomIds 에 채팅방 ID 를 추가합니다.
-        joinedMemberIds.forEach(memberId -> {
+        joinedMemberIdsWithoutDuplicate.forEach(memberId -> {
             chatMemberRepository.appendJoinedChatRoomToJoinedChatRooms(
                     memberId,
                     new ChatMember.JoinedChatRoom(chatRoom.getId(), new Date())
@@ -40,6 +41,16 @@ public class ChatRoomManageService {
         });
 
         return chatRoom;
+    }
+
+    private String createAutoTitle(List<Long> members) {
+        StringBuilder title = new StringBuilder();
+        for (Long memberId : members) {
+            title.append(memberProfileRepository.findByIdWithProfileInfo(memberId).getProfile().getInfo().getNickname());
+            title.append(", ");
+        }
+        title.delete(title.length() - 2, title.length());
+        return title.toString();
     }
 
     private String getFirstMessageForMemberName(List<Long> joinedMemberIds) {
