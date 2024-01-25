@@ -26,7 +26,7 @@ public class ChatMessageController {
         return ResponseEntity.ok(new ChatMessageListDto(lastMessages));
     }
 
-    @PostMapping("/page")
+    @PostMapping("/cursor")
     public ResponseEntity<ChatMessageListDto> getMessagesByPage(@RequestBody MessagePageRequestDto requestDto) {
         List<ChatRoom.LastMessage> messages = chatMessageListService.getChatMessageListAfterCursor(
                 requestDto.getChatRoomId(), requestDto.getCursor());
