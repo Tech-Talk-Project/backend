@@ -11,15 +11,15 @@ import java.util.List;
 public class ChatRoomByMemberDto {
     private String chatRoomId;
     private String title;
-    private List<SimpleMemberProfileDto> joinedMembers;
+    private Integer memberCount;
     private Integer unreadCount;
     private ChatRoom.LastMessage lastMessage;
 
 
-    public ChatRoomByMemberDto(ChatRoom chatRoom, Integer unreadCount, List<SimpleMemberProfileDto> joinedMembers) {
+    public ChatRoomByMemberDto(ChatRoom chatRoom, Integer memberCount, Integer unreadCount) {
         this.chatRoomId = chatRoom.getId();
         this.title = chatRoom.getTitle();
-        this.joinedMembers = joinedMembers;
+        this.memberCount = memberCount;
         this.unreadCount = unreadCount;
         this.lastMessage = chatRoom.getLastMessages().get(chatRoom.getLastMessages().size() - 1);
     }
