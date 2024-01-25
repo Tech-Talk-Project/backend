@@ -22,7 +22,6 @@ public class ChatRoomManageService {
     private final ChatMessageService chatMessageService;
     private final Long ADMIN_ID = -1L;
 
-
     public ChatRoom createChatRoom(String title, List<Long> joinedMemberIds) {
         List<Long> joinedMemberIdsWithoutDuplicate = new HashSet<>(joinedMemberIds).stream().toList();
         if (title == null || title.isEmpty()) {
@@ -53,7 +52,7 @@ public class ChatRoomManageService {
         title.delete(title.length() - 2, title.length());
         return title.toString();
     }
-    
+
     private String getFirstMessageForMemberName(List<Long> joinedMemberIds) {
         StringBuilder firstMessage = new StringBuilder();
         for (Long memberId : joinedMemberIds) {

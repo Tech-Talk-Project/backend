@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user/chat/room")
+@RequestMapping("/user/chat/")
 @RequiredArgsConstructor
 public class ChatRoomController {
     private final ChatRoomManageService chatRoomManageService;
@@ -38,7 +38,7 @@ public class ChatRoomController {
         return ResponseEntity.ok(new ChatRoomListResponseDto(chatRoomList));
     }
 
-    @PostMapping("/")
+    @PostMapping("/room")
     public ResponseEntity<ChatRoomResponseDto> getLastMessages(@RequestBody LastMessageRequestDto requestDto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ChatRoomResponseDto chatRoom = chatRoomSearchService.getChatRoom(memberId, requestDto.getChatRoomId());
