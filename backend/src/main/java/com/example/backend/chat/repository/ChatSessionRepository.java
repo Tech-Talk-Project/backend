@@ -11,14 +11,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ChatSessionRepository {
     private final RedisTemplate<String, String> redisTemplate;
-    public void saveSessionData(String sessionId, String userId, String chatRoomId) {
-        redisTemplate.opsForHash().put(sessionId, "userId", userId);
+    public void saveSessionData(String sessionId, String memberId, String chatRoomId) {
+        redisTemplate.opsForHash().put(sessionId, "memberId", memberId);
         redisTemplate.opsForHash().put(sessionId, "chatRoomId", chatRoomId);
     }
     public Map<String, String> getSessionData(String sessionId) {
         Map<Object, Object> rawData = redisTemplate.opsForHash().entries(sessionId);
         Map<String, String> sessionData = new HashMap<>();
-        sessionData.put("userId", (String) rawData.get("userId"));
+        sessionData.put("memberId", (String) rawData.get("memberId"));
         sessionData.put("chatRoomId", (String) rawData.get("chatRoomId"));
         return sessionData;
     }

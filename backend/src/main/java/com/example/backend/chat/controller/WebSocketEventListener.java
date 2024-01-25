@@ -21,10 +21,10 @@ public class WebSocketEventListener {
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
-        String userId = headerAccessor.getFirstNativeHeader("userId");
+        String memberId = headerAccessor.getFirstNativeHeader("memberId");
         String chatRoomId = headerAccessor.getFirstNativeHeader("chatRoomId");
 
-        chatSessionRepository.saveSessionData(sessionId, userId, chatRoomId);
+        chatSessionRepository.saveSessionData(sessionId, memberId, chatRoomId);
     }
 
     @EventListener
@@ -32,7 +32,7 @@ public class WebSocketEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
         Map<String, String> sessionData = chatSessionRepository.getSessionData(sessionId);
-        Long memberId = Long.parseLong(sessionData.get("userId"));
+        Long memberId = Long.parseLong(sessionData.get("memberId"));
         String chatRoomId = sessionData.get("chatRoomId");
 
         chatMemberService.leaveChatRoom(memberId, chatRoomId);
