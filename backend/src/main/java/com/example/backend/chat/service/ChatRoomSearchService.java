@@ -1,5 +1,6 @@
 package com.example.backend.chat.service;
 
+import com.example.backend.chat.controller.dto.response.ChatRoomResponseDto;
 import com.example.backend.chat.domain.ChatMember;
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
@@ -17,10 +18,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ChatRoomListService {
+public class ChatRoomSearchService {
     private final ChatMemberRepository chatMemberRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final MemberProfileRepository memberProfileRepository;
+
+    public ChatRoomResponseDto getChatRoom(Long memberId, String chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
+        List<SimpleMemberProfileDto> simpleMemberProfileDtoList = getJoinedMembers(chatRoom.getJoinedMemberIds());
+        List<ChatRoom.LastMessage> lastMessages = chatRoom.getLastMessages();
+        return new ChatRoomResponseDto(chatRoom.getTitle(), simpleMemberProfileDtoList, lastMessages);
+    }
 
     public List<ChatRoomByMemberDto> getChatRoomList(Long memberId) {
         ChatMember chatMember = chatMemberRepository.findById(memberId);

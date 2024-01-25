@@ -1,10 +1,12 @@
 package com.example.backend.chat.controller;
 
 import com.example.backend.chat.controller.dto.request.ChatRoomCreateRequestDto;
+import com.example.backend.chat.controller.dto.request.LastMessageRequestDto;
 import com.example.backend.chat.controller.dto.response.ChatRoomListResponseDto;
+import com.example.backend.chat.controller.dto.response.ChatRoomResponseDto;
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
-import com.example.backend.chat.service.ChatRoomListService;
+import com.example.backend.chat.service.ChatRoomSearchService;
 import com.example.backend.chat.service.ChatRoomManageService;
 import com.example.backend.controller.user.chat.dto.response.ChatRoomCreateResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatRoomController {
     private final ChatRoomManageService chatRoomManageService;
-    private final ChatRoomListService chatRoomListService;
+    private final ChatRoomSearchService chatRoomSearchService;
 
     @PostMapping("/create")
     public ResponseEntity<ChatRoomCreateResponseDto> createRoom(@RequestBody ChatRoomCreateRequestDto requestDto) {
@@ -32,7 +34,14 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     public ResponseEntity<ChatRoomListResponseDto> getRooms() {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ChatRoomByMemberDto> chatRoomList = chatRoomListService.getChatRoomList(memberId);
+        List<ChatRoomByMemberDto> chatRoomList = chatRoomSearchService.getChatRoomList(memberId);
         return ResponseEntity.ok(new ChatRoomListResponseDto(chatRoomList));
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<ChatRoomResponseDto> getLastMessages(@RequestBody LastMessageRequestDto requestDto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ChatRoomResponseDto chatRoom = chatRoomSearchService.getChatRoom(memberId, requestDto.getChatRoomId());
+        return ResponseEntity.ok(chatRoom);
     }
 }

@@ -20,12 +20,6 @@ import java.util.List;
 public class ChatMessageController {
     private final ChatMessageListService chatMessageListService;
 
-    @PostMapping("/last")
-    public ResponseEntity<ChatMessageListDto> getLastMessages(@RequestBody LastMessageRequestDto requestDto) {
-        List<ChatRoom.LastMessage> lastMessages = chatMessageListService.getLastMessages(requestDto.getChatRoomId());
-        return ResponseEntity.ok(new ChatMessageListDto(lastMessages));
-    }
-
     @PostMapping("/cursor")
     public ResponseEntity<ChatMessageListDto> getMessagesByPage(@RequestBody MessagePageRequestDto requestDto) {
         List<ChatRoom.LastMessage> messages = chatMessageListService.getChatMessageListAfterCursor(
