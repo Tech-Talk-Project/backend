@@ -7,6 +7,7 @@ import com.example.backend.chat.dto.ChatRoomByMemberDto;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
 import com.example.backend.entity.member.Member;
+import com.example.backend.repository.member.MemberRepository;
 import com.example.backend.repository.profile.MemberProfileRepository;
 import com.example.backend.service.profile.dto.SimpleMemberProfileDto;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.List;
 public class ChatRoomSearchService {
     private final ChatMemberRepository chatMemberRepository;
     private final ChatRoomRepository chatRoomRepository;
-    private final MemberProfileRepository memberProfileRepository;
+    private final MemberRepository memberRepository;
 
     public ChatRoomResponseDto getChatRoom(Long memberId, String chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
@@ -52,7 +53,8 @@ public class ChatRoomSearchService {
     private List<SimpleMemberProfileDto> getJoinedMembers(List<Long> joinedMemberIds) {
         List<SimpleMemberProfileDto> simpleMemberProfileDtoList = new ArrayList<>();
         for (Long memberId : joinedMemberIds) {
-            Member member = memberProfileRepository.findByIdWithProfileInfo(memberId);
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
             simpleMemberProfileDtoList.add(new SimpleMemberProfileDto(member));
         }
         return simpleMemberProfileDtoList;
