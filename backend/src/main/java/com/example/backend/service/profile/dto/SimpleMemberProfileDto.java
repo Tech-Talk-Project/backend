@@ -6,12 +6,12 @@ import lombok.Data;
 @Data
 public class SimpleMemberProfileDto {
     private Long memberId;
-    private String nickname;
+    private String name;
     private String imageUrl;
 
     public SimpleMemberProfileDto(Member member) {
         this.memberId = member.getId();
-        this.nickname = member.getProfile().getInfo().getNickname();
-        this.imageUrl = member.getProfile().getImageUrl();
+        this.name = member.getName();
+        this.imageUrl = member.getImageUrl();
     }
 }

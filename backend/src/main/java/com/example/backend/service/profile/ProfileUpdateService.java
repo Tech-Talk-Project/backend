@@ -1,6 +1,7 @@
 package com.example.backend.service.profile;
 
 import com.example.backend.controller.dto.request.*;
+import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.ESkill;
 import com.example.backend.entity.profile.Profile;
 import com.example.backend.entity.profile.Skill;
@@ -11,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -22,9 +21,9 @@ public class ProfileUpdateService {
     private final SkillRepository skillRepository;
 
     public void updateInfo(Long memberId, UpdateInfoRequestDto updateInfoRequestDto) {
-        String nickname = updateInfoRequestDto.getName();
+        String name = updateInfoRequestDto.getName();
         String job =  updateInfoRequestDto.getJob();
-        memberProfileRepository.updateProfileInfo(memberId, nickname, job);
+        memberProfileRepository.updateProfileInfo(memberId, name, job);
     }
 
     public void updateIntroduction(Long memberId, UpdateIntroductionRequestDto updateIntroductionRequestDto) {
@@ -38,15 +37,15 @@ public class ProfileUpdateService {
     }
 
     public void updateLinks(Long memberId, UpdateLinksRequestDto updateLinksRequestDto) {
-        Profile profileWithLinks = memberProfileRepository.findProfileWithLinks(memberId);
-        profileWithLinks.updateLinks(updateLinksRequestDto.getLinks());
+        Member member = memberProfileRepository.findByIdWithProfileWithLinks(memberId);
+        member.getProfile().updateLinks(updateLinksRequestDto.getLinks());
     }
 
     public void updateSkills(Long memberId, UpdateSkillsRequestDto updateSkillsRequestDto) {
-        Profile profileWithSkills = memberProfileRepository.findProfileWithSkills(memberId);
+        Member member = memberProfileRepository.findByIdWithProfileWithSkills(memberId);
         List<ESkill> eSkills =
                 updateSkillsRequestDto.getSkills().stream().map(ESkill::from).toList();
         List<Skill> skills = eSkills.stream().map(skillRepository::findByESkill).toList();
-        profileWithSkills.updateProfileSkills(skills);
+        member.getProfile().updateProfileSkills(skills);
     }
 }

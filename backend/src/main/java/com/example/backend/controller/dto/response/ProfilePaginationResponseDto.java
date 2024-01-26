@@ -1,5 +1,6 @@
 package com.example.backend.controller.dto.response;
 
+import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.Profile;
 import lombok.Data;
 import lombok.Getter;
@@ -25,26 +26,26 @@ public class ProfilePaginationResponseDto {
         private List<String> skills = new ArrayList<>();
     }
 
-    public ProfilePaginationResponseDto(List<Profile> profiles) {
+    public ProfilePaginationResponseDto(List<Member> members) {
         this.data = new ArrayList<>();
-        if (profiles.isEmpty()) {
+        if (members.isEmpty()) {
             this.nextCursor = "";
             this.count = 0;
             return;
         }
-        for (Profile profile : profiles) {
+        for (Member member : members) {
             ProfileData profileData = new ProfileData();
-            profileData.setMemberId(profile.getMember().getId());
-            profileData.setName(profile.getInfo().getNickname());
-            profileData.setJob(profile.getInfo().getJob());
-            profileData.setIntroduction(profile.getIntroduction());
-            profileData.setImageUrl(profile.getImageUrl());
-            profile.getProfileSkills().forEach(profileSkill -> {
+            profileData.setMemberId(member.getId());
+            profileData.setName(member.getName());
+            profileData.setJob(member.getProfile().getJob());
+            profileData.setIntroduction(member.getProfile().getIntroduction());
+            profileData.setImageUrl(member.getImageUrl());
+            member.getProfile().getProfileSkills().forEach(profileSkill -> {
                 profileData.getSkills().add(profileSkill.getSkill().getName());
             });
             data.add(profileData);
         }
-        this.count = profiles.size();
-        this.nextCursor = profiles.get(profiles.size() - 1).getUpdatedAt().toString();
+        this.count = members.size();
+        this.nextCursor = members.get(members.size() - 1).getUpdatedAt().toString();
     }
 }
