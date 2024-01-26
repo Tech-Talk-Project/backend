@@ -14,7 +14,6 @@ import java.util.Set;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Profile extends BaseEntity {
     @Id @GeneratedValue
     @Column(name = "profile_id")
@@ -22,13 +21,10 @@ public class Profile extends BaseEntity {
 
     @OneToOne(mappedBy = "profile")
     private Member member;
-    
-    @Embedded
-    private Info info;
+
+    private String job;
 
     private String introduction;
-
-    private String imageUrl;
 
     @Lob
     @Column(columnDefinition = "MEDIUMTEXT")
@@ -39,14 +35,6 @@ public class Profile extends BaseEntity {
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProfileSkill> profileSkills = new HashSet<>();
-
-    public Profile(String nickname, String email, String imageUrl) {
-        this.info = Info.builder()
-                .nickname(nickname)
-                .email(email)
-                .build();
-        this.imageUrl = imageUrl;
-    }
 
     public void updateLinks(List<String> links) {
         this.links.clear();

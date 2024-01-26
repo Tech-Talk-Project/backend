@@ -20,21 +20,20 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String email;
 
+    private String imageUrl;
+
     @Enumerated(EnumType.STRING)
     private OAuth2Provider oAuth2Provider;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "profile_id")
-    private Profile profile;
+    private Profile profile = new Profile();
 
     @Builder
-    public Member(String name, String email, OAuth2Provider oAuth2Provider) {
+    public Member(String name, String email, String imageUrl, OAuth2Provider oAuth2Provider) {
         this.name = name;
         this.email = email;
+        this.imageUrl = imageUrl;
         this.oAuth2Provider = oAuth2Provider;
-    }
-
-    public void createProfile(Profile profile) {
-        this.profile = profile;
     }
 }

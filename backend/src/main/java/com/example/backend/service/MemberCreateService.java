@@ -32,14 +32,15 @@ public class MemberCreateService {
         Member member = Member.builder()
                 .email(email)
                 .name(name)
+                .imageUrl(imageUrl)
                 .oAuth2Provider(oAuth2Provider)
                 .build();
-        Profile profile = new Profile(name, email, imageUrl);
-        member.createProfile(profile);
         memberRepository.save(member);
+
         Authority authority = authorityRepository.findByEAuthority(EAuthority.ROLE_USER)
                 .orElseThrow(() -> new IllegalArgumentException("ROLE_USER 권한이 존재하지 않습니다."));
         memberAuthorityRepository.save(new MemberAuthority(member, authority));
+
         chatMemberRepository.save(new ChatMember(member.getId()));
         return member;
     }
