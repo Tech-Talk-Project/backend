@@ -7,6 +7,7 @@ import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.service.ChatMessageListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,9 @@ public class ChatMessageController {
 
     @PostMapping("/cursor")
     public ResponseEntity<ChatMessageListDto> getMessagesByPage(@RequestBody MessagePageRequestDto requestDto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<ChatRoom.LastMessage> messages = chatMessageListService.getChatMessageListAfterCursor(
-                requestDto.getChatRoomId(), requestDto.getCursor());
+                memberId, requestDto.getChatRoomId(), requestDto.getCursor());
         return ResponseEntity.ok(new ChatMessageListDto(messages));
     }
 }

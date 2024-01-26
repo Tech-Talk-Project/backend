@@ -23,8 +23,12 @@ public class ChatRoomSearchService {
     private final ChatMemberRepository chatMemberRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
+    private final ChatRoomValidator chatRoomValidator;
 
     public ChatRoomResponseDto getChatRoom(Long memberId, String chatRoomId) {
+        if (!chatRoomValidator.isMemberOfChatRoom(chatRoomId, memberId)) {
+            throw new IllegalArgumentException("채팅방이 존재하지 않거나 참여하지 않은 채팅방입니다.");
+        }
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         List<SimpleMemberProfileDto> simpleMemberProfileDtoList = getJoinedMembers(chatRoom.getJoinedMemberIds());
         List<ChatRoom.LastMessage> lastMessages = chatRoom.getLastMessages();

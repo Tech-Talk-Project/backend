@@ -18,12 +18,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatMessageListService {
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomValidator chatRoomValidator;
 
     public List<ChatRoom.LastMessage> getLastMessages(String chatRoomId) {
         return chatRoomRepository.getLastMessages(chatRoomId);
     }
 
-    public List<ChatRoom.LastMessage> getChatMessageListAfterCursor(String chatRoomId, Date cursor) {
+    public List<ChatRoom.LastMessage> getChatMessageListAfterCursor(Long memberId, String chatRoomId, Date cursor) {
+        if (!chatRoomValidator.isMemberOfChatRoom(chatRoomId, memberId)) {
+            throw new IllegalArgumentException("존재하지 않는 채팅방입니다.");
+        }
         return chatRoomRepository.getChatMessageListAfterCursor(chatRoomId, cursor);
     }
 }

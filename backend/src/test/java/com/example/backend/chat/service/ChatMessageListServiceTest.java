@@ -41,7 +41,8 @@ class ChatMessageListServiceTest {
                 OAuth2Provider.GITHUB);
         ChatRoom chatRoom = chatRoomManageService.createChatRoom("test", List.of(user.getId()));
         // when
-        List<ChatRoom.LastMessage> chatMessageListAfterCursor = chatMessageListService.getChatMessageListAfterCursor(chatRoom.getId(), new Date());
+        List<ChatRoom.LastMessage> chatMessageListAfterCursor =
+                chatMessageListService.getChatMessageListAfterCursor(user.getId(), chatRoom.getId(), new Date());
 
         // then
         assertThat(chatMessageListAfterCursor.size()).isEqualTo(1);
@@ -59,7 +60,8 @@ class ChatMessageListServiceTest {
             chatMessageService.send(chatRoom.getId(), user.getId(), "test");
         }
         // when
-        List<ChatRoom.LastMessage> chatMessageListAfterCursor = chatMessageListService.getChatMessageListAfterCursor(chatRoom.getId(), new Date());
+        List<ChatRoom.LastMessage> chatMessageListAfterCursor =
+                chatMessageListService.getChatMessageListAfterCursor(user.getId(), chatRoom.getId(), new Date());
 
         // then
         assertThat(chatMessageListAfterCursor.size()).isEqualTo(51);
@@ -77,7 +79,8 @@ class ChatMessageListServiceTest {
             chatMessageService.send(chatRoom.getId(), user.getId(), "test" + i);
         }
         // when
-        List<ChatRoom.LastMessage> chatMessageListAfterCursor = chatMessageListService.getChatMessageListAfterCursor(chatRoom.getId(), new Date());
+        List<ChatRoom.LastMessage> chatMessageListAfterCursor =
+                chatMessageListService.getChatMessageListAfterCursor(user.getId(), chatRoom.getId(), new Date());
 
         // then
         assertThat(chatMessageListAfterCursor.size()).isEqualTo(100);

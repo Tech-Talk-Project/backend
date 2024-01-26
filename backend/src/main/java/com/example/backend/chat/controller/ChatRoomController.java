@@ -39,7 +39,7 @@ public class ChatRoomController {
     }
 
     @PostMapping("/room")
-    public ResponseEntity<ChatRoomResponseDto> getLastMessages(@RequestBody LastMessageRequestDto requestDto) {
+    public ResponseEntity<ChatRoomResponseDto> getChatRoom(@RequestBody LastMessageRequestDto requestDto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ChatRoomResponseDto chatRoom = chatRoomSearchService.getChatRoom(memberId, requestDto.getChatRoomId());
         return ResponseEntity.ok(chatRoom);
