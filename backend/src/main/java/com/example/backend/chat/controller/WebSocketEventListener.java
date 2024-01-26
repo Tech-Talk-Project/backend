@@ -36,5 +36,6 @@ public class WebSocketEventListener {
         String chatRoomId = sessionData.get("chatRoomId");
 
         chatMemberService.leaveChatRoom(memberId, chatRoomId);
+        chatSessionRepository.deleteSessionData(sessionId);
     }
 }

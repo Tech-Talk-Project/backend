@@ -22,4 +22,8 @@ public class ChatSessionRepository {
         sessionData.put("chatRoomId", (String) rawData.get("chatRoomId"));
         return sessionData;
     }
+
+    public void deleteSessionData(String sessionId) {
+        redisTemplate.delete(sessionId);
+    }
 }
