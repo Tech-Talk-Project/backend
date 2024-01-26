@@ -1,6 +1,7 @@
 package com.example.backend.service.profile;
 
 import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
+import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.ESkill;
 import com.example.backend.entity.profile.Profile;
 import com.example.backend.repository.profile.ProfilePaginationRepository;
@@ -31,15 +32,15 @@ public class ProfilePaginationService {
 
         List<ESkill> eSkills = strSkills.stream().map(ESkill::from).toList();
 
-        List<Profile> profiles = profilePaginationRepository.pagingBySkillsAfterCursor(cursorDateTime, limit, eSkills);
+        List<Member> members = profilePaginationRepository.pagingBySkillsAfterCursor(cursorDateTime, limit, eSkills);
 
-        return new ProfilePaginationResponseDto(profiles);
+        return new ProfilePaginationResponseDto(members);
     }
 
     public ProfilePaginationResponseDto getProfilesAfterCursor(String cursor, int limit) {
         LocalDateTime cursorDateTime = getCursorDateTime(cursor);
-        List<Profile> profiles = profilePaginationRepository.pagingAfterCursor(cursorDateTime, limit);
-        return new ProfilePaginationResponseDto(profiles);
+        List<Member> members = profilePaginationRepository.pagingAfterCursor(cursorDateTime, limit);
+        return new ProfilePaginationResponseDto(members);
     }
 
     private LocalDateTime getCursorDateTime(String cursor) {

@@ -4,10 +4,12 @@ import com.example.backend.chat.domain.ChatMember;
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
+import com.example.backend.entity.member.Member;
 import com.example.backend.repository.member.MemberRepository;
 import com.example.backend.repository.profile.MemberProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -15,10 +17,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ChatRoomManageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
-    private final MemberProfileRepository memberProfileRepository;
+    private final MemberRepository memberRepository;
     private final ChatMessageService chatMessageService;
     private final Long ADMIN_ID = -1L;
 
@@ -30,7 +33,7 @@ public class ChatRoomManageService {
         ChatRoom chatRoom = new ChatRoom(title, joinedMemberIdsWithoutDuplicate);
         chatRoomRepository.save(chatRoom);
 
-        chatMessageService.send(chatRoom.getId(), ADMIN_ID, getFirstMessageForMemberName(joinedMemberIds));
+        chatMessageService.send(chatRoom.getId(), ADMIN_ID, getFirstMessageForMemberName(joinedMemberIdsWithoutDuplicate));
 
         // 채팅방 생성 후, 채팅방에 참여한 멤버들의 joinedChatRoomIds 에 채팅방 ID 를 추가합니다.
         joinedMemberIdsWithoutDuplicate.forEach(memberId -> {
@@ -39,14 +42,16 @@ public class ChatRoomManageService {
                     new ChatMember.JoinedChatRoom(chatRoom.getId(), new Date())
             );
         });
-
         return chatRoom;
     }
 
     private String createAutoTitle(List<Long> members) {
         StringBuilder title = new StringBuilder();
         for (Long memberId : members) {
-            title.append(memberProfileRepository.findByIdWithProfileInfo(memberId).getProfile().getInfo().getNickname());
+            Member member = memberRepository.findById(memberId).orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 멤버입니다.")
+            );
+            title.append(member.getName());
             title.append(", ");
         }
         title.delete(title.length() - 2, title.length());
@@ -56,7 +61,10 @@ public class ChatRoomManageService {
     private String getFirstMessageForMemberName(List<Long> joinedMemberIds) {
         StringBuilder firstMessage = new StringBuilder();
         for (Long memberId : joinedMemberIds) {
-            firstMessage.append(memberProfileRepository.findByIdWithProfileInfo(memberId).getProfile().getInfo().getNickname());
+            Member member = memberRepository.findById(memberId).orElseThrow(
+                    () -> new IllegalArgumentException("존재하지 않는 멤버입니다.")
+            );
+            firstMessage.append(member.getName());
             firstMessage.append(", ");
         }
         firstMessage.delete(firstMessage.length() - 2, firstMessage.length());
