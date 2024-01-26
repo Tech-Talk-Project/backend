@@ -23,8 +23,9 @@ public class WebSocketEventListener {
         String sessionId = headerAccessor.getSessionId();
         String memberId = headerAccessor.getFirstNativeHeader("memberId");
         String chatRoomId = headerAccessor.getFirstNativeHeader("chatRoomId");
+        String type = headerAccessor.getFirstNativeHeader("type");
 
-        chatSessionRepository.saveSessionData(sessionId, memberId, chatRoomId);
+        chatSessionRepository.saveSessionData(sessionId, memberId, chatRoomId, type);
     }
 
     @EventListener
@@ -34,8 +35,12 @@ public class WebSocketEventListener {
         Map<String, String> sessionData = chatSessionRepository.getSessionData(sessionId);
         Long memberId = Long.parseLong(sessionData.get("memberId"));
         String chatRoomId = sessionData.get("chatRoomId");
+        WebSocketConnectionType type = WebSocketConnectionType.valueOf(sessionData.get("type"));
 
-        chatMemberService.leaveChatRoom(memberId, chatRoomId);
+        if (type == WebSocketConnectionType.CHAT_ROOM) {
+            chatMemberService.leaveChatRoom(memberId, chatRoomId);
+        }
+
         chatSessionRepository.deleteSessionData(sessionId);
     }
 }
