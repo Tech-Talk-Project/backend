@@ -12,8 +12,9 @@ import java.util.Date;
 public class ChatMessageService {
     private final ChatRoomRepository chatRoomRepository;
 
-    public void send(String chatRoomId, Long senderId, String message) {
+    public ChatRoom.LastMessage send(String chatRoomId, Long senderId, String message) {
         ChatRoom.LastMessage lastMessage = new ChatRoom.LastMessage(senderId, new Date(), message);
         chatRoomRepository.appendLastMessage(chatRoomId, lastMessage);
+        return lastMessage;
     }
 }

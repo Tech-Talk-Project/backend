@@ -1,6 +1,7 @@
 package com.example.backend.chat.controller;
 
 import com.example.backend.chat.controller.dto.ChatMessageDto;
+import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,7 +17,7 @@ public class ChatMessageWebSocketController {
 
     @MessageMapping("/chat/message/{chatRoomId}")
     public void send(ChatMessageDto chatDto, @DestinationVariable String chatRoomId) {
-        chatMessageService.send(chatRoomId, chatDto.getMemberId(), chatDto.getContent());
-        rabbitTemplate.convertAndSend("amq.topic", chatRoomId, chatDto);
+        ChatRoom.LastMessage message = chatMessageService.send(chatRoomId, chatDto.getMemberId(), chatDto.getContent());
+        rabbitTemplate.convertAndSend("amq.topic", chatRoomId, new ChatMessageDto(message));
     }
 }
