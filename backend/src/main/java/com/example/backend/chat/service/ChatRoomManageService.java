@@ -24,7 +24,6 @@ public class ChatRoomManageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final MemberRepository memberRepository;
-    private final ChatMessageService chatMessageService;
     private final RabbitTemplate rabbitTemplate;
     private final Long ADMIN_ID = -1L;
 
