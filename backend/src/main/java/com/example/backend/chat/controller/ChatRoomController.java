@@ -10,6 +10,7 @@ import com.example.backend.chat.service.ChatRoomSearchService;
 import com.example.backend.chat.service.ChatRoomManageService;
 import com.example.backend.controller.user.chat.dto.response.ChatRoomCreateResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
