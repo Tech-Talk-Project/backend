@@ -34,9 +34,10 @@ public class ChatRoomManageService {
             title = createAutoTitle(joinedMemberIdsWithoutDuplicate);
         }
         ChatRoom chatRoom = new ChatRoom(title, joinedMemberIdsWithoutDuplicate);
+        ChatRoom.LastMessage autoFirstMessage =
+                new ChatRoom.LastMessage(ADMIN_ID, new Date(), getFirstMessageForMemberName(joinedMemberIdsWithoutDuplicate));
+        chatRoom.getLastMessages().add(autoFirstMessage);
         chatRoomRepository.save(chatRoom);
-
-        chatMessageService.send(chatRoom.getId(), ADMIN_ID, getFirstMessageForMemberName(joinedMemberIdsWithoutDuplicate));
 
         // 채팅방 생성 후, 채팅방에 참여한 멤버들의 joinedChatRoomIds 에 채팅방 ID 를 추가합니다.
         // 채팅방이 생성되었다는 사실을 memberId topic 으로 구독된 사람들에게 알려줍니다.
