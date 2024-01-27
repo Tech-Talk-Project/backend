@@ -19,6 +19,6 @@ public class ChatMessageWebSocketController {
     @MessageMapping("/chat/message/{chatRoomId}")
     public void send(ChatMessageReceiveDto chatDto, @DestinationVariable String chatRoomId) {
         ChatRoom.LastMessage message = chatMessageService.send(chatRoomId, chatDto.getMemberId(), chatDto.getContent());
-        rabbitTemplate.convertAndSend("amq.topic", chatRoomId, new ChatMessageSendDto(message));
+        rabbitTemplate.convertAndSend("amq.topic", chatRoomId, new ChatMessageSendDto(message, chatRoomId));
     }
 }
