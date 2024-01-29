@@ -20,12 +20,13 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        String sessionId = headerAccessor.getSessionId();
-        String memberId = headerAccessor.getFirstNativeHeader("memberId");
-        String chatRoomId = headerAccessor.getFirstNativeHeader("chatRoomId");
         String type = headerAccessor.getFirstNativeHeader("type");
-
-        chatSessionRepository.saveSessionData(sessionId, memberId, chatRoomId, type);
+        if (WebSocketConnectionType.valueOf(type) == WebSocketConnectionType.CHAT_ROOM) {
+            String sessionId = headerAccessor.getSessionId();
+            String memberId = headerAccessor.getFirstNativeHeader("memberId");
+            String chatRoomId = headerAccessor.getFirstNativeHeader("chatRoomId");
+            chatSessionRepository.saveSessionData(sessionId, memberId, chatRoomId);
+        }
     }
 
     @EventListener
@@ -33,14 +34,12 @@ public class WebSocketEventListener {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
         Map<String, String> sessionData = chatSessionRepository.getSessionData(sessionId);
-        Long memberId = Long.parseLong(sessionData.get("memberId"));
-        String chatRoomId = sessionData.get("chatRoomId");
-        WebSocketConnectionType type = WebSocketConnectionType.valueOf(sessionData.get("type"));
 
-        if (type == WebSocketConnectionType.CHAT_ROOM) {
+        if (!sessionData.isEmpty()) {
+            Long memberId = Long.parseLong(sessionData.get("memberId"));
+            String chatRoomId = sessionData.get("chatRoomId");
             chatMemberService.leaveChatRoom(memberId, chatRoomId);
+            chatSessionRepository.deleteSessionData(sessionId);
         }
-
-        chatSessionRepository.deleteSessionData(sessionId);
     }
 }
