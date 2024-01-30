@@ -14,7 +14,7 @@ public class ChatMessageService {
 
     public ChatRoom.LastMessage send(String chatRoomId, Long senderId, String message) {
         ChatRoom.LastMessage lastMessage = new ChatRoom.LastMessage(senderId, new Date(), message);
-        chatRoomRepository.appendLastMessage(chatRoomId, lastMessage);
+        chatRoomRepository.appendMessage(chatRoomId, lastMessage);
         return lastMessage;
     }
 }

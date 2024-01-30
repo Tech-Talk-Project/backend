@@ -1,6 +1,7 @@
 package com.example.backend.chat.service;
 
 import com.example.backend.chat.domain.ChatRoom;
+import com.example.backend.chat.repository.BackupMessagesRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatMessageListService {
     private final ChatRoomRepository chatRoomRepository;
+    private final BackupMessagesRepository backupMessagesRepository;
     private final ChatRoomValidator chatRoomValidator;
 
     public List<ChatRoom.LastMessage> getLastMessages(String chatRoomId) {
@@ -28,6 +30,6 @@ public class ChatMessageListService {
         if (!chatRoomValidator.isMemberOfChatRoom(chatRoomId, memberId)) {
             throw new IllegalArgumentException("존재하지 않는 채팅방입니다.");
         }
-        return chatRoomRepository.getChatMessageListAfterCursor(chatRoomId, cursor);
+        return backupMessagesRepository.getChatMessageListAfterCursor(chatRoomId, cursor);
     }
 }

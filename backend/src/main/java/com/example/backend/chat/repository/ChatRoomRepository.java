@@ -1,5 +1,6 @@
 package com.example.backend.chat.repository;
 
+import com.example.backend.chat.domain.BackupMessages;
 import com.example.backend.chat.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -32,29 +33,25 @@ public class ChatRoomRepository {
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 
-    public void appendLastMessage(String chatRoomId, ChatRoom.LastMessage lastMessage) {
+    public void appendMessage(String chatRoomId, ChatRoom.LastMessage message) {
+        appendLastMessage(chatRoomId, message);
+        appendBackupMessage(chatRoomId, message);
+    }
+
+    private void appendLastMessage(String chatRoomId, ChatRoom.LastMessage lastMessage) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         Update update = new Update()
-                .push("lastMessages").slice(-100).each(lastMessage)
-                .push("backupMessages").slice(-10000).each(lastMessage);
+                .push("lastMessages").slice(-100).each(lastMessage);
 
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 
-    public void appendLastMessageIntoLastMessages(String chatRoomId, ChatRoom.LastMessage lastMessage) {
+    private void appendBackupMessage(String chatRoomId, ChatRoom.LastMessage lastMessage) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
-        Update update = new Update().push("lastMessages")
-                .slice(-100)
-                .each(lastMessage);
-        mongoTemplate.updateFirst(query, update, ChatRoom.class);
-    }
+        Update update = new Update()
+                .push("messages").slice(-10000).each(lastMessage);
 
-    public void appendLastMessageIntoBackupMessages(String chatRoomId, ChatRoom.LastMessage lastMessage) {
-        Query query = new Query(Criteria.where("_id").is(chatRoomId));
-        Update update = new Update().push("backupMessages")
-                .slice(-10000)
-                .each(lastMessage);
-        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+        mongoTemplate.updateFirst(query, update, BackupMessages.class);
     }
 
     public void pullMemberIdFromJoinedMemberIds(String chatRoomId, Long memberId) {
@@ -75,31 +72,7 @@ public class ChatRoomRepository {
         return chatRoom;
     }
 
-    public ChatRoom findByIdWithoutBackupMessages(String chatRoomId) {
-        Query query = new Query(Criteria.where("_id").is(chatRoomId));
-        query.fields().exclude("backupMessages");
 
-        return mongoTemplate.findOne(query, ChatRoom.class);
-    }
-
-    public List<ChatRoom.LastMessage> getChatMessageListAfterCursor(String chatRoomId, Date cursor) {
-        MatchOperation matchStage = Aggregation.match(Criteria.where("_id").is(chatRoomId)
-                .and("backupMessages.sendTime").lt(cursor));
-        Aggregation aggregation = Aggregation.newAggregation(
-                matchStage,
-                Aggregation.unwind("backupMessages"),
-                Aggregation.sort(Sort.Direction.DESC, "backupMessages.sendTime"),
-                Aggregation.limit(100),
-                Aggregation.project().and("backupMessages.senderId").as("senderId")
-                        .and("backupMessages.sendTime").as("sendTime")
-                        .and("backupMessages.content").as("content")
-        );
-
-        AggregationResults<ChatRoom.LastMessage> results =
-                mongoTemplate.aggregate(aggregation, ChatRoom.class, ChatRoom.LastMessage.class);
-
-        return results.getMappedResults();
-    }
 
     public List<ChatRoom.LastMessage> getLastMessages(String chatRoomId) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));

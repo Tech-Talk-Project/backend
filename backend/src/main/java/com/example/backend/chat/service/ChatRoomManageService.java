@@ -1,8 +1,10 @@
 package com.example.backend.chat.service;
 
+import com.example.backend.chat.domain.BackupMessages;
 import com.example.backend.chat.domain.ChatMember;
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
+import com.example.backend.chat.repository.BackupMessagesRepository;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
 import com.example.backend.entity.member.Member;
@@ -22,6 +24,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChatRoomManageService {
     private final ChatRoomRepository chatRoomRepository;
+    private final BackupMessagesRepository backupMessagesRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final MemberRepository memberRepository;
     private final RabbitTemplate rabbitTemplate;
@@ -37,6 +40,10 @@ public class ChatRoomManageService {
                 new ChatRoom.LastMessage(ADMIN_ID, new Date(), getFirstMessageForMemberName(joinedMemberIdsWithoutDuplicate));
         chatRoom.getLastMessages().add(autoFirstMessage);
         chatRoomRepository.save(chatRoom);
+
+        BackupMessages backupMessages = new BackupMessages(chatRoom.getId());
+        backupMessages.getMessages().add(autoFirstMessage);
+        backupMessagesRepository.save(backupMessages);
 
         // 채팅방 생성 후, 채팅방에 참여한 멤버들의 joinedChatRoomIds 에 채팅방 ID 를 추가합니다.
         // 채팅방이 생성되었다는 사실을 memberId topic 으로 구독된 사람들에게 알려줍니다.
