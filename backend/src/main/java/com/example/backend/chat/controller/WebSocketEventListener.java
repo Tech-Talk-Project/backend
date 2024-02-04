@@ -35,7 +35,7 @@ public class WebSocketEventListener {
         String sessionId = headerAccessor.getSessionId();
         Map<String, String> sessionData = chatSessionRepository.getSessionData(sessionId);
 
-        if (!sessionData.isEmpty()) {
+        if (chatSessionRepository.isSessionDataExist(sessionId)) {
             Long memberId = Long.parseLong(sessionData.get("memberId"));
             String chatRoomId = sessionData.get("chatRoomId");
             chatMemberService.leaveChatRoom(memberId, chatRoomId);

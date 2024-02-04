@@ -15,6 +15,11 @@ public class ChatSessionRepository {
         redisTemplate.opsForHash().put(sessionId, "memberId", memberId);
         redisTemplate.opsForHash().put(sessionId, "chatRoomId", chatRoomId);
     }
+
+    public boolean isSessionDataExist(String sessionId) {
+        return redisTemplate.opsForHash().hasKey(sessionId, "memberId");
+    }
+
     public Map<String, String> getSessionData(String sessionId) {
         Map<Object, Object> rawData = redisTemplate.opsForHash().entries(sessionId);
         Map<String, String> sessionData = new HashMap<>();
