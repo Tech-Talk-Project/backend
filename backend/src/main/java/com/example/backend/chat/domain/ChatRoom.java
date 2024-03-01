@@ -20,9 +20,6 @@ public class ChatRoom {
     // 100개 까지만 저장
     private List<LastMessage> lastMessages = new ArrayList<>();
 
-    // 10,000개 까지만 저장
-    private List<LastMessage> backupMessages = new ArrayList<>();
-
     public ChatRoom(String title, List<Long> joinedMemberIds) {
         this.title = title;
         this.joinedMemberIds = joinedMemberIds;

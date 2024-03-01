@@ -40,7 +40,7 @@ public class ChatRoomSearchService {
         List<ChatRoomByMemberDto> chatRoomByMemberDtoList = new ArrayList<>();
 
         for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
-            ChatRoom chatRoom = chatRoomRepository.findByIdWithoutBackupMessages(joinedChatRoom.getChatRoomId());
+            ChatRoom chatRoom = chatRoomRepository.findById(joinedChatRoom.getChatRoomId());
             Date lastAccessTime = joinedChatRoom.getLastAccessTime();
             Integer memberCount = chatRoom.getJoinedMemberIds().size();
             Integer unreadCount = getUnreadCount(chatRoom.getLastMessages(), lastAccessTime);
