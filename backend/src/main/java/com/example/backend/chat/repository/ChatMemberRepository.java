@@ -17,7 +17,7 @@ import java.util.Date;
 public class ChatMemberRepository  {
     private final MongoTemplate mongoTemplate;
 
-    public void appendJoinedChatRoomToJoinedChatRooms(Long memberId, ChatMember.JoinedChatRoom joinedChatRoom) {
+    public void appendJoinedChatRoom(Long memberId, ChatMember.JoinedChatRoom joinedChatRoom) {
         Query query = new Query(Criteria.where("_id").is(memberId));
         Update update = new Update().addToSet("joinedChatRooms", joinedChatRoom);
         mongoTemplate.upsert(query, update, ChatMember.class);
@@ -30,7 +30,7 @@ public class ChatMemberRepository  {
         mongoTemplate.updateFirst(query, update, ChatMember.class);
     }
 
-    public void pullJoinedChatRoomFromJoinedChatRooms(Long memberId, String chatRoomId) {
+    public void pullJoinedChatRoom(Long memberId, String chatRoomId) {
         Query query = new Query(Criteria.where("_id").is(memberId));
         Update update = new Update().pull("joinedChatRooms", new Query(Criteria.where("chatRoomId").is(chatRoomId)));
         mongoTemplate.updateFirst(query, update, ChatMember.class);

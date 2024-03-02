@@ -23,6 +23,6 @@ public class ChatMemberService {
     }
     public void exitChatRoom(String chatRoomId, Long memberId) {
         chatRoomRepository.pullMemberIdFromJoinedMemberIds(chatRoomId, memberId);
-        chatMemberRepository.pullJoinedChatRoomFromJoinedChatRooms(memberId, chatRoomId);
+        chatMemberRepository.pullJoinedChatRoom(memberId, chatRoomId);
     }
 }
