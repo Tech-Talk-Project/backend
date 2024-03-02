@@ -23,7 +23,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChatRoomManageService {
     private final ChatRoomRepository chatRoomRepository;
-    private final BackupMessagesRepository backupMessagesRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final MemberRepository memberRepository;
     private final RabbitTemplate rabbitTemplate;
