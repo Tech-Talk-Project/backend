@@ -42,10 +42,9 @@ public class ChatRoomSearchService {
         for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
             ChatRoom chatRoom = chatRoomRepository.findById(joinedChatRoom.getChatRoomId());
             Date lastAccessTime = joinedChatRoom.getLastAccessTime();
-            Integer memberCount = chatRoom.getJoinedMemberIds().size();
             Integer unreadCount = getUnreadCount(chatRoom.getLastMessages(), lastAccessTime);
             chatRoomByMemberDtoList.add(
-                    new ChatRoomByMemberDto(chatRoom, memberCount, unreadCount));
+                    new ChatRoomByMemberDto(chatRoom, unreadCount));
         }
 
         chatRoomByMemberDtoList.sort((dto1, dto2) ->
