@@ -51,6 +51,7 @@ public class ChatRoomManageService {
     private void addWelcomeMessage(ChatRoom chatRoom, List<Long> joinedMemberIds) {
         ChatRoom.LastMessage welcomeMessage =
                 new ChatRoom.LastMessage(ADMIN_ID, new Date(), makeWelcomeMessage(joinedMemberIds));
+        chatRoom.getLastMessages().add(welcomeMessage);
         chatRoomRepository.appendMessage(chatRoom.getId(), welcomeMessage);
     }
 
