@@ -43,7 +43,7 @@ public class ChatRoomRepository {
         Update update = new Update()
                 .push("lastMessages").slice(-100).each(lastMessage);
 
-        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+        mongoTemplate.upsert(query, update, ChatRoom.class);
     }
 
     private void appendBackupMessage(String chatRoomId, ChatRoom.LastMessage lastMessage) {
@@ -51,7 +51,7 @@ public class ChatRoomRepository {
         Update update = new Update()
                 .push("messages").slice(-10000).each(lastMessage);
 
-        mongoTemplate.updateFirst(query, update, BackupMessages.class);
+        mongoTemplate.upsert(query, update, BackupMessages.class);
     }
 
     public void pullMemberIdFromJoinedMemberIds(String chatRoomId, Long memberId) {

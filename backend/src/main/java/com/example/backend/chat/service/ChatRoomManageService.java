@@ -35,25 +35,23 @@ public class ChatRoomManageService {
             title = createAutoTitle(joinedMemberIdsWithoutDuplicate);
         }
         ChatRoom chatRoom = new ChatRoom(title, joinedMemberIdsWithoutDuplicate);
-        ChatRoom.LastMessage welcomeMessage =
-                new ChatRoom.LastMessage(ADMIN_ID, new Date(), makeWelcomeMessage(joinedMemberIdsWithoutDuplicate));
-        chatRoom.getLastMessages().add(welcomeMessage);
         chatRoomRepository.save(chatRoom);
 
-        BackupMessages backupMessages = new BackupMessages(chatRoom.getId());
-        backupMessages.getMessages().add(welcomeMessage);
-        backupMessagesRepository.save(backupMessages);
+        addWelcomeMessage(chatRoom, joinedMemberIdsWithoutDuplicate);
 
-        // 채팅방 생성 후, 채팅방에 참여한 멤버들의 joinedChatRoomIds 에 채팅방 ID 를 추가합니다.
-        // 채팅방이 생성되었다는 사실을 memberId topic 으로 구독된 사람들에게 알려줍니다.
         joinedMemberIdsWithoutDuplicate.forEach(memberId -> {
-            chatMemberRepository.appendJoinedChatRoom(
-                    memberId,
-                    new ChatMember.JoinedChatRoom(chatRoom.getId(), new Date())
-            );
+            ChatMember.JoinedChatRoom joinedChatRoom = new ChatMember.JoinedChatRoom(chatRoom.getId(), new Date());
+            chatMemberRepository.appendJoinedChatRoom(memberId, joinedChatRoom);
+
             publishChatRoomCreateNotification(chatRoom, memberId);
         });
         return chatRoom;
+    }
+
+    private void addWelcomeMessage(ChatRoom chatRoom, List<Long> joinedMemberIds) {
+        ChatRoom.LastMessage welcomeMessage =
+                new ChatRoom.LastMessage(ADMIN_ID, new Date(), makeWelcomeMessage(joinedMemberIds));
+        chatRoomRepository.appendMessage(chatRoom.getId(), welcomeMessage);
     }
 
     private void publishChatRoomCreateNotification(ChatRoom chatRoom, Long memberId) {
