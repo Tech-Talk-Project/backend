@@ -32,7 +32,19 @@ public class ChatRoomSearchService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         List<SimpleMemberProfileDto> simpleMemberProfileDtoList = getJoinedMembers(chatRoom.getJoinedMemberIds());
         List<ChatRoom.LastMessage> lastMessages = chatRoom.getLastMessages();
-        return new ChatRoomResponseDto(chatRoom.getTitle(), simpleMemberProfileDtoList, lastMessages);
+        Date lastAccessTime = getLastAccessTime(memberId, chatRoomId);
+        Integer unreadCount = getUnreadCount(lastMessages, lastAccessTime);
+        return new ChatRoomResponseDto(chatRoom.getTitle(), simpleMemberProfileDtoList, lastMessages, unreadCount);
+    }
+
+    private Date getLastAccessTime(Long memberId, String chatRoomId) {
+        ChatMember chatMember = chatMemberRepository.findById(memberId);
+        for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
+            if (joinedChatRoom.getChatRoomId().equals(chatRoomId)) {
+                return joinedChatRoom.getLastAccessTime();
+            }
+        }
+        throw new IllegalArgumentException("참여하지 않은 채팅방입니다.");
     }
 
     public List<ChatRoomByMemberDto> getChatRoomList(Long memberId) {
