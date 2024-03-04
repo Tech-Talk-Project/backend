@@ -25,6 +25,8 @@ public class ChatRoomSearchService {
     private final MemberRepository memberRepository;
     private final ChatRoomValidator chatRoomValidator;
 
+    private final Long ADMIN_ID = -1L;
+
     public ChatRoomResponseDto getChatRoom(Long memberId, String chatRoomId) {
         if (!chatRoomValidator.isMemberOfChatRoom(chatRoomId, memberId)) {
             throw new IllegalArgumentException("채팅방이 존재하지 않거나 참여하지 않은 채팅방입니다.");
@@ -41,7 +43,7 @@ public class ChatRoomSearchService {
     private void insertReadNotification(List<ChatRoom.LastMessage> lastMessages, Integer unreadCount) {
         if (unreadCount > 0) {
             int lastMessageIndex = lastMessages.size() - unreadCount;
-            ChatRoom.LastMessage message = new ChatRoom.LastMessage(-1L, new Date(), "여기까지 읽었습니다");
+            ChatRoom.LastMessage message = new ChatRoom.LastMessage(ADMIN_ID, new Date(), "여기까지 읽었습니다.");
             lastMessages.add(lastMessageIndex, message);
         }
     }
