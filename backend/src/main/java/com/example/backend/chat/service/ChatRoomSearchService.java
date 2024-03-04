@@ -34,7 +34,16 @@ public class ChatRoomSearchService {
         List<ChatRoom.LastMessage> lastMessages = chatRoom.getLastMessages();
         Date lastAccessTime = getLastAccessTime(memberId, chatRoomId);
         Integer unreadCount = getUnreadCount(lastMessages, lastAccessTime);
+        insertReadNotification(lastMessages, unreadCount);
         return new ChatRoomResponseDto(chatRoom.getTitle(), simpleMemberProfileDtoList, lastMessages, unreadCount);
+    }
+
+    private void insertReadNotification(List<ChatRoom.LastMessage> lastMessages, Integer unreadCount) {
+        if (unreadCount > 0) {
+            int lastMessageIndex = lastMessages.size() - unreadCount;
+            ChatRoom.LastMessage message = new ChatRoom.LastMessage(-1L, new Date(), "여기까지 읽었습니다");
+            lastMessages.add(lastMessageIndex, message);
+        }
     }
 
     private Date getLastAccessTime(Long memberId, String chatRoomId) {

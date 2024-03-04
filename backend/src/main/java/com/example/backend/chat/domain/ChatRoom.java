@@ -26,7 +26,7 @@ public class ChatRoom {
     }
 
     @Getter
-    @NoArgsConstructor
+    @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
     public static class LastMessage {
         private Long senderId;
         private Date sendTime;
