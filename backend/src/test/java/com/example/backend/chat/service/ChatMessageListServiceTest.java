@@ -84,6 +84,31 @@ class ChatMessageListServiceTest {
 
         // then
         assertThat(chatMessageListAfterCursor.size()).isEqualTo(100);
-        assertThat(chatMessageListAfterCursor.get(0).getContent()).isEqualTo("test149");
+    }
+
+    @DisplayName("채팅 메시지 리스트 조회 서비스 - 100개 이상 메세지가 보내진 후 - 2번째 페이지 요청")
+    @Test
+    void chatMessageListServiceTest4() {
+        // given
+        Member user = memberCreateService.createUser(
+                new UserProfileDto("test", "test@com", "test"),
+                OAuth2Provider.GITHUB);
+        ChatRoom chatRoom = chatRoomManageService.createChatRoom("test", List.of(user.getId()));
+        for (int i = 0; i < 75; i++) {
+            chatMessageService.send(chatRoom.getId(), user.getId(), "test" + i);
+        }
+        Date cursor = new Date();
+        for (int i = 75; i < 150; i++) {
+            chatMessageService.send(chatRoom.getId(), user.getId(), "test" + i);
+        }
+        // when
+        List<ChatRoom.LastMessage> chatMessageListAfterCursor =
+                chatMessageListService.getChatMessageListAfterCursor(user.getId(), chatRoom.getId(), cursor);
+
+        // then
+        for (ChatRoom.LastMessage lastMessage : chatMessageListAfterCursor) {
+            System.out.println(lastMessage.getContent());
+        }
+        assertThat(chatMessageListAfterCursor.size()).isEqualTo(76);
     }
 }

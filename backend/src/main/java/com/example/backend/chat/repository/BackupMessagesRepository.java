@@ -24,12 +24,12 @@ public class BackupMessagesRepository {
     }
 
     public List<ChatRoom.LastMessage> getChatMessageListAfterCursor(String chatRoomId, Date cursor) {
-        MatchOperation matchStage = Aggregation.match(Criteria.where("_id").is(chatRoomId)
-                .and("messages.sendTime").lt(cursor));
+        MatchOperation matchStage = Aggregation.match(Criteria.where("_id").is(chatRoomId));
         Aggregation aggregation = Aggregation.newAggregation(
                 matchStage,
                 Aggregation.unwind("messages"),
-                Aggregation.sort(Sort.Direction.DESC, "messages.sendTime"),
+                Aggregation.match(Criteria.where("messages.sendTime").lt(cursor)),
+                Aggregation.sort(Sort.Direction.ASC, "messages.sendTime"),
                 Aggregation.limit(100),
                 Aggregation.project().and("messages.senderId").as("senderId")
                         .and("messages.sendTime").as("sendTime")
