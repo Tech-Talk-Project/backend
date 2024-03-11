@@ -16,10 +16,10 @@ public class ChatRoomByMemberDto {
     private ChatRoom.LastMessage lastMessage;
 
 
-    public ChatRoomByMemberDto(ChatRoom chatRoom, Integer memberCount, Integer unreadCount) {
+    public ChatRoomByMemberDto(ChatRoom chatRoom, Integer unreadCount) {
         this.chatRoomId = chatRoom.getId();
         this.title = chatRoom.getTitle();
-        this.memberCount = memberCount;
+        this.memberCount = chatRoom.getJoinedMemberIds().size();
         this.unreadCount = unreadCount;
         this.lastMessage = chatRoom.getLastMessages().get(chatRoom.getLastMessages().size() - 1);
     }

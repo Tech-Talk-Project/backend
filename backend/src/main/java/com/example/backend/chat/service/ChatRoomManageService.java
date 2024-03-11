@@ -9,7 +9,6 @@ import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
 import com.example.backend.entity.member.Member;
 import com.example.backend.repository.member.MemberRepository;
-import com.example.backend.repository.profile.MemberProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChatRoomManageService {
     private final ChatRoomRepository chatRoomRepository;
-    private final BackupMessagesRepository backupMessagesRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final MemberRepository memberRepository;
     private final RabbitTemplate rabbitTemplate;
@@ -32,63 +30,68 @@ public class ChatRoomManageService {
 
     public ChatRoom createChatRoom(String title, List<Long> joinedMemberIds) {
         List<Long> joinedMemberIdsWithoutDuplicate = new HashSet<>(joinedMemberIds).stream().toList();
-        if (title == null || title.isEmpty()) {
+        if (isNoTitle(title)) {
             title = createAutoTitle(joinedMemberIdsWithoutDuplicate);
         }
         ChatRoom chatRoom = new ChatRoom(title, joinedMemberIdsWithoutDuplicate);
-        ChatRoom.LastMessage autoFirstMessage =
-                new ChatRoom.LastMessage(ADMIN_ID, new Date(), getFirstMessageForMemberName(joinedMemberIdsWithoutDuplicate));
-        chatRoom.getLastMessages().add(autoFirstMessage);
         chatRoomRepository.save(chatRoom);
 
-        BackupMessages backupMessages = new BackupMessages(chatRoom.getId());
-        backupMessages.getMessages().add(autoFirstMessage);
-        backupMessagesRepository.save(backupMessages);
+        addWelcomeMessage(chatRoom, joinedMemberIdsWithoutDuplicate);
 
-        // 채팅방 생성 후, 채팅방에 참여한 멤버들의 joinedChatRoomIds 에 채팅방 ID 를 추가합니다.
-        // 채팅방이 생성되었다는 사실을 memberId topic 으로 구독된 사람들에게 알려줍니다.
         joinedMemberIdsWithoutDuplicate.forEach(memberId -> {
-            chatMemberRepository.appendJoinedChatRoomToJoinedChatRooms(
-                    memberId,
-                    new ChatMember.JoinedChatRoom(chatRoom.getId(), new Date())
-            );
-            ChatRoomByMemberDto chatRoomDto = new ChatRoomByMemberDto(chatRoom, joinedMemberIdsWithoutDuplicate.size(), 0);
-            rabbitTemplate.convertAndSend("amq.topic", memberId.toString(), chatRoomDto);
+            ChatMember.JoinedChatRoom joinedChatRoom = new ChatMember.JoinedChatRoom(chatRoom.getId(), new Date());
+            chatMemberRepository.appendJoinedChatRoom(memberId, joinedChatRoom);
+
+            publishChatRoomCreateNotification(chatRoom, memberId);
         });
         return chatRoom;
     }
 
-    private String createAutoTitle(List<Long> members) {
+    private void addWelcomeMessage(ChatRoom chatRoom, List<Long> joinedMemberIds) {
+        ChatRoom.LastMessage welcomeMessage =
+                new ChatRoom.LastMessage(ADMIN_ID, new Date(), makeWelcomeMessage(joinedMemberIds));
+        chatRoom.getLastMessages().add(welcomeMessage);
+        chatRoomRepository.appendMessage(chatRoom.getId(), welcomeMessage);
+    }
+
+    private void publishChatRoomCreateNotification(ChatRoom chatRoom, Long memberId) {
+        ChatRoomByMemberDto chatRoomDto = new ChatRoomByMemberDto(chatRoom, 0);
+        rabbitTemplate.convertAndSend("amq.topic", memberId.toString(), chatRoomDto);
+    }
+
+    private Boolean isNoTitle(String title) {
+        return title == null || title.isEmpty();
+    }
+
+    private String findMemberName(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 멤버입니다.")
+        );
+        return member.getName();
+    }
+
+    private String concatMemberNames(List<Long> memberIds) {
         StringBuilder title = new StringBuilder();
-        for (Long memberId : members) {
-            Member member = memberRepository.findById(memberId).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 멤버입니다.")
-            );
-            title.append(member.getName());
+        for (Long memberId : memberIds) {
+            title.append(findMemberName(memberId));
             title.append(", ");
         }
         title.delete(title.length() - 2, title.length());
         return title.toString();
     }
 
-    private String getFirstMessageForMemberName(List<Long> joinedMemberIds) {
-        StringBuilder firstMessage = new StringBuilder();
-        for (Long memberId : joinedMemberIds) {
-            Member member = memberRepository.findById(memberId).orElseThrow(
-                    () -> new IllegalArgumentException("존재하지 않는 멤버입니다.")
-            );
-            firstMessage.append(member.getName());
-            firstMessage.append(", ");
-        }
-        firstMessage.delete(firstMessage.length() - 2, firstMessage.length());
-        firstMessage.append(" 님이 입장하셨습니다.");
-        return firstMessage.toString();
+    private String createAutoTitle(List<Long> members) {
+        return concatMemberNames(members);
+    }
+
+    private String makeWelcomeMessage(List<Long> joinedMemberIds) {
+        return concatMemberNames(joinedMemberIds) + " 님이 입장하셨습니다.";
     }
 
     public void addNewMembers(String chatRoomId, List<Long> newMemberIds) {
         chatRoomRepository.appendMemberIdsIntoJoinedMemberIds(chatRoomId, newMemberIds);
         newMemberIds.forEach(memberId -> {
-            chatMemberRepository.appendJoinedChatRoomToJoinedChatRooms(
+            chatMemberRepository.appendJoinedChatRoom(
                     memberId,
                     new ChatMember.JoinedChatRoom(chatRoomId, new Date())
             );

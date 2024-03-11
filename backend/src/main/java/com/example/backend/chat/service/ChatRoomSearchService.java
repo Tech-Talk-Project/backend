@@ -25,6 +25,8 @@ public class ChatRoomSearchService {
     private final MemberRepository memberRepository;
     private final ChatRoomValidator chatRoomValidator;
 
+    private final Long ADMIN_ID = -1L;
+
     public ChatRoomResponseDto getChatRoom(Long memberId, String chatRoomId) {
         if (!chatRoomValidator.isMemberOfChatRoom(chatRoomId, memberId)) {
             throw new IllegalArgumentException("채팅방이 존재하지 않거나 참여하지 않은 채팅방입니다.");
@@ -32,7 +34,28 @@ public class ChatRoomSearchService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         List<SimpleMemberProfileDto> simpleMemberProfileDtoList = getJoinedMembers(chatRoom.getJoinedMemberIds());
         List<ChatRoom.LastMessage> lastMessages = chatRoom.getLastMessages();
-        return new ChatRoomResponseDto(chatRoom.getTitle(), simpleMemberProfileDtoList, lastMessages);
+        Date lastAccessTime = getLastAccessTime(memberId, chatRoomId);
+        Integer unreadCount = getUnreadCount(lastMessages, lastAccessTime);
+        insertReadNotification(lastMessages, unreadCount);
+        return new ChatRoomResponseDto(chatRoom.getTitle(), simpleMemberProfileDtoList, lastMessages, unreadCount);
+    }
+
+    private void insertReadNotification(List<ChatRoom.LastMessage> lastMessages, Integer unreadCount) {
+        if (unreadCount > 0) {
+            int lastMessageIndex = lastMessages.size() - unreadCount;
+            ChatRoom.LastMessage message = new ChatRoom.LastMessage(ADMIN_ID, new Date(), "여기까지 읽었습니다.");
+            lastMessages.add(lastMessageIndex, message);
+        }
+    }
+
+    private Date getLastAccessTime(Long memberId, String chatRoomId) {
+        ChatMember chatMember = chatMemberRepository.findById(memberId);
+        for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
+            if (joinedChatRoom.getChatRoomId().equals(chatRoomId)) {
+                return joinedChatRoom.getLastAccessTime();
+            }
+        }
+        throw new IllegalArgumentException("참여하지 않은 채팅방입니다.");
     }
 
     public List<ChatRoomByMemberDto> getChatRoomList(Long memberId) {
@@ -42,10 +65,9 @@ public class ChatRoomSearchService {
         for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
             ChatRoom chatRoom = chatRoomRepository.findById(joinedChatRoom.getChatRoomId());
             Date lastAccessTime = joinedChatRoom.getLastAccessTime();
-            Integer memberCount = chatRoom.getJoinedMemberIds().size();
             Integer unreadCount = getUnreadCount(chatRoom.getLastMessages(), lastAccessTime);
             chatRoomByMemberDtoList.add(
-                    new ChatRoomByMemberDto(chatRoom, memberCount, unreadCount));
+                    new ChatRoomByMemberDto(chatRoom, unreadCount));
         }
 
         chatRoomByMemberDtoList.sort((dto1, dto2) ->

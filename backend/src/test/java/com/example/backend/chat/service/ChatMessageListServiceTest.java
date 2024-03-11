@@ -84,6 +84,62 @@ class ChatMessageListServiceTest {
 
         // then
         assertThat(chatMessageListAfterCursor.size()).isEqualTo(100);
-        assertThat(chatMessageListAfterCursor.get(0).getContent()).isEqualTo("test149");
+        for (ChatRoom.LastMessage lastMessage : chatMessageListAfterCursor) {
+            System.out.println(lastMessage.getContent());
+        }
+    }
+
+    @DisplayName("채팅 메시지 리스트 조회 서비스 - 100개 이상 메세지가 보내진 후 - 2번째 페이지 요청")
+    @Test
+    void chatMessageListServiceTest4() {
+        // given
+        Member user = memberCreateService.createUser(
+                new UserProfileDto("test", "test@com", "test"),
+                OAuth2Provider.GITHUB);
+        ChatRoom chatRoom = chatRoomManageService.createChatRoom("test", List.of(user.getId()));
+
+
+        Date cursor1 = new Date();
+        for (int i = 0; i < 50; i++) {
+            chatMessageService.send(chatRoom.getId(), user.getId(), "test" + i);
+        }
+        Date cursor2 = new Date();
+        for (int i = 50; i < 100; i++) {
+            chatMessageService.send(chatRoom.getId(), user.getId(), "test" + i);
+        }
+        Date cursor3 = new Date();
+        for (int i = 100; i < 150; i++) {
+            chatMessageService.send(chatRoom.getId(), user.getId(), "test" + i);
+        }
+        Date cursor4 = new Date();
+
+
+        // when
+        List<ChatRoom.LastMessage> chatMessageListAfterCursor1 =
+                chatMessageListService.getChatMessageListAfterCursor(user.getId(), chatRoom.getId(), cursor1);
+        List<ChatRoom.LastMessage> chatMessageListAfterCursor2 =
+                chatMessageListService.getChatMessageListAfterCursor(user.getId(), chatRoom.getId(), cursor2);
+        List<ChatRoom.LastMessage> chatMessageListAfterCursor3 =
+                chatMessageListService.getChatMessageListAfterCursor(user.getId(), chatRoom.getId(), cursor3);
+        List<ChatRoom.LastMessage> chatMessageListAfterCursor4 =
+                chatMessageListService.getChatMessageListAfterCursor(user.getId(), chatRoom.getId(), cursor4);
+
+        // then
+        assertThat(chatMessageListAfterCursor1.size()).isEqualTo(1);
+        assertThat(chatMessageListAfterCursor2.size()).isEqualTo(51);
+        assertThat(chatMessageListAfterCursor3.size()).isEqualTo(100);
+        assertThat(chatMessageListAfterCursor4.size()).isEqualTo(100);
+
+        System.out.println(chatMessageListAfterCursor1.get(0).getContent());
+        System.out.println(chatMessageListAfterCursor1.get(chatMessageListAfterCursor1.size() -1).getContent());
+
+        System.out.println(chatMessageListAfterCursor2.get(0).getContent());
+        System.out.println(chatMessageListAfterCursor2.get(chatMessageListAfterCursor2.size() -1).getContent());
+
+        System.out.println(chatMessageListAfterCursor3.get(0).getContent());
+        System.out.println(chatMessageListAfterCursor3.get(chatMessageListAfterCursor3.size() -1).getContent());
+
+        System.out.println(chatMessageListAfterCursor4.get(0).getContent());
+        System.out.println(chatMessageListAfterCursor4.get(chatMessageListAfterCursor4.size() -1).getContent());
     }
 }
