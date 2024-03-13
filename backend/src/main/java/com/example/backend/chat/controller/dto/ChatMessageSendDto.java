@@ -7,12 +7,12 @@ import java.util.Date;
 
 @Data
 public class ChatMessageSendDto {
-    private Long memberId;
+    private Long senderId;
     private String content;
     private Date sendTime;
 
     public ChatMessageSendDto(ChatRoom.LastMessage message) {
-        this.memberId = message.getSenderId();
+        this.senderId = message.getSenderId();
         this.content = message.getContent();
         this.sendTime = message.getSendTime();
     }
