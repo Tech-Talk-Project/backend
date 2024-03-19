@@ -32,4 +32,11 @@ public class ChatMessageListService {
         }
         return backupMessagesRepository.getChatMessageListAfterCursor(chatRoomId, cursor);
     }
+
+    public List<ChatRoom.LastMessage> getChatMessageListBeforeCursor(Long memberId, String chatRoomId, Date cursor) {
+        if (!chatRoomValidator.isMemberOfChatRoom(chatRoomId, memberId)) {
+            throw new IllegalArgumentException("존재하지 않는 채팅방입니다.");
+        }
+        return backupMessagesRepository.getChatMessageListBeforeCursor(chatRoomId, cursor);
+    }
 }

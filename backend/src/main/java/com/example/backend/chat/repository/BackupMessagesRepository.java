@@ -54,4 +54,23 @@ public class BackupMessagesRepository {
         }
         return reverseResults;
     }
+
+    public List<ChatRoom.LastMessage> getChatMessageListBeforeCursor(String chatRoomId, Date cursor) {
+        MatchOperation matchStage = Aggregation.match(Criteria.where("_id").is(chatRoomId));
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                matchStage,
+                Aggregation.unwind("messages"),
+                Aggregation.match(Criteria.where("messages.sendTime").gt(cursor)),
+                Aggregation.sort(Sort.Direction.ASC, "messages.sendTime"),
+                Aggregation.project().and("messages.senderId").as("senderId")
+                        .and("messages.sendTime").as("sendTime")
+                        .and("messages.content").as("content")
+        );
+
+        List<ChatRoom.LastMessage> immutableList = mongoTemplate
+                .aggregate(aggregation, BackupMessages.class, ChatRoom.LastMessage.class)
+                .getMappedResults();
+        return new ArrayList<>(immutableList);
+    }
 }

@@ -24,6 +24,7 @@ public class ChatRoomSearchService {
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
     private final ChatRoomValidator chatRoomValidator;
+    private final ChatMessageListService chatMessageListService;
 
     private final Long ADMIN_ID = -1L;
 
@@ -33,9 +34,14 @@ public class ChatRoomSearchService {
         }
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         List<SimpleMemberProfileDto> simpleMemberProfileDtoList = getJoinedMembers(chatRoom.getJoinedMemberIds());
-        List<ChatRoom.LastMessage> lastMessages = chatRoom.getLastMessages();
         Date lastAccessTime = getLastAccessTime(memberId, chatRoomId);
-        Integer unreadCount = getUnreadCount(lastMessages, lastAccessTime);
+        List<ChatRoom.LastMessage> lastMessages = chatMessageListService.getChatMessageListBeforeCursor(memberId, chatRoomId, lastAccessTime);
+        Integer unreadCount = lastMessages.size();
+        if (lastMessages.size() < 100) {
+            lastMessages = chatRoom.getLastMessages();
+            unreadCount = getUnreadCount(lastMessages, lastAccessTime);
+        }
+
         insertReadNotification(lastMessages, unreadCount);
         return new ChatRoomResponseDto(chatRoom.getTitle(), simpleMemberProfileDtoList, lastMessages, unreadCount);
     }
