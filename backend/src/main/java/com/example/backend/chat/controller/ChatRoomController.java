@@ -51,7 +51,7 @@ public class ChatRoomController {
     public ResponseEntity<String> leaveChatRoom(@RequestParam String chatRoomId) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         chatMemberService.leaveChatRoom(memberId, chatRoomId);
-        return ResponseEntity.ok("채팅방을 나갔습니다.");
+        return ResponseEntity.ok("채팅방을 종료했습니다.");
     }
 
     @GetMapping("/exit")
