@@ -22,4 +22,11 @@ public class MemberAuthorityQuerydslImpl implements MemberAuthorityQuerydsl{
                 .where(memberAuthority.member.id.eq(memberId))
                 .fetch();
     }
+
+    public void deleteAuthoritiesByMemberId(Long memberId) {
+        query
+            .delete(memberAuthority)
+            .where(memberAuthority.member.id.eq(memberId))
+            .execute();
+    }
 }

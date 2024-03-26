@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface MemberAuthorityQuerydsl {
     List<Authority> findAuthoritiesByMemberId(Long memberId);
+    void deleteAuthoritiesByMemberId(Long memberId);
 }
