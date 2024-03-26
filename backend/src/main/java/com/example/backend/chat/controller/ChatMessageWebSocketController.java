@@ -13,12 +13,10 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequiredArgsConstructor
 public class ChatMessageWebSocketController {
-    private final RabbitTemplate rabbitTemplate;
     private final ChatMessageService chatMessageService;
 
     @MessageMapping("/chat/message/{chatRoomId}")
     public void send(ChatMessageReceiveDto chatDto, @DestinationVariable String chatRoomId) {
-        ChatRoom.LastMessage message = chatMessageService.send(chatRoomId, chatDto.getMemberId(), chatDto.getContent());
-        rabbitTemplate.convertAndSend("amq.topic", chatRoomId, new ChatMessageSendDto(message));
+        chatMessageService.send(chatRoomId, chatDto.getMemberId(), chatDto.getContent());
     }
 }
