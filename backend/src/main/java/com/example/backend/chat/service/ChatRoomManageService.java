@@ -1,10 +1,8 @@
 package com.example.backend.chat.service;
 
-import com.example.backend.chat.domain.BackupMessages;
 import com.example.backend.chat.domain.ChatMember;
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
-import com.example.backend.chat.repository.BackupMessagesRepository;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
 import com.example.backend.entity.member.Member;
@@ -26,7 +24,6 @@ public class ChatRoomManageService {
     private final ChatMemberRepository chatMemberRepository;
     private final MemberRepository memberRepository;
     private final RabbitTemplate rabbitTemplate;
-    private final Long ADMIN_ID = -1L;
 
     public ChatRoom createChatRoom(String title, List<Long> joinedMemberIds) {
         List<Long> joinedMemberIdsWithoutDuplicate = new HashSet<>(joinedMemberIds).stream().toList();
@@ -49,7 +46,7 @@ public class ChatRoomManageService {
 
     private void addWelcomeMessage(ChatRoom chatRoom, List<Long> joinedMemberIds) {
         ChatRoom.LastMessage welcomeMessage =
-                new ChatRoom.LastMessage(ADMIN_ID, new Date(), makeWelcomeMessage(joinedMemberIds));
+                new ChatRoom.LastMessage(MemberId.ADMIN.getValue(), new Date(), makeWelcomeMessage(joinedMemberIds));
         chatRoom.getLastMessages().add(welcomeMessage);
         chatRoomRepository.appendMessage(chatRoom.getId(), welcomeMessage);
     }

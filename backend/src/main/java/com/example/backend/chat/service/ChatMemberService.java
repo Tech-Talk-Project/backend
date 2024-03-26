@@ -3,7 +3,6 @@ package com.example.backend.chat.service;
 import com.example.backend.chat.domain.ChatMember;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
-import com.example.backend.entity.member.Member;
 import com.example.backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +31,6 @@ public class ChatMemberService {
         String memberName = memberRepository.findById(memberId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
         ).getName();
-        chatMessageService.send(chatRoomId, MemberId.ADMIN.getValue(), memberName + "님이 퇴장하셨습니다.");
+        chatMessageService.send(chatRoomId, MemberId.LEAVE.getValue(), memberName + "님이 퇴장하셨습니다.");
     }
 }
