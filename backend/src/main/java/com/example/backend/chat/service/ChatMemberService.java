@@ -23,15 +23,15 @@ public class ChatMemberService {
         return chatMember;
     }
 
-    public void leaveChatRoom(Long memberId, String chatRoomID) {
-        chatMemberRepository.updateJoinedChatRoomLeaveTime(memberId, chatRoomID);
-        String memberName = memberRepository.findById(memberId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
-        ).getName();
-        chatMessageService.send(chatRoomID, MemberId.ADMIN.getValue(), memberName + "님이 퇴장하셨습니다.");
+    public void leaveChatRoom(Long memberId, String chatRoomId) {
+        chatMemberRepository.updateJoinedChatRoomLeaveTime(memberId, chatRoomId);
     }
     public void exitChatRoom(String chatRoomId, Long memberId) {
         chatRoomRepository.pullMemberIdFromJoinedMemberIds(chatRoomId, memberId);
         chatMemberRepository.pullJoinedChatRoom(memberId, chatRoomId);
+        String memberName = memberRepository.findById(memberId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
+        ).getName();
+        chatMessageService.send(chatRoomId, MemberId.ADMIN.getValue(), memberName + "님이 퇴장하셨습니다.");
     }
 }
