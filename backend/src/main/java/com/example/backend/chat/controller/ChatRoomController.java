@@ -6,6 +6,7 @@ import com.example.backend.chat.controller.dto.response.ChatRoomListResponseDto;
 import com.example.backend.chat.controller.dto.response.ChatRoomResponseDto;
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
+import com.example.backend.chat.service.ChatMemberService;
 import com.example.backend.chat.service.ChatRoomSearchService;
 import com.example.backend.chat.service.ChatRoomManageService;
 import com.example.backend.controller.user.chat.dto.response.ChatRoomCreateResponseDto;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ChatRoomController {
     private final ChatRoomManageService chatRoomManageService;
     private final ChatRoomSearchService chatRoomSearchService;
+    private final ChatMemberService chatMemberService;
 
     @PostMapping("/create")
     public ResponseEntity<ChatRoomCreateResponseDto> createRoom(@RequestBody ChatRoomCreateRequestDto requestDto) {
@@ -43,5 +45,19 @@ public class ChatRoomController {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ChatRoomResponseDto chatRoom = chatRoomSearchService.getChatRoom(memberId, requestDto.getChatRoomId());
         return ResponseEntity.ok(chatRoom);
+    }
+
+    @GetMapping("/leave")
+    public ResponseEntity<String> leaveChatRoom(@RequestParam String chatRoomId) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        chatMemberService.leaveChatRoom(memberId, chatRoomId);
+        return ResponseEntity.ok("채팅방을 종료했습니다.");
+    }
+
+    @GetMapping("/exit")
+    public ResponseEntity<String> exitChatRoom(@RequestParam String chatRoomId) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        chatMemberService.exitChatRoom(chatRoomId, memberId);
+        return ResponseEntity.ok("채팅방을 나갔습니다.");
     }
 }
