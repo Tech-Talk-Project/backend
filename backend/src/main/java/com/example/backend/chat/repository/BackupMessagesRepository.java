@@ -26,7 +26,7 @@ public class BackupMessagesRepository {
         mongoTemplate.save(message);
     }
 
-    public void remove(String chatRoomId) {
+    public void deleteById(String chatRoomId) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         mongoTemplate.remove(query, BackupMessages.class);
     }

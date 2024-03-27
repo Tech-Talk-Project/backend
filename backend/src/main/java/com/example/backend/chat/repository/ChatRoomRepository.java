@@ -72,7 +72,7 @@ public class ChatRoomRepository {
         return chatRoom;
     }
 
-    public void remove(String chatRoomId) {
+    public void deleteById(String chatRoomId) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         mongoTemplate.remove(query, ChatRoom.class);
     }
@@ -82,5 +82,12 @@ public class ChatRoomRepository {
         query.fields().include("lastMessages");
 
         return mongoTemplate.findOne(query, ChatRoom.class).getLastMessages();
+    }
+
+    public Integer getMemberCount(String chatRoomId) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        query.fields().include("joinedMemberIds");
+
+        return mongoTemplate.findOne(query, ChatRoom.class).getJoinedMemberIds().size();
     }
 }
