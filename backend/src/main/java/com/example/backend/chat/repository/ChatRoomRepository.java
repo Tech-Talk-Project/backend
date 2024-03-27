@@ -72,7 +72,10 @@ public class ChatRoomRepository {
         return chatRoom;
     }
 
-
+    public void remove(String chatRoomId) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        mongoTemplate.remove(query, ChatRoom.class);
+    }
 
     public List<ChatRoom.LastMessage> getLastMessages(String chatRoomId) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));

@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -23,6 +24,11 @@ public class BackupMessagesRepository {
 
     public void save(BackupMessages message) {
         mongoTemplate.save(message);
+    }
+
+    public void remove(String chatRoomId) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        mongoTemplate.remove(query, BackupMessages.class);
     }
 
     public List<ChatRoom.LastMessage> getChatMessageListAfterCursor(String chatRoomId, Date cursor) {
