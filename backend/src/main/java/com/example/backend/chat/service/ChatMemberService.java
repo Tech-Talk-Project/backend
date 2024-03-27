@@ -1,6 +1,7 @@
 package com.example.backend.chat.service;
 
 import com.example.backend.chat.domain.ChatMember;
+import com.example.backend.chat.repository.BackupMessagesRepository;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
 import com.example.backend.repository.member.MemberRepository;
@@ -14,6 +15,7 @@ public class ChatMemberService {
     private final ChatMemberRepository chatMemberRepository;
     private final ChatMessageService chatMessageService;
     private final MemberRepository memberRepository;
+    private final BackupMessagesRepository backupMessagesRepository;
 
 
     public ChatMember createChatMember(Long memberId) {
@@ -31,6 +33,13 @@ public class ChatMemberService {
         String memberName = memberRepository.findById(memberId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
         ).getName();
-        chatMessageService.send(chatRoomId, MemberId.LEAVE.getValue(), memberName + "님이 퇴장하셨습니다.");
+
+        Integer memberCount = chatRoomRepository.getMemberCount(chatRoomId);
+        if (memberCount == 0) {
+            chatRoomRepository.deleteById(chatRoomId);
+            backupMessagesRepository.deleteById(chatRoomId);
+        } else {
+            chatMessageService.send(chatRoomId, MemberId.LEAVE.getValue(), memberName + "님이 퇴장하셨습니다.");
+        }
     }
 }
