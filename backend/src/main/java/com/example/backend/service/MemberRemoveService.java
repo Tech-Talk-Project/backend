@@ -3,8 +3,6 @@ package com.example.backend.service;
 import com.example.backend.chat.domain.ChatMember;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.service.ChatMemberService;
-import com.example.backend.chat.service.ChatMessageService;
-import com.example.backend.chat.service.MemberId;
 import com.example.backend.repository.member.MemberAuthorityRepository;
 import com.example.backend.repository.member.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -24,6 +22,11 @@ public class MemberRemoveService {
         ChatMember chatMember = chatMemberRepository.findById(memberId);
         for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
             chatMemberService.exitChatRoom(joinedChatRoom.getChatRoomId(), memberId);
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         memberAuthorityRepository.deleteAuthoritiesByMemberId(memberId);
         memberRepository.deleteById(memberId);
