@@ -90,4 +90,10 @@ public class ChatRoomRepository {
 
         return mongoTemplate.findOne(query, ChatRoom.class).getJoinedMemberIds().size();
     }
+
+    public void changeTitle(String chatRoomId, String title) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        Update update = new Update().set("title", title);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
 }

@@ -2,6 +2,7 @@ package com.example.backend.chat.controller;
 
 import com.example.backend.chat.controller.dto.request.ChatRoomCreateRequestDto;
 import com.example.backend.chat.controller.dto.request.LastMessageRequestDto;
+import com.example.backend.chat.controller.dto.request.TitleChangeRequestDto;
 import com.example.backend.chat.controller.dto.response.ChatRoomListResponseDto;
 import com.example.backend.chat.controller.dto.response.ChatRoomResponseDto;
 import com.example.backend.chat.domain.ChatRoom;
@@ -59,5 +60,11 @@ public class ChatRoomController {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         chatMemberService.exitChatRoom(chatRoomId, memberId);
         return ResponseEntity.ok("채팅방을 나갔습니다.");
+    }
+
+    @PostMapping("/change-title")
+    public ResponseEntity<String> changeTitle(@RequestBody TitleChangeRequestDto dto) {
+        chatRoomManageService.changeTitle(dto.getChatRoomId(), dto.getNewTitle());
+        return ResponseEntity.ok("채팅방 제목을 변경했습니다.");
     }
 }

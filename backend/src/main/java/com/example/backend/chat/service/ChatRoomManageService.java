@@ -94,4 +94,8 @@ public class ChatRoomManageService {
             );
         });
     }
+
+    public void changeTitle(String chatRoomId, String title) {
+        chatRoomRepository.changeTitle(chatRoomId, title);
+    }
 }
