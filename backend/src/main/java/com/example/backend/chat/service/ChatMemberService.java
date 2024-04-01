@@ -37,7 +37,6 @@ public class ChatMemberService {
         // 참여하고 있는 채팅방에서 제거
         chatMemberRepository.pullJoinedChatRoom(memberId, chatRoomId);
 
-
         Integer memberCount = chatRoomRepository.getMemberCount(chatRoomId);
         if (memberCount == 0) {
             chatRoomRepository.delete(chatRoom);

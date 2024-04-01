@@ -96,7 +96,15 @@ public class ChatRoomManageService {
         });
     }
 
-    public void changeTitle(String chatRoomId, String title) {
+    public void changeTitle(Long memberId, String chatRoomId, String title) {
+        validateChatRoomOwner(memberId, chatRoomId);
         chatRoomRepository.changeTitle(chatRoomId, title);
+    }
+
+    public void validateChatRoomOwner(Long memberId, String chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
+        if (!chatRoom.getOwnerId().equals(memberId)) {
+            throw new IllegalArgumentException("채팅방의 소유자가 아닙니다.");
+        }
     }
 }

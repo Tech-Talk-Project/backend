@@ -64,7 +64,8 @@ public class ChatRoomController {
 
     @PostMapping("/change-title")
     public ResponseEntity<String> changeTitle(@RequestBody TitleChangeRequestDto dto) {
-        chatRoomManageService.changeTitle(dto.getChatRoomId(), dto.getNewTitle());
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        chatRoomManageService.changeTitle(memberId, dto.getChatRoomId(), dto.getNewTitle());
         return ResponseEntity.ok("채팅방 제목을 변경했습니다.");
     }
 }
