@@ -72,12 +72,28 @@ public class ChatRoomRepository {
         return chatRoom;
     }
 
-
+    public void deleteById(String chatRoomId) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        mongoTemplate.remove(query, ChatRoom.class);
+    }
 
     public List<ChatRoom.LastMessage> getLastMessages(String chatRoomId) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         query.fields().include("lastMessages");
 
         return mongoTemplate.findOne(query, ChatRoom.class).getLastMessages();
+    }
+
+    public Integer getMemberCount(String chatRoomId) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        query.fields().include("joinedMemberIds");
+
+        return mongoTemplate.findOne(query, ChatRoom.class).getJoinedMemberIds().size();
+    }
+
+    public void changeTitle(String chatRoomId, String title) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        Update update = new Update().set("title", title);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 }
