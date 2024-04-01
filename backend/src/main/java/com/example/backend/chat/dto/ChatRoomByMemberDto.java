@@ -13,6 +13,7 @@ public class ChatRoomByMemberDto {
     private String title;
     private Integer memberCount;
     private Integer unreadCount;
+    private Long ownerId;
     private ChatRoom.LastMessage lastMessage;
 
 
@@ -20,6 +21,7 @@ public class ChatRoomByMemberDto {
         this.chatRoomId = chatRoom.getId();
         this.title = chatRoom.getTitle();
         this.memberCount = chatRoom.getJoinedMemberIds().size();
+        this.ownerId = chatRoom.getOwnerId();
         this.unreadCount = unreadCount;
         this.lastMessage = chatRoom.getLastMessages().get(chatRoom.getLastMessages().size() - 1);
     }

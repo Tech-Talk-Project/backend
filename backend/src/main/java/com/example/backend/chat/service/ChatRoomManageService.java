@@ -25,12 +25,13 @@ public class ChatRoomManageService {
     private final MemberRepository memberRepository;
     private final RabbitTemplate rabbitTemplate;
 
-    public ChatRoom createChatRoom(String title, List<Long> joinedMemberIds) {
+    public ChatRoom createChatRoom(String title, Long roomOwnerId, List<Long> joinedMemberIds) {
+        joinedMemberIds.add(roomOwnerId);
         List<Long> joinedMemberIdsWithoutDuplicate = new HashSet<>(joinedMemberIds).stream().toList();
         if (isNoTitle(title)) {
             title = createAutoTitle(joinedMemberIdsWithoutDuplicate);
         }
-        ChatRoom chatRoom = new ChatRoom(title, joinedMemberIdsWithoutDuplicate);
+        ChatRoom chatRoom = new ChatRoom(title, roomOwnerId, joinedMemberIdsWithoutDuplicate);
         chatRoomRepository.save(chatRoom);
 
         addWelcomeMessage(chatRoom, joinedMemberIdsWithoutDuplicate);
@@ -95,7 +96,15 @@ public class ChatRoomManageService {
         });
     }
 
-    public void changeTitle(String chatRoomId, String title) {
+    public void changeTitle(Long memberId, String chatRoomId, String title) {
+        validateChatRoomOwner(memberId, chatRoomId);
         chatRoomRepository.changeTitle(chatRoomId, title);
+    }
+
+    public void validateChatRoomOwner(Long memberId, String chatRoomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
+        if (!chatRoom.getOwnerId().equals(memberId)) {
+            throw new IllegalArgumentException("채팅방의 소유자가 아닙니다.");
+        }
     }
 }

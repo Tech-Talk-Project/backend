@@ -41,7 +41,7 @@ public class ChatRoomSearchService {
         }
 
         insertReadNotification(lastMessages, unreadCount);
-        return new ChatRoomResponseDto(chatRoom.getTitle(), simpleMemberProfileDtoList, lastMessages, unreadCount);
+        return new ChatRoomResponseDto(chatRoom, simpleMemberProfileDtoList, lastMessages, unreadCount);
     }
 
     private void insertReadNotification(List<ChatRoom.LastMessage> lastMessages, Integer unreadCount) {
