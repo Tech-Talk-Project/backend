@@ -9,13 +9,15 @@ import java.util.List;
 @Data
 public class ChatRoomResponseDto {
     private String title;
+    private Long ownerId;
     private List<SimpleMemberProfileDto> members;
     private List<ChatRoom.LastMessage> messages;
     private Integer unreadCount;
 
-    public ChatRoomResponseDto(String title, List<SimpleMemberProfileDto> members,
+    public ChatRoomResponseDto(ChatRoom chatRoom, List<SimpleMemberProfileDto> members,
                                List<ChatRoom.LastMessage> messages, Integer unreadCount) {
-        this.title = title;
+        this.title = chatRoom.getTitle();
+        this.ownerId = chatRoom.getOwnerId();
         this.members = members;
         this.messages = messages;
         this.unreadCount = unreadCount;

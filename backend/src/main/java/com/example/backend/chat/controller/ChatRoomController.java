@@ -28,9 +28,9 @@ public class ChatRoomController {
 
     @PostMapping("/create")
     public ResponseEntity<ChatRoomCreateResponseDto> createRoom(@RequestBody ChatRoomCreateRequestDto requestDto) {
-        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        requestDto.getMemberIds().add(memberId);
-        ChatRoom chatRoom = chatRoomManageService.createChatRoom(requestDto.getTitle(), requestDto.getMemberIds());
+        Long roomOwnerId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ChatRoom chatRoom = chatRoomManageService.createChatRoom(
+                requestDto.getTitle(),roomOwnerId, requestDto.getMemberIds());
         return ResponseEntity.ok(new ChatRoomCreateResponseDto(chatRoom));
     }
 

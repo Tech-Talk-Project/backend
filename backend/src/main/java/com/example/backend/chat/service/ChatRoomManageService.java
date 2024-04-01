@@ -25,12 +25,13 @@ public class ChatRoomManageService {
     private final MemberRepository memberRepository;
     private final RabbitTemplate rabbitTemplate;
 
-    public ChatRoom createChatRoom(String title, List<Long> joinedMemberIds) {
+    public ChatRoom createChatRoom(String title, Long roomOwnerId, List<Long> joinedMemberIds) {
+        joinedMemberIds.add(roomOwnerId);
         List<Long> joinedMemberIdsWithoutDuplicate = new HashSet<>(joinedMemberIds).stream().toList();
         if (isNoTitle(title)) {
             title = createAutoTitle(joinedMemberIdsWithoutDuplicate);
         }
-        ChatRoom chatRoom = new ChatRoom(title, joinedMemberIdsWithoutDuplicate);
+        ChatRoom chatRoom = new ChatRoom(title, roomOwnerId, joinedMemberIdsWithoutDuplicate);
         chatRoomRepository.save(chatRoom);
 
         addWelcomeMessage(chatRoom, joinedMemberIdsWithoutDuplicate);

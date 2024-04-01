@@ -49,5 +49,4 @@ public class ProfilePaginationService {
         }
         return LocalDateTime.parse(cursor);
     }
-
 }

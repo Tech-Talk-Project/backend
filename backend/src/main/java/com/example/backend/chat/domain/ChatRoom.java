@@ -15,13 +15,15 @@ public class ChatRoom {
     @Id
     private String id;
     private String title;
+    private Long ownerId;
     private List<Long> joinedMemberIds = new ArrayList<>();
 
     // 100개 까지만 저장
     private List<LastMessage> lastMessages = new ArrayList<>();
 
-    public ChatRoom(String title, List<Long> joinedMemberIds) {
+    public ChatRoom(String title, Long ownerId, List<Long> joinedMemberIds) {
         this.title = title;
+        this.ownerId = ownerId;
         this.joinedMemberIds = joinedMemberIds;
     }
 
