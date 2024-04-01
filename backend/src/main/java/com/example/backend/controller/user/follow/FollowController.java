@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class FollowController {
     private final FollowService followService;
 
-    @PostMapping("/add}")
+    @PostMapping("/add")
     public ResponseEntity<String> addFollowing(@RequestBody FollowUpdateDto followUpdateDto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         followService.addFollowing(memberId, followUpdateDto.getMemberId());
