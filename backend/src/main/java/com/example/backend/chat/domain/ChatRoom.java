@@ -40,4 +40,8 @@ public class ChatRoom {
             this.content = content;
         }
     }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
 }
