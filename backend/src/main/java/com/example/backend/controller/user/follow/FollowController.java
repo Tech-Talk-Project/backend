@@ -41,5 +41,4 @@ public class FollowController {
         ProfilePaginationResponseDto result = followService.getFollowingsAfterCursor(memberId, cursor, limit);
         return ResponseEntity.ok(result);
     }
-
 }

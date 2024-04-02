@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class MemberPageViewController {
+public class MemberViewController {
     private final ProfilePaginationService profilePaginationService;
 
     @PostMapping("/members")
