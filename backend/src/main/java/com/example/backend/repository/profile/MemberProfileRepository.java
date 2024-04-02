@@ -11,6 +11,7 @@ import static com.example.backend.entity.member.QMember.*;
 import static com.example.backend.entity.profile.QLink.*;
 import static com.example.backend.entity.profile.QProfile.*;
 import static com.example.backend.entity.profile.QProfileSkill.*;
+import static com.example.backend.entity.profile.QSkill.skill;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,9 +21,10 @@ public class MemberProfileRepository {
     public Member findByIdWithProfileWithAll(Long memberId) {
         return query
                 .selectFrom(member)
-                .innerJoin(member.profile, profile).fetchJoin()
-                .leftJoin(profile.links, link).fetchJoin()
-                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
+                .innerJoin(member.profile, profile)
+                .leftJoin(profile.links, link)
+                .leftJoin(profile.profileSkills, profileSkill)
+                .leftJoin(profileSkill.skill, skill)
                 .where(member.id.eq(memberId))
                 .fetchOne();
     }
