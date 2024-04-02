@@ -38,7 +38,7 @@ public class FollowingRepository {
                 Aggregation.match(Criteria.where("followingPerson.followingTime").lt(cursor)),
                 Aggregation.sort(Sort.Direction.DESC, "followingPerson.followingTime"),
                 Aggregation.limit(limit),
-                Aggregation.project().and("followingPerson.id").as("id")
+                Aggregation.project().and("followingPerson._id").as("id")
                         .and("followingPerson.followingTime").as("followingTime")
         );
 

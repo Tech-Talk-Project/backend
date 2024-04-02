@@ -8,6 +8,7 @@ import com.example.backend.repository.profile.MemberProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ public class FollowService {
     private final MemberProfileRepository memberProfileRepository;
 
     public void addFollowing(Long memberId, Long followingId) {
-        Following.Person followingPerson = new Following.Person(followingId);
+        Following.Person followingPerson = new Following.Person(followingId, LocalDateTime.now());
         followingRepository.addFollowing(memberId, followingPerson);
     }
 
