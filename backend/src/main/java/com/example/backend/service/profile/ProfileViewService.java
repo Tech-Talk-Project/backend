@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class ProfileViewService {
     private final MemberProfileRepository memberProfileRepository;
 
-    public MyProfileViewResponseDto gerProfile(Long memberId) {
+    public MyProfileViewResponseDto gerMyProfile(Long memberId) {
         Member member = memberProfileRepository.findByIdWithProfileWithAll(memberId);
         return new MyProfileViewResponseDto(member);
     }

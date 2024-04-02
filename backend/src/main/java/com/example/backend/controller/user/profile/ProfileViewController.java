@@ -18,6 +18,6 @@ public class ProfileViewController {
     @GetMapping
     public ResponseEntity<MyProfileViewResponseDto> getProfile() {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(profileViewService.gerProfile(memberId));
+        return ResponseEntity.ok(profileViewService.gerMyProfile(memberId));
     }
 }
