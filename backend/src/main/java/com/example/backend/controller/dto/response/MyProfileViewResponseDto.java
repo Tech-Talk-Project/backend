@@ -1,10 +1,8 @@
 package com.example.backend.controller.dto.response;
 
 import com.example.backend.controller.dto.InfoDto;
-import com.example.backend.entity.dto.ProfileWithAllDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.Link;
-import com.example.backend.entity.profile.Profile;
 import lombok.Data;
 
 import java.util.List;
@@ -12,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
-public class ProfileViewResponseDto {
+public class MyProfileViewResponseDto {
 
     private InfoDto info;
 
@@ -26,7 +24,7 @@ public class ProfileViewResponseDto {
 
     private String detailedDescription;
 
-    public ProfileViewResponseDto(Member member) {
+    public MyProfileViewResponseDto(Member member) {
         this.info = new InfoDto(member.getName(), member.getProfile().getJob(), member.getEmail());
         this.imageUrl = member.getImageUrl();
         this.introduction = member.getProfile().getIntroduction();

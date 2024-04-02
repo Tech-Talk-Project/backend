@@ -1,9 +1,7 @@
 package com.example.backend.service.profile;
 
-import com.example.backend.controller.dto.response.ProfileViewResponseDto;
-import com.example.backend.entity.dto.ProfileWithAllDto;
+import com.example.backend.controller.dto.response.MyProfileViewResponseDto;
 import com.example.backend.entity.member.Member;
-import com.example.backend.entity.profile.Profile;
 import com.example.backend.repository.profile.MemberProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,8 +11,8 @@ import org.springframework.stereotype.Service;
 public class ProfileViewService {
     private final MemberProfileRepository memberProfileRepository;
 
-    public ProfileViewResponseDto gerProfile(Long memberId) {
+    public MyProfileViewResponseDto gerProfile(Long memberId) {
         Member member = memberProfileRepository.findByIdWithProfileWithAll(memberId);
-        return new ProfileViewResponseDto(member);
+        return new MyProfileViewResponseDto(member);
     }
 }

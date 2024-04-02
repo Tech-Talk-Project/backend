@@ -6,6 +6,7 @@ import com.example.backend.service.profile.ProfilePaginationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,4 +29,8 @@ public class MemberViewController {
                 profilePaginationService.getProfilesAfterCursorBySkills(cursor, limit, skills);
         return ResponseEntity.ok(profilesAfterCursor);
     }
+
+    @GetMapping("/member")
+    public ResponseEntity<>
+
 }
