@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,18 +20,19 @@ public class FollowService {
     private final MemberProfileRepository memberProfileRepository;
 
     public void addFollowing(Long memberId, Long followingId) {
-        followingRepository.addFollowing(memberId, followingId);
+        Following.Person followingPerson = new Following.Person(followingId);
+        followingRepository.addFollowing(memberId, followingPerson);
     }
 
     public void removeFollowing(Long memberId, Long followingId) {
         followingRepository.removeFollowing(memberId, followingId);
     }
 
-    public ProfilePaginationResponseDto getFollowingsAfterCursor(String cursor, int limit, Long memberId) {
-        Set<Long> followingIds = followingRepository.findById(memberId).getFollowingIds();
+    public ProfilePaginationResponseDto getFollowingsAfterCursor(Long memberId, Date cursor, int limit) {
+        List<Following.Person> followingsByCursor = followingRepository.getFollowingsByCursor(memberId, cursor, limit);
         List<Member> members = new ArrayList<>();
-        for (Long followingId : followingIds) {
-            Member member = memberProfileRepository.findByIdWithProfileWithSkills(followingId);
+        for (Following.Person followingPerson : followingsByCursor) {
+            Member member = memberProfileRepository.findByIdWithProfileInfo(followingPerson.getId());
             members.add(member);
         }
 
@@ -38,7 +40,6 @@ public class FollowService {
     }
 
     private boolean isFollowing(Long memberId, Long followingId) {
-        Following following = followingRepository.findById(memberId);
-        return following.getFollowingIds().contains(followingId);
+        return followingRepository.existsByMemberIdInFollowingPerson(memberId, followingId);
     }
 }

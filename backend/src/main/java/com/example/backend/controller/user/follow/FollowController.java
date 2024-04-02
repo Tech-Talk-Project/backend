@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/user/follow")
 @RequiredArgsConstructor
@@ -30,11 +32,14 @@ public class FollowController {
 
     @GetMapping("/followings")
     public ResponseEntity<ProfilePaginationResponseDto> getFollowingsAfterCursor(
-            @RequestParam String cursor,
-            @RequestParam(defaultValue = "15") int limit) {
+            @RequestParam(required = false) Date cursor,
+            @RequestParam(required = false, defaultValue = "15") int limit) {
+        if (cursor == null) {
+            cursor = new Date();
+        }
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ProfilePaginationResponseDto profilePaginationResponseDto = followService.getFollowingsAfterCursor(cursor, limit, memberId);
-        return ResponseEntity.ok(profilePaginationResponseDto);
+        ProfilePaginationResponseDto result = followService.getFollowingsAfterCursor(memberId, cursor, limit);
+        return ResponseEntity.ok(result);
     }
 
 }
