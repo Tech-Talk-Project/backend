@@ -32,7 +32,7 @@ public class FollowService {
         List<Following.Person> followingsByCursor = followingRepository.getFollowingsByCursor(memberId, cursor, limit);
         List<Member> members = new ArrayList<>();
         for (Following.Person followingPerson : followingsByCursor) {
-            Member member = memberProfileRepository.findByIdWithProfileInfo(followingPerson.getId());
+            Member member = memberProfileRepository.findByIdWithProfileInfo(followingPerson.getMemberId());
             members.add(member);
         }
 

@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,11 +22,11 @@ public class Following {
 
     @Getter
     public static class Person {
-        private Long id;
+        private Long memberId;
         private LocalDateTime followingTime;
 
-        public Person(Long id, LocalDateTime followingTime) {
-            this.id = id;
+        public Person(Long memberId, LocalDateTime followingTime) {
+            this.memberId = memberId;
             this.followingTime = followingTime;
         }
     }
