@@ -39,7 +39,7 @@ public class FollowService {
         return new ProfilePaginationResponseDto(members, nextCursor);
     }
 
-    private boolean isFollowing(Long memberId, Long followingId) {
+    public boolean isFollowing(Long memberId, Long followingId) {
         return followingRepository.existsByMemberIdInFollowingPerson(memberId, followingId);
     }
 }

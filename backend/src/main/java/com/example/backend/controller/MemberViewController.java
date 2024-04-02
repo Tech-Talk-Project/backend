@@ -2,14 +2,13 @@ package com.example.backend.controller;
 
 import com.example.backend.controller.dto.request.MembersViewRequestDto;
 import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
+import com.example.backend.controller.dto.response.ProfileViewResponseDto;
 import com.example.backend.service.profile.ProfilePaginationService;
+import com.example.backend.service.profile.ProfileViewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberViewController {
     private final ProfilePaginationService profilePaginationService;
+    private final ProfileViewService profileViewService;
+
 
     @PostMapping("/members")
     public ResponseEntity<ProfilePaginationResponseDto> getProfilesAfterCursor(
@@ -31,6 +32,12 @@ public class MemberViewController {
     }
 
     @GetMapping("/member")
-    public ResponseEntity<>
+    public ResponseEntity<ProfileViewResponseDto> getProfile(
+            @RequestParam Long memberId,
+            @RequestParam Long selectedMemberId
+    ) {
+        ProfileViewResponseDto profile = profileViewService.getProfile(memberId, selectedMemberId);
+        return ResponseEntity.ok(profile);
+    }
 
 }
