@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +35,8 @@ public class FollowService {
             members.add(member);
         }
 
-        return new ProfilePaginationResponseDto(members);
+        String nextCursor = members.isEmpty() ? "" : followingsByCursor.get(followingsByCursor.size() - 1).getFollowingTime().toString();
+        return new ProfilePaginationResponseDto(members, nextCursor);
     }
 
     private boolean isFollowing(Long memberId, Long followingId) {

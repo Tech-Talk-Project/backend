@@ -48,4 +48,27 @@ public class ProfilePaginationResponseDto {
         this.count = members.size();
         this.nextCursor = members.get(members.size() - 1).getUpdatedAt().toString();
     }
+
+    public ProfilePaginationResponseDto(List<Member> members, String nextCursor) {
+        this.data = new ArrayList<>();
+        if (members.isEmpty()) {
+            this.nextCursor = "";
+            this.count = 0;
+            return;
+        }
+        for (Member member : members) {
+            ProfileData profileData = new ProfileData();
+            profileData.setMemberId(member.getId());
+            profileData.setName(member.getName());
+            profileData.setJob(member.getProfile().getJob());
+            profileData.setIntroduction(member.getProfile().getIntroduction());
+            profileData.setImageUrl(member.getImageUrl());
+            member.getProfile().getProfileSkills().forEach(profileSkill -> {
+                profileData.getSkills().add(profileSkill.getSkill().getName());
+            });
+            data.add(profileData);
+        }
+        this.count = members.size();
+        this.nextCursor = nextCursor;
+    }
 }
