@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-public abstract class ProfilePaginationResponseDto {
+public class ProfilePaginationResponseDto {
     List<ProfileData> data = new ArrayList<>();
     int count;
     @Getter
@@ -38,5 +38,24 @@ public abstract class ProfilePaginationResponseDto {
                 this.skills.add(profileSkill.getSkill().getName());
             }
         }
+    }
+
+    public ProfilePaginationResponseDto(List<Member> members) {
+        if (members.isEmpty()) {
+            this.count = 0;
+            return;
+        }
+        for (Member member : members) {
+            ProfileData profileData = ProfileData.builder()
+                    .memberId(member.getId())
+                    .name(member.getName())
+                    .job(member.getProfile().getJob())
+                    .introduction(member.getProfile().getIntroduction())
+                    .imageUrl(member.getImageUrl())
+                    .skills(member.getProfile().getProfileSkills())
+                    .build();
+            data.add(profileData);
+        }
+        this.count = members.size();
     }
 }

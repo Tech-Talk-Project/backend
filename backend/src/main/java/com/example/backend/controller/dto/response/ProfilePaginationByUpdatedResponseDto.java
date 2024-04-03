@@ -8,28 +8,12 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter @Setter
 public class ProfilePaginationByUpdatedResponseDto extends ProfilePaginationResponseDto{
     private String nextCursor;
 
     public ProfilePaginationByUpdatedResponseDto(List<Member> members) {
-        if (members.isEmpty()) {
-            this.nextCursor = "";
-            this.count = 0;
-            return;
-        }
-        for (Member member : members) {
-            ProfileData profileData = ProfileData.builder()
-                            .memberId(member.getId())
-                            .name(member.getName())
-                            .job(member.getProfile().getJob())
-                            .introduction(member.getProfile().getIntroduction())
-                            .imageUrl(member.getImageUrl())
-                            .skills(member.getProfile().getProfileSkills())
-                            .build();
-            data.add(profileData);
-        }
-        this.count = members.size();
+        super(members);
         this.nextCursor = members.get(members.size() - 1).getUpdatedAt().toString();
     }
 }

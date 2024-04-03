@@ -5,7 +5,9 @@ import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Document
@@ -14,7 +16,7 @@ public class Following {
     @Id
     private Long id;
 
-    private Set<Long> followingIds = new HashSet<>();
+    private List<Long> followingIds = new ArrayList<>();
 
     public Following(Long id) {
         this.id = id;
