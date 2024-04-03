@@ -14,20 +14,9 @@ public class Following {
     @Id
     private Long id;
 
-    private Set<Person> followingPerson = new HashSet<>();
+    private Set<Long> followingIds = new HashSet<>();
 
     public Following(Long id) {
         this.id = id;
-    }
-
-    @Getter
-    public static class Person {
-        private Long memberId;
-        private LocalDateTime followingTime;
-
-        public Person(Long memberId, LocalDateTime followingTime) {
-            this.memberId = memberId;
-            this.followingTime = followingTime;
-        }
     }
 }

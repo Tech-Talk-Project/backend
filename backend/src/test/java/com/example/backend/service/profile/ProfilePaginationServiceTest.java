@@ -1,7 +1,7 @@
 package com.example.backend.service.profile;
 
 import com.example.backend.controller.dto.request.UpdateSkillsRequestDto;
-import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
+import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
@@ -48,9 +48,9 @@ class ProfilePaginationServiceTest {
         em.clear();
 
 
-        ProfilePaginationResponseDto searchAll =
+        ProfilePaginationByUpdatedResponseDto searchAll =
                 profilePaginationService.getProfilesAfterCursorBySkills("2025-08-01T00:00:00", 10, List.of());
-        ProfilePaginationResponseDto searchOnlyJavaContained =
+        ProfilePaginationByUpdatedResponseDto searchOnlyJavaContained =
                 profilePaginationService.getProfilesAfterCursorBySkills("2025-08-01T00:00:00", 10, List.of("JAVA"));
 
         assertThat(searchAll.getCount()).isEqualTo(1);
@@ -73,7 +73,7 @@ class ProfilePaginationServiceTest {
         em.flush();
         em.clear();
 
-        ProfilePaginationResponseDto profilesAfterCursor
+        ProfilePaginationByUpdatedResponseDto profilesAfterCursor
                 = profilePaginationService.getProfilesAfterCursorBySkills("2025-08-01T00:00:00", 10, List.of("JAVA"));
         assertThat(profilesAfterCursor.getCount()).isEqualTo(1);
     }
@@ -93,7 +93,7 @@ class ProfilePaginationServiceTest {
         em.flush();
         em.clear();
 
-        ProfilePaginationResponseDto profilesAfterCursor =
+        ProfilePaginationByUpdatedResponseDto profilesAfterCursor =
                 profilePaginationService.getProfilesAfterCursorBySkills("2025-08-01T00:00:00", 10, List.of("Java", "Python"));
         assertThat(profilesAfterCursor.getCount()).isEqualTo(1);
     }

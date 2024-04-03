@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.controller.dto.request.MembersViewRequestDto;
-import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
+import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
 import com.example.backend.controller.dto.response.ProfileViewResponseDto;
 import com.example.backend.service.profile.ProfilePaginationService;
 import com.example.backend.service.profile.ProfileViewService;
@@ -20,13 +20,13 @@ public class MemberViewController {
 
 
     @PostMapping("/members")
-    public ResponseEntity<ProfilePaginationResponseDto> getProfilesAfterCursor(
+    public ResponseEntity<ProfilePaginationByUpdatedResponseDto> getProfilesAfterCursor(
             @Valid @RequestBody MembersViewRequestDto membersViewRequestDto
             ) {
         String cursor = membersViewRequestDto.getCursor();
         int limit = membersViewRequestDto.getLimit();
         List<String> skills = membersViewRequestDto.getSkills();
-        ProfilePaginationResponseDto profilesAfterCursor =
+        ProfilePaginationByUpdatedResponseDto profilesAfterCursor =
                 profilePaginationService.getProfilesAfterCursorBySkills(cursor, limit, skills);
         return ResponseEntity.ok(profilesAfterCursor);
     }

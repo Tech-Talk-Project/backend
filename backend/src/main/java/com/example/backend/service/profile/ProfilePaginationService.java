@@ -1,9 +1,8 @@
 package com.example.backend.service.profile;
 
-import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
+import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.ESkill;
-import com.example.backend.entity.profile.Profile;
 import com.example.backend.repository.profile.ProfilePaginationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,7 @@ public class ProfilePaginationService {
      * @param strSkills
      * @return
      */
-    public ProfilePaginationResponseDto getProfilesAfterCursorBySkills(
+    public ProfilePaginationByUpdatedResponseDto getProfilesAfterCursorBySkills(
             String cursor, int limit, List<String> strSkills) {
         LocalDateTime cursorDateTime = getCursorDateTime(cursor);
 
@@ -34,13 +33,13 @@ public class ProfilePaginationService {
 
         List<Member> members = profilePaginationRepository.pagingBySkillsAfterCursor(cursorDateTime, limit, eSkills);
 
-        return new ProfilePaginationResponseDto(members);
+        return new ProfilePaginationByUpdatedResponseDto(members);
     }
 
-    public ProfilePaginationResponseDto getProfilesAfterCursor(String cursor, int limit) {
+    public ProfilePaginationByUpdatedResponseDto getProfilesAfterCursor(String cursor, int limit) {
         LocalDateTime cursorDateTime = getCursorDateTime(cursor);
         List<Member> members = profilePaginationRepository.pagingAfterCursor(cursorDateTime, limit);
-        return new ProfilePaginationResponseDto(members);
+        return new ProfilePaginationByUpdatedResponseDto(members);
     }
 
     private LocalDateTime getCursorDateTime(String cursor) {

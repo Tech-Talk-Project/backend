@@ -1,6 +1,6 @@
 package com.example.backend.service.follow;
 
-import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
+import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
 import com.example.backend.entity.follow.Following;
 import com.example.backend.entity.member.Member;
 import com.example.backend.repository.follow.FollowingRepository;
@@ -8,9 +8,7 @@ import com.example.backend.repository.profile.MemberProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,27 +18,22 @@ public class FollowService {
     private final MemberProfileRepository memberProfileRepository;
 
     public void addFollowing(Long memberId, Long followingId) {
-        Following.Person followingPerson = new Following.Person(followingId, LocalDateTime.now());
-        followingRepository.addFollowing(memberId, followingPerson);
+        followingRepository.addFollowing(memberId, followingId);
     }
 
     public void removeFollowing(Long memberId, Long followingId) {
         followingRepository.removeFollowing(memberId, followingId);
     }
 
-    public ProfilePaginationResponseDto getFollowingsAfterCursor(Long memberId, Date cursor, int limit) {
-        List<Following.Person> followingsByCursor = followingRepository.getFollowingsByCursor(memberId, cursor, limit);
-        List<Member> members = new ArrayList<>();
-        for (Following.Person followingPerson : followingsByCursor) {
-            Member member = memberProfileRepository.findByIdWithProfileInfo(followingPerson.getMemberId());
-            members.add(member);
-        }
-
-        String nextCursor = members.isEmpty() ? "" : followingsByCursor.get(followingsByCursor.size() - 1).getFollowingTime().toString();
-        return new ProfilePaginationResponseDto(members, nextCursor);
-    }
+//    public ProfilePaginationByUpdatedResponseDto getFollowingsAfterCursor(Long memberId, Long cursor, int limit) {
+//        Following following = followingRepository.findById(memberId);
+//        List<Member> members = new ArrayList<>();
+//
+//
+//
+//    }
 
     public boolean isFollowing(Long memberId, Long followingId) {
-        return followingRepository.existsByMemberIdInFollowingPerson(memberId, followingId);
+        return followingRepository.existsFollowingId(memberId, followingId);
     }
 }
