@@ -1,13 +1,15 @@
 package com.example.backend.controller;
 
 import com.example.backend.controller.dto.request.MembersViewRequestDto;
+import com.example.backend.controller.dto.response.AuthSelectedProfileResponseDto;
 import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
-import com.example.backend.controller.dto.response.ProfileViewResponseDto;
+import com.example.backend.controller.dto.response.SelectedProfileResponseDto;
 import com.example.backend.service.profile.ProfilePaginationService;
 import com.example.backend.service.profile.ProfileViewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,12 +34,17 @@ public class MemberViewController {
     }
 
     @GetMapping("/member")
-    public ResponseEntity<ProfileViewResponseDto> getProfile(
-            @RequestParam Long memberId,
+    public ResponseEntity<SelectedProfileResponseDto> getProfile(
             @RequestParam Long selectedMemberId
     ) {
-        ProfileViewResponseDto profile = profileViewService.getProfile(memberId, selectedMemberId);
-        return ResponseEntity.ok(profile);
+        return ResponseEntity.ok(profileViewService.getSelectedProfile(selectedMemberId));
     }
 
+    @GetMapping("/user/member")
+    public ResponseEntity<AuthSelectedProfileResponseDto> getProfileWhenLogin(
+            @RequestParam Long selectedMemberId
+    ) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(profileViewService.getSelectedProfileWhenLogin(memberId, selectedMemberId));
+    }
 }

@@ -3,6 +3,7 @@ package com.example.backend.service.profile;
 import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.ESkill;
+import com.example.backend.repository.follow.FollowingRepository;
 import com.example.backend.repository.profile.ProfilePaginationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,6 @@ public class ProfilePaginationService {
         LocalDateTime cursorDateTime = getCursorDateTime(cursor);
 
         List<ESkill> eSkills = strSkills.stream().map(ESkill::from).toList();
-
         List<Member> members = profilePaginationRepository.pagingBySkillsAfterCursor(cursorDateTime, limit, eSkills);
 
         return new ProfilePaginationByUpdatedResponseDto(members);
