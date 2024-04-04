@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static com.example.backend.entity.member.QMember.*;
 import static com.example.backend.entity.profile.QLink.*;
 import static com.example.backend.entity.profile.QProfile.*;
@@ -46,13 +48,14 @@ public class MemberProfileRepository {
                 .fetchOne();
     }
 
-    public Member findByIdWithProfileWithSkills(Long memberId) {
-        return query
+    public Optional<Member> findByIdWithProfileWithSkills(Long memberId) {
+        Member ret = query
                 .selectFrom(member)
                 .innerJoin(member.profile, profile).fetchJoin()
                 .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
                 .where(member.id.eq(memberId))
                 .fetchOne();
+        return Optional.ofNullable(ret);
     }
 
     @Transactional

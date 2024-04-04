@@ -33,7 +33,9 @@ public class FollowService {
 
         List<Member> members = new ArrayList<>();
         for (Long followingId : followingIds.subList(fromIndex, toIndex)) {
-            members.add(memberProfileRepository.findByIdWithProfileWithSkills(followingId));
+            memberProfileRepository.findByIdWithProfileWithSkills(followingId)
+                    .ifPresentOrElse(members::add
+                            , () -> {followingRepository.removeFollowing(memberId, followingId);});
         }
         return new ProfilePaginationResponseDto(members);
     }
