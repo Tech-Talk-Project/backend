@@ -1,6 +1,9 @@
 package com.example.backend.service.profile;
 
+import com.example.backend.controller.dto.ProfileDto;
+import com.example.backend.controller.dto.response.AuthProfilePaginationDto;
 import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
+import com.example.backend.entity.follow.Following;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.ESkill;
 import com.example.backend.repository.follow.FollowingRepository;
@@ -10,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -17,6 +22,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ProfilePaginationService {
     private final ProfilePaginationRepository profilePaginationRepository;
+    private final FollowingRepository followingRepository;
 
     /**
      * cursor 이후의 limit 개수 만큼의 프로필을 조회합니다. <br>
@@ -34,6 +40,34 @@ public class ProfilePaginationService {
         List<Member> members = profilePaginationRepository.pagingBySkillsAfterCursor(cursorDateTime, limit, eSkills);
 
         return new ProfilePaginationByUpdatedResponseDto(members);
+    }
+
+    public AuthProfilePaginationDto getProfileAfterCursorBySkillsWhenLogin(
+            String cursor, int limit, List<String> strSkills, Long memberId) {
+        LocalDateTime cursorDateTime = getCursorDateTime(cursor);
+
+        List<ESkill> eSkills = strSkills.stream().map(ESkill::from).toList();
+        List<Member> members = profilePaginationRepository.pagingBySkillsAfterCursor(cursorDateTime, limit, eSkills);
+
+        List<Long> followingIds = followingRepository.findById(memberId).getFollowingIds();
+        Collections.sort(followingIds);
+
+        List<ProfileDto> data = new ArrayList<>();
+        for (Member member : members) {
+            ProfileDto.builder()
+                    .memberId(member.getId())
+                    .name(member.getName())
+                    .job(member.getProfile().getJob())
+                    .introduction(member.getProfile().getIntroduction())
+                    .imageUrl(member.getImageUrl())
+                    .skills(member.getProfile().getProfileSkills())
+                    .isFollowing(Collections.binarySearch(followingIds, member.getId()) >= 0)
+                    .build();
+        }
+        String nextCursor = members.isEmpty() ? null : members.get(members.size() - 1).getUpdatedAt().toString();
+        int count = members.size();
+
+        return new AuthProfilePaginationDto(data, nextCursor, count);
     }
 
     public ProfilePaginationByUpdatedResponseDto getProfilesAfterCursor(String cursor, int limit) {

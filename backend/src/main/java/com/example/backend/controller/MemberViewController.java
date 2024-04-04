@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.controller.dto.request.MembersViewRequestDto;
+import com.example.backend.controller.dto.response.AuthProfilePaginationDto;
 import com.example.backend.controller.dto.response.AuthSelectedProfileResponseDto;
 import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
 import com.example.backend.controller.dto.response.SelectedProfileResponseDto;
@@ -31,6 +32,19 @@ public class MemberViewController {
         ProfilePaginationByUpdatedResponseDto profilesAfterCursor =
                 profilePaginationService.getProfilesAfterCursorBySkills(cursor, limit, skills);
         return ResponseEntity.ok(profilesAfterCursor);
+    }
+
+    @PostMapping("/user/members")
+    public ResponseEntity<AuthProfilePaginationDto> getProfilesAfterCursorWhenLogin(
+            @Valid @RequestBody MembersViewRequestDto membersViewRequestDto
+    ) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String cursor = membersViewRequestDto.getCursor();
+        int limit = membersViewRequestDto.getLimit();
+        List<String> skills = membersViewRequestDto.getSkills();
+        AuthProfilePaginationDto result =
+                profilePaginationService.getProfileAfterCursorBySkillsWhenLogin(cursor, limit, skills, memberId);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/member")
