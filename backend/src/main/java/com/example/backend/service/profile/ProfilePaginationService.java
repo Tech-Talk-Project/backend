@@ -54,7 +54,7 @@ public class ProfilePaginationService {
 
         List<ProfileDto> data = new ArrayList<>();
         for (Member member : members) {
-            ProfileDto.builder()
+            ProfileDto profile = ProfileDto.builder()
                     .memberId(member.getId())
                     .name(member.getName())
                     .job(member.getProfile().getJob())
@@ -63,6 +63,7 @@ public class ProfilePaginationService {
                     .skills(member.getProfile().getProfileSkills())
                     .isFollowing(Collections.binarySearch(followingIds, member.getId()) >= 0)
                     .build();
+            data.add(profile);
         }
         String nextCursor = members.isEmpty() ? null : members.get(members.size() - 1).getUpdatedAt().toString();
         int count = members.size();
