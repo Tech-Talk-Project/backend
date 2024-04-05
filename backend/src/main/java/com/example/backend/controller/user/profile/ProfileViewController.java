@@ -1,6 +1,6 @@
 package com.example.backend.controller.user.profile;
 
-import com.example.backend.controller.dto.response.ProfileViewResponseDto;
+import com.example.backend.controller.dto.response.MyProfileResponseDto;
 import com.example.backend.service.profile.ProfileViewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ public class ProfileViewController {
     private final ProfileViewService profileViewService;
 
     @GetMapping
-    public ResponseEntity<ProfileViewResponseDto> getProfile() {
+    public ResponseEntity<MyProfileResponseDto> getProfile() {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(profileViewService.gerProfile(memberId));
+        return ResponseEntity.ok(profileViewService.getProfile(memberId));
     }
 }

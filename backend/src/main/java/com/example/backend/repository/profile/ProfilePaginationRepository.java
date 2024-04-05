@@ -42,8 +42,6 @@ public class ProfilePaginationRepository {
         return query
                 .selectFrom(member)
                 .innerJoin(member.profile, profile).fetchJoin()
-                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
-                .leftJoin(profileSkill.skill, skill).fetchJoin()
                 .where(
                         profile.id.in(subQuery),
                         profile.updatedAt.lt(cursor)
@@ -57,8 +55,6 @@ public class ProfilePaginationRepository {
         return query
                 .selectFrom(member)
                 .innerJoin(member.profile, profile).fetchJoin()
-                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
-                .leftJoin(profileSkill.skill, skill).fetchJoin()
                 .where(profile.updatedAt.lt(cursor))
                 .orderBy(profile.updatedAt.desc())
                 .limit(limit)

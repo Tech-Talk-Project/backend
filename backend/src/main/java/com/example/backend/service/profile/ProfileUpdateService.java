@@ -42,7 +42,11 @@ public class ProfileUpdateService {
     }
 
     public void updateSkills(Long memberId, UpdateSkillsRequestDto updateSkillsRequestDto) {
-        Member member = memberProfileRepository.findByIdWithProfileWithSkills(memberId);
+        Member member = memberProfileRepository.findByIdWithProfileWithSkills(memberId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+                );
+
         List<ESkill> eSkills =
                 updateSkillsRequestDto.getSkills().stream().map(ESkill::from).toList();
         List<Skill> skills = eSkills.stream().map(skillRepository::findByESkill).toList();

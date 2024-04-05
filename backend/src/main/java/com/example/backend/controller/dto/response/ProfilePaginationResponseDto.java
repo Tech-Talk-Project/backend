@@ -1,51 +1,61 @@
 package com.example.backend.controller.dto.response;
 
 import com.example.backend.entity.member.Member;
-import com.example.backend.entity.profile.Profile;
+import com.example.backend.entity.profile.ProfileSkill;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class ProfilePaginationResponseDto {
-    private List<ProfileData> data;
-
-    private String nextCursor;
-    private int count;
-
-    @Getter @Setter
-    private static class ProfileData {
+    List<ProfileData> data = new ArrayList<>();
+    int count;
+    @Getter
+    @Setter
+    protected static class ProfileData {
         private Long memberId;
         private String name;
         private String job;
         private String introduction;
         private String imageUrl;
-        private List<String> skills = new ArrayList<>();
+        private List<String> skills;
+
+        @Builder
+        public ProfileData(Long memberId, String name, String job, String introduction, String imageUrl, Set<ProfileSkill> skills) {
+            this.memberId = memberId;
+            this.name = name;
+            this.job = job;
+            this.introduction = introduction;
+            this.imageUrl = imageUrl;
+
+            this.skills = new ArrayList<>();
+            for (ProfileSkill profileSkill : skills) {
+                this.skills.add(profileSkill.getSkill().getName());
+            }
+        }
     }
 
     public ProfilePaginationResponseDto(List<Member> members) {
-        this.data = new ArrayList<>();
         if (members.isEmpty()) {
-            this.nextCursor = "";
             this.count = 0;
             return;
         }
         for (Member member : members) {
-            ProfileData profileData = new ProfileData();
-            profileData.setMemberId(member.getId());
-            profileData.setName(member.getName());
-            profileData.setJob(member.getProfile().getJob());
-            profileData.setIntroduction(member.getProfile().getIntroduction());
-            profileData.setImageUrl(member.getImageUrl());
-            member.getProfile().getProfileSkills().forEach(profileSkill -> {
-                profileData.getSkills().add(profileSkill.getSkill().getName());
-            });
+            ProfileData profileData = ProfileData.builder()
+                    .memberId(member.getId())
+                    .name(member.getName())
+                    .job(member.getProfile().getJob())
+                    .introduction(member.getProfile().getIntroduction())
+                    .imageUrl(member.getImageUrl())
+                    .skills(member.getProfile().getProfileSkills())
+                    .build();
             data.add(profileData);
         }
         this.count = members.size();
-        this.nextCursor = members.get(members.size() - 1).getUpdatedAt().toString();
     }
 }
