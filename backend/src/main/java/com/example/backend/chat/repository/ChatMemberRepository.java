@@ -47,4 +47,9 @@ public class ChatMemberRepository  {
         }
         return chatMember;
     }
+
+    public void deleteById(Long memberId) {
+        Query query = new Query(Criteria.where("_id").is(memberId));
+        mongoTemplate.remove(query, ChatMember.class);
+    }
 }

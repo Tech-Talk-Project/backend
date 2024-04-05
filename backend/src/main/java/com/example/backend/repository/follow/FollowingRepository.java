@@ -16,6 +16,15 @@ import java.util.List;
 public class FollowingRepository {
     private final MongoTemplate mongoTemplate;
 
+    public void save(Following following) {
+        mongoTemplate.save(following);
+    }
+
+    public void deleteById(Long memberId) {
+        Query query = new Query(Criteria.where("_id").is(memberId));
+        mongoTemplate.remove(query, Following.class);
+    }
+
     public void addFollowing(Long memberId, Long followingId) {
         Query query = new Query(Criteria.where("_id").is(memberId));
         Update update = new Update().addToSet("followingIds", followingId);
