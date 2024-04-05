@@ -6,7 +6,7 @@ import com.example.backend.entity.member.Member;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
 import com.example.backend.repository.member.MemberRepository;
-import com.example.backend.service.MemberCreateService;
+import com.example.backend.service.member.MemberCreateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -10,7 +10,7 @@ import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
 import com.example.backend.repository.member.AuthorityRepository;
 import com.example.backend.repository.profile.SkillRepository;
-import com.example.backend.service.MemberCreateService;
+import com.example.backend.service.member.MemberCreateService;
 import com.example.backend.service.profile.ProfileUpdateService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class InitApp {
     public void init() {
         initAuthority.init();
         initSkill.init();
-//        initMember.init();
+        initMember.init();
     }
 
     @Component

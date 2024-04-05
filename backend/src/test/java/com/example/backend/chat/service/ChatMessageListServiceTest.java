@@ -4,7 +4,7 @@
 //import com.example.backend.entity.member.Member;
 //import com.example.backend.oauth2.OAuth2Provider;
 //import com.example.backend.oauth2.dto.UserProfileDto;
-//import com.example.backend.service.MemberCreateService;
+//import com.example.backend.service.member.MemberCreateService;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

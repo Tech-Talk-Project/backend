@@ -2,7 +2,7 @@ package com.example.backend.controller.user;
 
 
 import com.example.backend.auth.service.AuthService;
-import com.example.backend.service.MemberRemoveService;
+import com.example.backend.service.member.MemberRemoveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;

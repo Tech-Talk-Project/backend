@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.service.member;
 
 import com.example.backend.chat.domain.ChatMember;
 import com.example.backend.chat.repository.ChatMemberRepository;
