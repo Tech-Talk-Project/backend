@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.chat.domain.ChatMember;
 import com.example.backend.chat.repository.ChatMemberRepository;
+import com.example.backend.entity.follow.Following;
 import com.example.backend.entity.member.Authority;
 import com.example.backend.entity.member.EAuthority;
 import com.example.backend.entity.member.Member;
@@ -9,6 +10,7 @@ import com.example.backend.entity.member.MemberAuthority;
 import com.example.backend.entity.profile.Profile;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
+import com.example.backend.repository.follow.FollowingRepository;
 import com.example.backend.repository.member.AuthorityRepository;
 import com.example.backend.repository.member.MemberAuthorityRepository;
 import com.example.backend.repository.member.MemberRepository;
@@ -24,6 +26,7 @@ public class MemberCreateService {
     private final AuthorityRepository authorityRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
     private final ChatMemberRepository chatMemberRepository;
+    private final FollowingRepository followingRepository;
 
     public Member createUser(UserProfileDto userProfileDto, OAuth2Provider oAuth2Provider) {
         String email = userProfileDto.getEmail();
@@ -42,6 +45,7 @@ public class MemberCreateService {
         memberAuthorityRepository.save(new MemberAuthority(member, authority));
 
         chatMemberRepository.save(new ChatMember(member.getId()));
+        followingRepository.save(new Following(member.getId()));
         return member;
     }
 }
