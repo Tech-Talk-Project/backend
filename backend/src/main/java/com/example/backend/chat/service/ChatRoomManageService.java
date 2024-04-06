@@ -3,6 +3,7 @@ package com.example.backend.chat.service;
 import com.example.backend.chat.domain.ChatMember;
 import com.example.backend.chat.domain.ChatRoom;
 import com.example.backend.chat.dto.ChatRoomByMemberDto;
+import com.example.backend.chat.exception.MemberAlreadyInvitedException;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
 import com.example.backend.entity.member.Member;
@@ -24,6 +25,7 @@ public class ChatRoomManageService {
     private final ChatMemberRepository chatMemberRepository;
     private final MemberRepository memberRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final ChatMessageService chatMessageService;
 
     public ChatRoom createChatRoom(String title, Long roomOwnerId, List<Long> joinedMemberIds) {
         joinedMemberIds.add(roomOwnerId);
@@ -40,7 +42,7 @@ public class ChatRoomManageService {
             ChatMember.JoinedChatRoom joinedChatRoom = new ChatMember.JoinedChatRoom(chatRoom.getId(), new Date());
             chatMemberRepository.appendJoinedChatRoom(memberId, joinedChatRoom);
 
-            publishChatRoomCreateNotification(chatRoom, memberId);
+            publishChatRoomInvitedNotification(chatRoom, memberId);
         });
         return chatRoom;
     }
@@ -52,7 +54,7 @@ public class ChatRoomManageService {
         chatRoomRepository.appendMessage(chatRoom.getId(), welcomeMessage);
     }
 
-    private void publishChatRoomCreateNotification(ChatRoom chatRoom, Long memberId) {
+    private void publishChatRoomInvitedNotification(ChatRoom chatRoom, Long memberId) {
         ChatRoomByMemberDto chatRoomDto = new ChatRoomByMemberDto(chatRoom, 0);
         rabbitTemplate.convertAndSend("amq.topic", memberId.toString(), chatRoomDto);
     }
@@ -85,6 +87,32 @@ public class ChatRoomManageService {
     private String makeWelcomeMessage(List<Long> joinedMemberIds) {
         return concatMemberNames(joinedMemberIds) + " 님이 입장하셨습니다.";
     }
+
+    public void inviteChatRoom(String chatRoomId, Long inviteMemberId) {
+        // memberId 가 존재하지 않을 때 예외 처리
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
+        if (chatRoom.getJoinedMemberIds().contains(inviteMemberId)) {
+            throw new MemberAlreadyInvitedException("이미 참여한 채팅방입니다.");
+        }
+
+        chatRoomRepository.appendMemberIdsIntoJoinedMemberIds(chatRoomId, List.of(inviteMemberId));
+        chatMemberRepository.appendJoinedChatRoom(
+                inviteMemberId,
+                new ChatMember.JoinedChatRoom(chatRoomId, new Date())
+        );
+        publishChatRoomInvitedNotification(chatRoom, inviteMemberId);
+        addInvitedMessage(chatRoom, inviteMemberId);
+        chatMessageService.send(chatRoomId, MemberId.ADMIN.getValue(), findMemberName(inviteMemberId) + " 님이 초대되었습니다.");
+    }
+
+    private void addInvitedMessage(ChatRoom chatRoom, Long invitedMemberId) {
+        ChatRoom.LastMessage invitedMessage =
+                new ChatRoom.LastMessage(MemberId.ADMIN.getValue(), new Date(), findMemberName(invitedMemberId) + " 님이 초대되었습니다.");
+        chatRoom.getLastMessages().add(invitedMessage);
+        chatRoomRepository.appendMessage(chatRoom.getId(), invitedMessage);
+    }
+
+
 
     public void addNewMembers(String chatRoomId, List<Long> newMemberIds) {
         chatRoomRepository.appendMemberIdsIntoJoinedMemberIds(chatRoomId, newMemberIds);

@@ -1,6 +1,7 @@
 package com.example.backend.chat.controller;
 
 import com.example.backend.chat.controller.dto.request.ChatRoomCreateRequestDto;
+import com.example.backend.chat.controller.dto.request.InviteChatRoomRequestDto;
 import com.example.backend.chat.controller.dto.request.LastMessageRequestDto;
 import com.example.backend.chat.controller.dto.request.TitleChangeRequestDto;
 import com.example.backend.chat.controller.dto.response.ChatRoomListResponseDto;
@@ -54,6 +55,14 @@ public class ChatRoomController {
         chatMemberService.leaveChatRoom(memberId, chatRoomId);
         return ResponseEntity.ok("채팅방을 종료했습니다.");
     }
+
+    @PostMapping("/invite")
+    public ResponseEntity<String> inviteChatRoom(
+            @RequestBody InviteChatRoomRequestDto dto) {
+        chatRoomManageService.inviteChatRoom(dto.getChatRoomId(), dto.getInvitedMemberId());
+        return ResponseEntity.ok("채팅방에 초대했습니다.");
+    }
+
 
     @GetMapping("/exit")
     public ResponseEntity<String> exitChatRoom(@RequestParam String chatRoomId) {
