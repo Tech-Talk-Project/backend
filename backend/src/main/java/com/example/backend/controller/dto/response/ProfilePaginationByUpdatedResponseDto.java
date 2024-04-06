@@ -14,6 +14,10 @@ public class ProfilePaginationByUpdatedResponseDto extends ProfilePaginationResp
 
     public ProfilePaginationByUpdatedResponseDto(List<Member> members) {
         super(members);
+        if (members.isEmpty()) {
+            this.nextCursor = null;
+            return;
+        }
         this.nextCursor = members.get(members.size() - 1).getUpdatedAt().toString();
     }
 }
