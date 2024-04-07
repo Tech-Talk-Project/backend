@@ -101,14 +101,13 @@ public class ChatRoomManageService {
                 new ChatMember.JoinedChatRoom(chatRoomId, new Date())
         );
         publishChatRoomInvitedNotification(chatRoom, inviteMemberId);
-        addInvitedMessage(chatRoom, inviteMemberId);
-        chatMessageService.send(chatRoomId, MemberId.ADMIN.getValue(), findMemberName(inviteMemberId) + " 님이 초대되었습니다.");
+        ChatRoom.LastMessage invitedMessage =
+                new ChatRoom.LastMessage(MemberId.ADMIN.getValue(), new Date(), findMemberName(inviteMemberId) + " 님이 초대되었습니다.");
+        addInvitedMessage(chatRoom, invitedMessage);
+        chatMessageService.send(chatRoomId, MemberId.ADMIN.getValue(), invitedMessage.getContent());
     }
 
-    private void addInvitedMessage(ChatRoom chatRoom, Long invitedMemberId) {
-        ChatRoom.LastMessage invitedMessage =
-                new ChatRoom.LastMessage(MemberId.ADMIN.getValue(), new Date(), findMemberName(invitedMemberId) + " 님이 초대되었습니다.");
-        chatRoom.getLastMessages().add(invitedMessage);
+    private void addInvitedMessage(ChatRoom chatRoom, ChatRoom.LastMessage invitedMessage) {
         chatRoomRepository.appendMessage(chatRoom.getId(), invitedMessage);
     }
 
