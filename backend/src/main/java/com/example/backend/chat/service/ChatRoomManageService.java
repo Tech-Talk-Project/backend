@@ -102,9 +102,9 @@ public class ChatRoomManageService {
         );
         publishChatRoomInvitedNotification(chatRoom, inviteMemberId);
         ChatRoom.LastMessage invitedMessage =
-                new ChatRoom.LastMessage(MemberId.ADMIN.getValue(), new Date(), findMemberName(inviteMemberId) + " 님이 초대되었습니다.");
+                new ChatRoom.LastMessage(MemberId.INVITE.getValue(), new Date(), findMemberName(inviteMemberId) + " 님이 초대되었습니다.");
         addInvitedMessage(chatRoom, invitedMessage);
-        chatMessageService.send(chatRoomId, MemberId.ADMIN.getValue(), invitedMessage.getContent());
+        chatMessageService.send(chatRoomId, MemberId.INVITE.getValue(), invitedMessage.getContent());
     }
 
     private void addInvitedMessage(ChatRoom chatRoom, ChatRoom.LastMessage invitedMessage) {
