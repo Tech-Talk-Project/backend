@@ -100,4 +100,10 @@ public class ChatRoomRepository {
         Update update = new Update().set("title", title);
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
+
+    public void updateOwnerId(String chatRoomId, Long newOwnerId) {
+        Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        Update update = new Update().set("ownerId", newOwnerId);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
 }
