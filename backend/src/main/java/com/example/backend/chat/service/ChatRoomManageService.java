@@ -95,23 +95,20 @@ public class ChatRoomManageService {
             throw new MemberAlreadyInvitedException("이미 참여한 채팅방입니다.");
         }
 
-        chatRoomRepository.appendMemberIdsIntoJoinedMemberIds(chatRoomId, List.of(inviteMemberId));
+        chatRoom.getJoinedMemberIds().add(inviteMemberId);
+        chatRoomRepository.save(chatRoom);
+        ChatRoom.LastMessage invitedMessage =
+                new ChatRoom.LastMessage(MemberId.INVITE.getValue(), new Date(), findMemberName(inviteMemberId) + " 님이 초대되었습니다.");
+        chatRoom.getLastMessages().add(invitedMessage);
+
         chatMemberRepository.appendJoinedChatRoom(
                 inviteMemberId,
                 new ChatMember.JoinedChatRoom(chatRoomId, new Date())
         );
+
         publishChatRoomInvitedNotification(chatRoom, inviteMemberId);
-        ChatRoom.LastMessage invitedMessage =
-                new ChatRoom.LastMessage(MemberId.INVITE.getValue(), new Date(), findMemberName(inviteMemberId) + " 님이 초대되었습니다.");
-        addInvitedMessage(chatRoom, invitedMessage);
         chatMessageService.send(chatRoomId, MemberId.INVITE.getValue(), invitedMessage.getContent());
     }
-
-    private void addInvitedMessage(ChatRoom chatRoom, ChatRoom.LastMessage invitedMessage) {
-        chatRoomRepository.appendMessage(chatRoom.getId(), invitedMessage);
-    }
-
-
 
     public void addNewMembers(String chatRoomId, List<Long> newMemberIds) {
         chatRoomRepository.appendMemberIdsIntoJoinedMemberIds(chatRoomId, newMemberIds);

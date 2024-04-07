@@ -60,10 +60,9 @@ public class ChatMemberService {
                         () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
                 ).getName();
                 chatRoom.setOwnerId(chatRoom.getJoinedMemberIds().get(0));
-                chatRoomRepository.save(chatRoom);
-
                 chatMessageService.send(chatRoomId, MemberId.ADMIN.getValue(), newOwnerName + "님이 방장이 되었습니다.");
             }
+            chatRoomRepository.save(chatRoom);
         }
     }
 }
