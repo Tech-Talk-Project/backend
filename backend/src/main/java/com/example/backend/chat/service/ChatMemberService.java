@@ -47,6 +47,13 @@ public class ChatMemberService {
             ).getName();
             chatMessageService.send(chatRoomId, MemberId.LEAVE.getValue(), memberName + "님이 퇴장하셨습니다.");
 
+            // message 를 너무 빠르게 보면 websocket 에서 처리가 안되는 경우가 있어서 0.5초 대기
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             if (Objects.equals(chatRoom.getOwnerId(), memberId)) {
                 Long newOwnerId = chatRoom.getJoinedMemberIds().get(0);
                 String newOwnerName = memberRepository.findById(newOwnerId).orElseThrow(
