@@ -28,6 +28,8 @@ public class FollowService {
     public ProfilePaginationResponseDto getFollowingsWithSlice(Long memberId, int pageNumber, int pageSize) {
         Following following = followingRepository.findById(memberId);
         List<Long> followingIds = following.getFollowingIds();
+        int totalCount = followingIds.size();
+        int totalPage = (int) Math.ceil((double) totalCount / pageSize);
         int fromIndex = (pageNumber-1) * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, followingIds.size());
 
@@ -37,7 +39,8 @@ public class FollowService {
                     .ifPresentOrElse(members::add
                             , () -> {followingRepository.removeFollowing(memberId, followingId);});
         }
-        return new ProfilePaginationResponseDto(members);
+
+        return new ProfilePaginationResponseDto(members, totalCount, totalPage);
     }
 
     public boolean isFollowing(Long memberId, Long followingId) {

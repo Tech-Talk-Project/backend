@@ -14,7 +14,9 @@ import java.util.Set;
 @Data
 public class ProfilePaginationResponseDto {
     List<ProfileData> data = new ArrayList<>();
-    int count;
+    int totalCount;
+    int totalPage;
+
     @Getter
     @Setter
     protected static class ProfileData {
@@ -40,11 +42,7 @@ public class ProfilePaginationResponseDto {
         }
     }
 
-    public ProfilePaginationResponseDto(List<Member> members) {
-        if (members.isEmpty()) {
-            this.count = 0;
-            return;
-        }
+    public ProfilePaginationResponseDto(List<Member> members, int totalCount, int totalPage) {
         for (Member member : members) {
             ProfileData profileData = ProfileData.builder()
                     .memberId(member.getId())
@@ -56,6 +54,7 @@ public class ProfilePaginationResponseDto {
                     .build();
             data.add(profileData);
         }
-        this.count = members.size();
+        this.totalCount = totalCount;
+        this.totalPage = totalPage;
     }
 }
