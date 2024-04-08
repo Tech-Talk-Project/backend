@@ -1,7 +1,7 @@
 package com.example.backend.service.profile;
 
 import com.example.backend.controller.dto.request.UpdateSkillsRequestDto;
-import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
+import com.example.backend.controller.dto.response.ProfileCursorPaginationResponseDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
@@ -14,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -48,9 +46,9 @@ class ProfilePaginationServiceTest {
         em.clear();
 
 
-        ProfilePaginationByUpdatedResponseDto searchAll =
+        ProfileCursorPaginationResponseDto searchAll =
                 profilePaginationService.getProfilesAfterCursorBySkills("2025-08-01T00:00:00", 10, List.of());
-        ProfilePaginationByUpdatedResponseDto searchOnlyJavaContained =
+        ProfileCursorPaginationResponseDto searchOnlyJavaContained =
                 profilePaginationService.getProfilesAfterCursorBySkills("2025-08-01T00:00:00", 10, List.of("JAVA"));
 
         assertThat(searchAll.getCount()).isEqualTo(1);
@@ -73,7 +71,7 @@ class ProfilePaginationServiceTest {
         em.flush();
         em.clear();
 
-        ProfilePaginationByUpdatedResponseDto profilesAfterCursor
+        ProfileCursorPaginationResponseDto profilesAfterCursor
                 = profilePaginationService.getProfilesAfterCursorBySkills("2025-08-01T00:00:00", 10, List.of("JAVA"));
         assertThat(profilesAfterCursor.getCount()).isEqualTo(1);
     }
@@ -93,7 +91,7 @@ class ProfilePaginationServiceTest {
         em.flush();
         em.clear();
 
-        ProfilePaginationByUpdatedResponseDto profilesAfterCursor =
+        ProfileCursorPaginationResponseDto profilesAfterCursor =
                 profilePaginationService.getProfilesAfterCursorBySkills("2025-08-01T00:00:00", 10, List.of("Java", "Python"));
         assertThat(profilesAfterCursor.getCount()).isEqualTo(1);
     }

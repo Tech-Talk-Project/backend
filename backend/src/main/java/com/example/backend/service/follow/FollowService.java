@@ -1,6 +1,6 @@
 package com.example.backend.service.follow;
 
-import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
+import com.example.backend.controller.dto.response.ProfileOffsetPaginationResponseDto;
 import com.example.backend.entity.follow.Following;
 import com.example.backend.entity.member.Member;
 import com.example.backend.repository.follow.FollowingRepository;
@@ -25,7 +25,7 @@ public class FollowService {
         followingRepository.removeFollowing(memberId, followingId);
     }
 
-    public ProfilePaginationResponseDto getFollowingsWithSlice(Long memberId, int pageNumber, int pageSize) {
+    public ProfileOffsetPaginationResponseDto getFollowingsWithSlice(Long memberId, int pageNumber, int pageSize) {
         Following following = followingRepository.findById(memberId);
         List<Long> followingIds = following.getFollowingIds();
         int totalCount = followingIds.size();
@@ -40,7 +40,7 @@ public class FollowService {
                             , () -> {followingRepository.removeFollowing(memberId, followingId);});
         }
 
-        return new ProfilePaginationResponseDto(members, totalCount, totalPage);
+        return new ProfileOffsetPaginationResponseDto(members, totalCount, totalPage);
     }
 
     public boolean isFollowing(Long memberId, Long followingId) {
