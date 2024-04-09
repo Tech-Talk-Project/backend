@@ -2,8 +2,7 @@ package com.example.backend.service.profile;
 
 import com.example.backend.controller.dto.ProfileDto;
 import com.example.backend.controller.dto.response.AuthProfilePaginationDto;
-import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
-import com.example.backend.entity.follow.Following;
+import com.example.backend.controller.dto.response.ProfileCursorPaginationResponseDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.ESkill;
 import com.example.backend.repository.follow.FollowingRepository;
@@ -32,14 +31,14 @@ public class ProfilePaginationService {
      * @param strSkills
      * @return
      */
-    public ProfilePaginationByUpdatedResponseDto getProfilesAfterCursorBySkills(
+    public ProfileCursorPaginationResponseDto getProfilesAfterCursorBySkills(
             String cursor, int limit, List<String> strSkills) {
         LocalDateTime cursorDateTime = getCursorDateTime(cursor);
 
         List<ESkill> eSkills = strSkills.stream().map(ESkill::from).toList();
         List<Member> members = profilePaginationRepository.pagingBySkillsAfterCursor(cursorDateTime, limit, eSkills);
 
-        return new ProfilePaginationByUpdatedResponseDto(members);
+        return new ProfileCursorPaginationResponseDto(members);
     }
 
     public AuthProfilePaginationDto getProfileAfterCursorBySkillsWhenLogin(
@@ -71,10 +70,10 @@ public class ProfilePaginationService {
         return new AuthProfilePaginationDto(data, nextCursor, count);
     }
 
-    public ProfilePaginationByUpdatedResponseDto getProfilesAfterCursor(String cursor, int limit) {
+    public ProfileCursorPaginationResponseDto getProfilesAfterCursor(String cursor, int limit) {
         LocalDateTime cursorDateTime = getCursorDateTime(cursor);
         List<Member> members = profilePaginationRepository.pagingAfterCursor(cursorDateTime, limit);
-        return new ProfilePaginationByUpdatedResponseDto(members);
+        return new ProfileCursorPaginationResponseDto(members);
     }
 
     private LocalDateTime getCursorDateTime(String cursor) {

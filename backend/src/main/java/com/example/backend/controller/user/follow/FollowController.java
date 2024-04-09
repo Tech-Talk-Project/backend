@@ -1,15 +1,12 @@
 package com.example.backend.controller.user.follow;
 
 import com.example.backend.controller.dto.request.FollowUpdateDto;
-import com.example.backend.controller.dto.response.ProfilePaginationByUpdatedResponseDto;
-import com.example.backend.controller.dto.response.ProfilePaginationResponseDto;
+import com.example.backend.controller.dto.response.ProfileOffsetPaginationResponseDto;
 import com.example.backend.service.follow.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @RestController
 @RequestMapping("/user/follow")
@@ -32,7 +29,7 @@ public class FollowController {
     }
 
     @GetMapping("/followings")
-    public ResponseEntity<ProfilePaginationResponseDto> getFollowingsAfterCursor(
+    public ResponseEntity<ProfileOffsetPaginationResponseDto> getFollowingsAfterCursor(
             @RequestParam(required = false, defaultValue = "1") int pageNumber,
             @RequestParam(required = false, defaultValue = "30") int pageSize) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

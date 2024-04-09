@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.auth.exception.DuplicateOAuth2ProviderException;
+import com.example.backend.chat.exception.MemberAlreadyInvitedException;
 import com.example.backend.oauth2.exception.OAuth2InvalidEmailException;
 import com.example.backend.security.exception.InvalidJwtException;
 import com.example.backend.security.exception.InvalidRefreshToken;
@@ -47,7 +48,8 @@ public class GlobalExceptionHandler {
 
     //409
     @ExceptionHandler({
-            DuplicateOAuth2ProviderException.class
+            DuplicateOAuth2ProviderException.class,
+            MemberAlreadyInvitedException.class
     })
     @ResponseBody
     public ResponseEntity<Object> handleCustomException(Exception ex) {

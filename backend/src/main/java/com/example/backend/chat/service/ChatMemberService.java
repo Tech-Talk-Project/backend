@@ -33,12 +33,12 @@ public class ChatMemberService {
     public void exitChatRoom(String chatRoomId, Long memberId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         // 참여자 명단에서 제거
-        chatRoom.getJoinedMemberIds().remove(memberId);
+
+        chatRoomRepository.pullMemberIdFromJoinedMemberIds(chatRoomId, memberId);
         // 참여하고 있는 채팅방에서 제거
         chatMemberRepository.pullJoinedChatRoom(memberId, chatRoomId);
 
-        Integer memberCount = chatRoomRepository.getMemberCount(chatRoomId);
-        if (memberCount == 0) {
+        if (chatRoomRepository.getMemberCount(chatRoomId) == 0) {
             chatRoomRepository.delete(chatRoom);
             backupMessagesRepository.deleteById(chatRoomId);
         } else {
@@ -47,14 +47,19 @@ public class ChatMemberService {
             ).getName();
             chatMessageService.send(chatRoomId, MemberId.LEAVE.getValue(), memberName + "님이 퇴장하셨습니다.");
 
+//             message 를 너무 빠르게 보면 websocket 에서 처리가 안되는 경우가 있어서 0.5초 대기
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             if (Objects.equals(chatRoom.getOwnerId(), memberId)) {
                 Long newOwnerId = chatRoom.getJoinedMemberIds().get(0);
                 String newOwnerName = memberRepository.findById(newOwnerId).orElseThrow(
                         () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
                 ).getName();
-                chatRoom.setOwnerId(chatRoom.getJoinedMemberIds().get(0));
-                chatRoomRepository.save(chatRoom);
-
+                chatRoomRepository.updateOwnerId(chatRoomId, newOwnerId);
                 chatMessageService.send(chatRoomId, MemberId.ADMIN.getValue(), newOwnerName + "님이 방장이 되었습니다.");
             }
         }

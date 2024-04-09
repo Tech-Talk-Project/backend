@@ -34,10 +34,9 @@ public class ChatRoomSearchService {
         List<SimpleMemberProfileDto> simpleMemberProfileDtoList = getJoinedMembers(chatRoom.getJoinedMemberIds());
         Date lastAccessTime = getLastAccessTime(memberId, chatRoomId);
         List<ChatRoom.LastMessage> lastMessages = chatMessageListService.getChatMessageListBeforeCursor(memberId, chatRoomId, lastAccessTime);
-        Integer unreadCount = lastMessages.size();
+        Integer unreadCount = getUnreadCountWithoutAdminMessage(lastMessages, lastAccessTime);
         if (lastMessages.size() < 100) {
             lastMessages = chatRoom.getLastMessages();
-            unreadCount = getUnreadCount(lastMessages, lastAccessTime);
         }
 
         insertReadNotification(lastMessages, unreadCount);
@@ -88,6 +87,16 @@ public class ChatRoomSearchService {
             simpleMemberProfileDtoList.add(new SimpleMemberProfileDto(member));
         }
         return simpleMemberProfileDtoList;
+    }
+
+    private Integer getUnreadCountWithoutAdminMessage(List<ChatRoom.LastMessage> lastMessages, Date lastReadDate) {
+        Integer count = 0;
+        for (ChatRoom.LastMessage lastMessage : lastMessages) {
+            if (lastMessage.getSendTime().after(lastReadDate)) break;
+            if (lastMessage.getSenderId() < 0) continue;
+            count++;
+        }
+        return count;
     }
 
     private Integer getUnreadCount(List<ChatRoom.LastMessage> lastMessages, Date lastReadDate) {
