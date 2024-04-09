@@ -14,13 +14,13 @@ import java.util.List;
 public class ChatRoom {
     @Id
     private String id;
+    @CreatedDate
+    private LocalDateTime createdAt;
     private String title;
     private Long ownerId;
     private List<Long> memberIds = new ArrayList<>();
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-
+    private List<Message> messages = new ArrayList<>();
+    
     @Getter
     public static class Message {
         private Long senderId;
