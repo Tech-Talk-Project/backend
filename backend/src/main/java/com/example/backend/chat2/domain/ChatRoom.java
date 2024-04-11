@@ -26,5 +26,17 @@ public class ChatRoom {
         private Long senderId;
         private LocalDateTime sendTime;
         private String content;
+
+        public Message(Long senderId, String content) {
+            this.senderId = senderId;
+            this.content = content;
+            this.sendTime = LocalDateTime.now();
+        }
+    }
+
+    public ChatRoom(String title, Long ownerId, List<Long> memberIds) {
+        this.title = title;
+        this.ownerId = ownerId;
+        this.memberIds = memberIds;
     }
 }
