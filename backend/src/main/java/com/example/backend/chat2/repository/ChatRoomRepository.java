@@ -14,7 +14,7 @@ public class ChatRoomRepository {
     private final MongoTemplate mongoTemplate;
     private static final Integer MESSAGE_LIMIT = 100;
 
-    public void appendMemberIdToMemberIds(String chatRoomId, Long memberId) {
+    public void appendMemberId(String chatRoomId, Long memberId) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         Update update = new Update().addToSet("memberIds", memberId);
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
@@ -35,8 +35,9 @@ public class ChatRoomRepository {
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 
-    public void save(ChatRoom chatRoom) {
+    public ChatRoom save(ChatRoom chatRoom) {
         mongoTemplate.save(chatRoom);
+        return chatRoom;
     }
 
     public ChatRoom findById(String chatRoomId) {
@@ -47,7 +48,7 @@ public class ChatRoomRepository {
         return chatRoom;
     }
 
-    public void delete(ChatRoom chatRoom) {
+    public void remove(ChatRoom chatRoom) {
         mongoTemplate.remove(chatRoom);
     }
 
@@ -61,5 +62,10 @@ public class ChatRoomRepository {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         Update update = new Update().set("ownerId", ownerId);
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
+
+    public Integer getMemberCount(String chatRoomId) {
+        ChatRoom chatRoom = findById(chatRoomId);
+        return chatRoom.getMemberIds().size();
     }
 }
