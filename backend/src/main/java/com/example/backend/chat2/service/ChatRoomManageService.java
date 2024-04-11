@@ -1,7 +1,11 @@
 package com.example.backend.chat2.service;
 
+import com.example.backend.chat2.dto.request.ChatRoomTitleUpdateRequestDto;
+import com.example.backend.chat2.exception.MemberAlreadyInvitedException;
 import com.example.backend.chat2.domain.ChatRoom;
-import com.example.backend.chat2.dto.ChatRoomCreateRequestDto;
+import com.example.backend.chat2.dto.request.ChatRoomCreateRequestDto;
+import com.example.backend.chat2.dto.request.ChatRoomInviteRequestDto;
+import com.example.backend.chat2.dto.request.ChatRoomLeaveRequestDto;
 import com.example.backend.chat2.repository.BackupMessageRepository;
 import com.example.backend.chat2.repository.ChatMemberRepository;
 import com.example.backend.chat2.repository.ChatRoomRepository;
@@ -82,7 +86,10 @@ public class ChatRoomManageService {
         return new HashSet<>(memberIds).stream().toList();
     }
 
-    public void inviteMember(String chatRoomId, Long memberId) {
+    public void inviteMember(ChatRoomInviteRequestDto dto) {
+        String chatRoomId = dto.getChatRoomId();
+        Long memberId = dto.getMemberId();
+
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         validateInviteMemberId(chatRoom, memberId);
         chatRoomRepository.appendMemberId(chatRoomId, memberId);
@@ -92,10 +99,11 @@ public class ChatRoomManageService {
     }
 
     private void validateInviteMemberId(ChatRoom chatRoom, Long memberId) {
-        // 멤버가 존재하지 않거나 이미 채팅방에 참여중인 경우
-        if (!memberQuerydsl.existsByMemberId(memberId) ||
-                chatRoom.getMemberIds().contains(memberId)) {
+        if (!memberQuerydsl.existsByMemberId(memberId)) {
             throw new IllegalArgumentException("존재하지 않는 멤버입니다.");
+        }
+        if (chatRoom.getMemberIds().contains(memberId)) {
+            throw new MemberAlreadyInvitedException("이미 참여한 채팅방입니다.");
         }
     }
 
@@ -106,7 +114,8 @@ public class ChatRoomManageService {
         backupMessagesRepository.appendMessage(chatRoom.getId(), inviteMessage);
     }
 
-    public void leaveChatRoom(String chatRoomId, Long memberId) {
+    public void leaveChatRoom(Long memberId, ChatRoomLeaveRequestDto dto) {
+        String chatRoomId = dto.getChatRoomId();
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
 
         chatRoom.getMemberIds().remove(memberId);
@@ -156,7 +165,10 @@ public class ChatRoomManageService {
         }
     }
 
-    public void changeTitle(Long memberId, String chatRoomId, String title) {
+    public void changeTitle(Long memberId, ChatRoomTitleUpdateRequestDto dto) {
+        String chatRoomId = dto.getChatRoomId();
+        String title = dto.getTitle();
+
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         validateChatRoomOwner(memberId, chatRoom);
         chatRoomRepository.updateTitle(chatRoomId, title);
