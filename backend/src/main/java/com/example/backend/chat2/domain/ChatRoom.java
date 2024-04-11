@@ -20,7 +20,7 @@ public class ChatRoom {
     private Long ownerId;
     private List<Long> memberIds = new ArrayList<>();
     private List<Message> messages = new ArrayList<>();
-    
+
     @Getter
     public static class Message {
         private Long senderId;
