@@ -32,4 +32,20 @@ public class MemberQuerydsl {
                 .limit(limit)
                 .fetch();
     }
+
+    public String findNameById(Long memberId) {
+        return query
+                .select(member.name)
+                .from(member)
+                .where(member.id.eq(memberId))
+                .fetchOne();
+    }
+
+    public boolean existsByMemberId(Long memberId) {
+        return query
+                .selectOne()
+                .from(member)
+                .where(member.id.eq(memberId))
+                .fetchFirst() != null;
+    }
 }
