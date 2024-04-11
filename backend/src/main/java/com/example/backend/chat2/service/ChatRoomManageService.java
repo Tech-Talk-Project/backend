@@ -54,6 +54,7 @@ public class ChatRoomManageService {
         String content = concatNames(memberIds) + " 님이 입장하셨습니다.";
         ChatRoom.Message welcomeMessage = new ChatRoom.Message(AdminId.WELCOME.getValue(), content);
         chatRoomRepository.appendMessage(chatRoom.getId(), welcomeMessage);
+        backupMessagesRepository.appendMessage(chatRoom.getId(), welcomeMessage);
     }
 
     private String concatNames(List<Long> memberIds) {
@@ -102,6 +103,7 @@ public class ChatRoomManageService {
         String content = memberQuerydsl.findNameById(memberId) + " 님이 초대되었습니다.";
         ChatRoom.Message inviteMessage = new ChatRoom.Message(AdminId.INVITE.getValue(), content);
         chatRoomRepository.appendMessage(chatRoom.getId(), inviteMessage);
+        backupMessagesRepository.appendMessage(chatRoom.getId(), inviteMessage);
     }
 
     public void leaveChatRoom(String chatRoomId, Long memberId) {
@@ -111,7 +113,7 @@ public class ChatRoomManageService {
         chatRoomRepository.pullMemberIdFromMemberIds(chatRoomId, memberId);
         chatMemberRepository.pullJoinedChatRoom(memberId, chatRoomId);
 
-        // 채팅방에 나 혼자 남아 있었으면 채팅방 삭제
+        // 채팅방이 비어 있으면 삭제합니다.
         if (chatRoom.getMemberIds().isEmpty()) {
             chatRoomRepository.remove(chatRoom);
             backupMessagesRepository.removeById(chatRoomId);
@@ -135,6 +137,7 @@ public class ChatRoomManageService {
         String content = memberName + "님이 퇴장하셨습니다.";
         ChatRoom.Message leaveMessage = new ChatRoom.Message(AdminId.LEAVE.getValue(), content);
         chatRoomRepository.appendMessage(chatRoomId, leaveMessage);
+        backupMessagesRepository.appendMessage(chatRoomId, leaveMessage);
     }
 
     private void addNewOwnerNotificationMessage(String chatRoomId, Long newOwnerId) {
@@ -142,6 +145,7 @@ public class ChatRoomManageService {
         String content = newOwnerName + "님이 방장이 되었습니다.";
         ChatRoom.Message newOwnerMessage = new ChatRoom.Message(AdminId.NEW_OWNER.getValue(), content);
         chatRoomRepository.appendMessage(chatRoomId, newOwnerMessage);
+        backupMessagesRepository.appendMessage(chatRoomId, newOwnerMessage);
     }
 
     private void waitHalfSecond() {

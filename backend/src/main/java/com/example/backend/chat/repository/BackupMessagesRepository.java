@@ -61,6 +61,7 @@ public class BackupMessagesRepository {
         return reverseResults;
     }
 
+
     public List<ChatRoom.LastMessage> getChatMessageListBeforeCursor(String chatRoomId, Date cursor) {
         MatchOperation matchStage = Aggregation.match(Criteria.where("_id").is(chatRoomId));
 
