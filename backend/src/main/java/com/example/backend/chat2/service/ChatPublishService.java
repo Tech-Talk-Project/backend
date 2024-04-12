@@ -18,6 +18,13 @@ public class ChatPublishService {
     }
 
     public void publishInviteNotification(String topic, ChatRoom invitedChatRoom) {
-        rabbitTemplate.convertAndSend(EXCHANGE, topic, new ChatRoomInfoWhenListDto(invitedChatRoom, 0));
+        rabbitTemplate.convertAndSend(
+                EXCHANGE, topic, new ChatRoomInfoWhenListDto(invitedChatRoom, getUnreadCount(invitedChatRoom))
+        );
+
+    }
+    
+    public Integer getUnreadCount(ChatRoom chatRoom) {
+        return chatRoom.getMessages().size();
     }
 }

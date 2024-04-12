@@ -34,8 +34,8 @@ public class ChatRoomManageService {
 
         ChatRoom chatRoom = chatRoomRepository.save(new ChatRoom(title, ownerId, memberIds));
 
-        addWelcomeMessage(chatRoom, memberIds);
         appendJoinedChatRoom(memberIds, chatRoom.getId());
+        addWelcomeMessage(chatRoom, memberIds);
         for (Long memberId : memberIds) {
             publishChatRoomInviteNotification(chatRoom, memberId);
         }
@@ -57,6 +57,7 @@ public class ChatRoomManageService {
     private void addWelcomeMessage(ChatRoom chatRoom, List<Long> memberIds) {
         String content = concatNames(memberIds) + " 님이 입장하셨습니다.";
         ChatRoom.Message welcomeMessage = new ChatRoom.Message(AdminId.WELCOME.getValue(), content);
+        chatRoom.getMessages().add(welcomeMessage);
         chatRoomRepository.appendMessage(chatRoom.getId(), welcomeMessage);
         backupMessagesRepository.appendMessage(chatRoom.getId(), welcomeMessage);
     }
@@ -94,8 +95,8 @@ public class ChatRoomManageService {
         validateInviteMemberId(chatRoom, memberId);
         chatRoomRepository.appendMemberId(chatRoomId, memberId);
         chatMemberRepository.appendJoinedChatRoom(memberId, chatRoomId);
-        publishChatRoomInviteNotification(chatRoom, memberId);
         addInviteMessage(chatRoom, memberId);
+        publishChatRoomInviteNotification(chatRoom, memberId);
     }
 
     private void validateInviteMemberId(ChatRoom chatRoom, Long memberId) {
@@ -110,6 +111,7 @@ public class ChatRoomManageService {
     private void addInviteMessage(ChatRoom chatRoom, Long memberId) {
         String content = memberQuerydsl.findNameById(memberId) + " 님이 초대되었습니다.";
         ChatRoom.Message inviteMessage = new ChatRoom.Message(AdminId.INVITE.getValue(), content);
+        chatRoom.getMessages().add(inviteMessage);
         chatRoomRepository.appendMessage(chatRoom.getId(), inviteMessage);
         backupMessagesRepository.appendMessage(chatRoom.getId(), inviteMessage);
     }
