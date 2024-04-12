@@ -17,6 +17,9 @@ public class ChatMessageService {
     private final ChatMemberValidator chatMemberValidator;
 
     public ChatMessageListResponseDto getMessagesBeforeCursor(Long memberId, String chatRoomId, LocalDateTime cursor) {
+        if (cursor == null) {
+            cursor = LocalDateTime.now();
+        }
         chatMemberValidator.validateMember(chatRoomId, memberId);
         List<ChatRoom.Message> messages =
                 backupMessageRepository.getMessagesBeforeCursor(chatRoomId, cursor);

@@ -20,7 +20,7 @@ public class ChatMessageViewController {
 
     @GetMapping("/cursor")
     public ResponseEntity<ChatMessageListResponseDto> getMessagesBeforeCursor(
-            @RequestParam String chatRoomId, @RequestParam LocalDateTime cursor
+            @RequestParam String chatRoomId, @RequestParam(required = false) LocalDateTime cursor
     ) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(chatMessageService.getMessagesBeforeCursor(memberId, chatRoomId, cursor));
