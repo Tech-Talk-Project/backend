@@ -48,4 +48,11 @@ public class MemberQuerydsl {
                 .where(member.id.eq(memberId))
                 .fetchFirst() != null;
     }
+
+    public List<Member> findByIdIn(List<Long> memberIds) {
+        return query
+                .selectFrom(member)
+                .where(member.id.in(memberIds))
+                .fetch();
+    }
 }

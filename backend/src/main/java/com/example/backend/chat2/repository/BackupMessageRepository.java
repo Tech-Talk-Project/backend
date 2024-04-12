@@ -3,8 +3,10 @@ package com.example.backend.chat2.repository;
 import com.example.backend.chat2.domain.BackupMessage;
 import com.example.backend.chat2.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -34,7 +36,41 @@ public class BackupMessageRepository {
         mongoTemplate.upsert(query, update, BackupMessage.class);
     }
 
-//    public List<ChatRoom.Message> getMessagesAfterCursor(String chatRoomId, LocalDateTime cursor) {
-//        Aggregation.match(Criteria.where("_id").is(chatRoomId));
-//    }
+    public List<ChatRoom.Message> getMessagesAfterCursor(String chatRoomId, LocalDateTime cursor) {
+        MatchOperation matchOperation = Aggregation.match(Criteria.where("_id").is(chatRoomId));
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                matchOperation,
+                Aggregation.unwind("messages"),
+                Aggregation.match(Criteria.where("messages.sendTime").lt(cursor)),
+                Aggregation.sort(Sort.Direction.ASC, "messages.sendTime"),
+                Aggregation.limit(100),
+                Aggregation.project().and("messages.senderId").as("senderId")
+                        .and("messages.sendTime").as("sendTime")
+                        .and("messages.content").as("content")
+        );
+
+        return mongoTemplate
+                .aggregate(aggregation, BackupMessage.class, ChatRoom.Message.class)
+                .getMappedResults();
+    }
+
+    public List<ChatRoom.Message> getMessagesBeforeCursor(String chatRoomId, LocalDateTime cursor) {
+        MatchOperation matchOperation = Aggregation.match(Criteria.where("_id").is(chatRoomId));
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                matchOperation,
+                Aggregation.unwind("messages"),
+                Aggregation.match(Criteria.where("messages.sendTime").gt(cursor)),
+                Aggregation.sort(Sort.Direction.DESC, "messages.sendTime"),
+                Aggregation.limit(MESSAGE_LIMIT),
+                Aggregation.project().and("messages.senderId").as("senderId")
+                        .and("messages.sendTime").as("sendTime")
+                        .and("messages.content").as("content")
+        );
+
+        return mongoTemplate
+                .aggregate(aggregation, BackupMessage.class, ChatRoom.Message.class)
+                .getMappedResults();
+    }
 }
