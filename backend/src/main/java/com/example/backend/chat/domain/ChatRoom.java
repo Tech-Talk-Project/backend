@@ -1,5 +1,6 @@
 package com.example.backend.chat.domain;
 
+import com.example.backend.chat.dto.websocket.ChatMessageReceiveDto;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -30,6 +31,12 @@ public class ChatRoom {
         public Message(Long senderId, String content) {
             this.senderId = senderId;
             this.content = content;
+            this.sendTime = LocalDateTime.now();
+        }
+
+        public Message(ChatMessageReceiveDto dto) {
+            this.senderId = dto.getMemberId();
+            this.content = dto.getContent();
             this.sendTime = LocalDateTime.now();
         }
     }
