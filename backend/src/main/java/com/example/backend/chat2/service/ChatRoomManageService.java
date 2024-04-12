@@ -1,5 +1,6 @@
 package com.example.backend.chat2.service;
 
+import com.example.backend.chat2.domain.ChatMember;
 import com.example.backend.chat2.dto.request.ChatRoomTitleUpdateRequestDto;
 import com.example.backend.chat2.exception.MemberAlreadyInvitedException;
 import com.example.backend.chat2.domain.ChatRoom;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class ChatRoomManageService {
         appendJoinedChatRoom(memberIds, chatRoom.getId());
         addWelcomeMessage(chatRoom, memberIds);
         for (Long memberId : memberIds) {
-            publishChatRoomInviteNotification(chatRoom, memberId);
+            publishChatRoomCreateNotification(chatRoom, memberId);
         }
 
         return chatRoom.getId();
@@ -49,9 +51,14 @@ public class ChatRoomManageService {
         }
     }
 
-    private void publishChatRoomInviteNotification(ChatRoom chatRoom, Long memberId) {
+    private void publishChatRoomCreateNotification(ChatRoom chatRoom, Long memberId) {
         String notificationTopic = memberId.toString();
-        chatPublishService.publishInviteNotification(notificationTopic, chatRoom);
+        chatPublishService.publishCreateNotification(notificationTopic, chatRoom);
+    }
+
+    private void publishChatRoomInviteNotification(ChatRoom chatRoom, Long memberId, LocalDateTime inviteTime) {
+        String notificationTopic = memberId.toString();
+        chatPublishService.publishInviteNotification(notificationTopic, chatRoom, inviteTime);
     }
 
     private void addWelcomeMessage(ChatRoom chatRoom, List<Long> memberIds) {
@@ -94,9 +101,9 @@ public class ChatRoomManageService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         validateInviteMemberId(chatRoom, memberId);
         chatRoomRepository.appendMemberId(chatRoomId, memberId);
-        chatMemberRepository.appendJoinedChatRoom(memberId, chatRoomId);
+        ChatMember.JoinedChatRoom joinedChatRoom = chatMemberRepository.appendJoinedChatRoom(memberId, chatRoomId);
         addInviteMessage(chatRoom, memberId);
-        publishChatRoomInviteNotification(chatRoom, memberId);
+        publishChatRoomInviteNotification(chatRoom, memberId, joinedChatRoom.getLastAccessTime());
     }
 
     private void validateInviteMemberId(ChatRoom chatRoom, Long memberId) {

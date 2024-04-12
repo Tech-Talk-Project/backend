@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class ChatPublishService {
@@ -17,14 +19,20 @@ public class ChatPublishService {
         rabbitTemplate.convertAndSend(EXCHANGE, topic, new ChatMessagePublishInfoDto(message));
     }
 
-    public void publishInviteNotification(String topic, ChatRoom invitedChatRoom) {
+    public void publishCreateNotification(String topic, ChatRoom createdChatRoom) {
         rabbitTemplate.convertAndSend(
-                EXCHANGE, topic, new ChatRoomInfoWhenListDto(invitedChatRoom, getUnreadCount(invitedChatRoom))
+                EXCHANGE, topic, new ChatRoomInfoWhenListDto(createdChatRoom, createdChatRoom.getMessages().size())
+        );
+    }
+
+    public void publishInviteNotification(String topic, ChatRoom invitedChatRoom, LocalDateTime inviteTime) {
+        rabbitTemplate.convertAndSend(
+                EXCHANGE, topic, new ChatRoomInfoWhenListDto(invitedChatRoom, getUnreadCountWhenInvite(invitedChatRoom, inviteTime))
         );
 
     }
-    
-    public Integer getUnreadCount(ChatRoom chatRoom) {
-        return chatRoom.getMessages().size();
+
+    public Integer getUnreadCountWhenInvite(ChatRoom chatRoom, LocalDateTime inviteTime) {
+        return (int) chatRoom.getMessages().stream().filter(message -> message.getSendTime().isAfter(inviteTime)).count();
     }
 }

@@ -15,10 +15,14 @@ import java.time.LocalDateTime;
 public class ChatMemberRepository {
     private final MongoTemplate mongoTemplate;
 
-    public void appendJoinedChatRoom(Long memberId, String chatRoomId) {
+    public ChatMember.JoinedChatRoom appendJoinedChatRoom(Long memberId, String chatRoomId) {
+        ChatMember.JoinedChatRoom joinedChatRoom = new ChatMember.JoinedChatRoom(chatRoomId);
+
         Query query = new Query(Criteria.where("_id").is(memberId));
-        Update update = new Update().addToSet("joinedChatRooms", new ChatMember.JoinedChatRoom(chatRoomId));
+        Update update = new Update().addToSet("joinedChatRooms", joinedChatRoom);
         mongoTemplate.upsert(query, update, ChatMember.class);
+
+        return joinedChatRoom;
     }
 
     public void updateLeaveTimeToNow(Long memberId, String chatRoomId) {
