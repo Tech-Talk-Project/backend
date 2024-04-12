@@ -44,7 +44,6 @@ public class BackupMessageRepository {
                 Aggregation.unwind("messages"),
                 Aggregation.match(Criteria.where("messages.sendTime").lt(cursor)),
                 Aggregation.sort(Sort.Direction.ASC, "messages.sendTime"),
-                Aggregation.limit(100),
                 Aggregation.project().and("messages.senderId").as("senderId")
                         .and("messages.sendTime").as("sendTime")
                         .and("messages.content").as("content")

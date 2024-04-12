@@ -36,7 +36,7 @@ public class ChatRoomViewService {
         List<SimpleMemberProfileDto> simpleProfiles = getSimpleProfile(chatRoom.getMemberIds());
 
 
-        List<ChatRoom.Message> messages = backupMessageRepository.getMessagesBeforeCursor(chatRoomId, lastAccessTime);
+        List<ChatRoom.Message> messages = backupMessageRepository.getMessagesAfterCursor(chatRoomId, lastAccessTime);
         Integer unreadCount = messages.size();
         if (messages.size() < 100) {
             messages = chatRoom.getMessages();
