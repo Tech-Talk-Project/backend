@@ -29,10 +29,10 @@ public class ChatRoomManageService {
     private final MemberQuerydsl memberQuerydsl;
     private final ChatPublishService chatPublishService;
 
-    public String createChatRoom(ChatRoomCreateRequestDto chatRoomCreateRequestDto) {
+    public String createChatRoom(Long ownerId, ChatRoomCreateRequestDto chatRoomCreateRequestDto) {
+        chatRoomCreateRequestDto.getMemberIds().add(ownerId);
         List<Long> memberIds = getJoinMemberIdsWithoutDuplicate(chatRoomCreateRequestDto);
         String title = createAutoTitleIfNone(chatRoomCreateRequestDto.getTitle(), memberIds);
-        Long ownerId = chatRoomCreateRequestDto.getOwnerId();
 
         ChatRoom chatRoom = chatRoomRepository.save(new ChatRoom(title, ownerId, memberIds));
 
@@ -90,7 +90,6 @@ public class ChatRoomManageService {
 
     private List<Long> getJoinMemberIdsWithoutDuplicate(ChatRoomCreateRequestDto dto) {
         List<Long> memberIds = dto.getMemberIds();
-        memberIds.add(dto.getOwnerId());
         return new HashSet<>(memberIds).stream().toList();
     }
 
