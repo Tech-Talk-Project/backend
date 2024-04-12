@@ -1,6 +1,7 @@
 package com.example.backend.chat2.dto;
 
 import com.example.backend.chat2.domain.ChatRoom;
+import com.example.backend.chat2.dto.websocket.ChatMessageReceiveDto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,5 +16,17 @@ public class ChatMessagePublishInfoDto {
         this.senderId = message.getSenderId();
         this.content = message.getContent();
         this.sendTime = message.getSendTime();
+    }
+
+    public ChatMessagePublishInfoDto(Long senderId, String content) {
+        this.senderId = senderId;
+        this.content = content;
+        this.sendTime = LocalDateTime.now();
+    }
+
+    public ChatMessagePublishInfoDto(ChatMessageReceiveDto dto) {
+        this.senderId = dto.getMemberId();
+        this.content = dto.getContent();
+        this.sendTime = LocalDateTime.now();
     }
 }
