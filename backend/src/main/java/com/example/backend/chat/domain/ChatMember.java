@@ -1,11 +1,12 @@
 package com.example.backend.chat.domain;
 
+import jakarta.persistence.Id;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Document
@@ -13,6 +14,10 @@ import java.util.List;
 public class ChatMember {
     @Id
     private Long id;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
     private List<JoinedChatRoom> joinedChatRooms = new ArrayList<>();
 
     public ChatMember(Long id) {
@@ -22,11 +27,15 @@ public class ChatMember {
     @Getter
     public static class JoinedChatRoom {
         private String chatRoomId;
-        private Date lastAccessTime;
+        private LocalDateTime lastAccessTime;
 
-        public JoinedChatRoom(String chatRoomId, Date lastAccessTime) {
+        /**
+         * 이 생성자로 생성된 JoinedChatRoom은 lastAccessTime이 현재 시간으로 설정됩니다.
+         * @param chatRoomId
+         */
+        public JoinedChatRoom(String chatRoomId) {
             this.chatRoomId = chatRoomId;
-            this.lastAccessTime = lastAccessTime;
+            this.lastAccessTime = LocalDateTime.now();
         }
     }
 }

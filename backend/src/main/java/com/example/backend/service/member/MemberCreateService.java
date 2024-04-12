@@ -7,7 +7,6 @@ import com.example.backend.entity.member.Authority;
 import com.example.backend.entity.member.EAuthority;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.member.MemberAuthority;
-import com.example.backend.entity.profile.Profile;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
 import com.example.backend.repository.follow.FollowingRepository;

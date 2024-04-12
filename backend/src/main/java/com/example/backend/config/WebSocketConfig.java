@@ -1,6 +1,6 @@
 package com.example.backend.config;
 
-import com.example.backend.chat.ws.CustomChannelInterceptor;
+import com.example.backend.chat.websocket.ChatWebsocketEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -13,7 +13,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    private final CustomChannelInterceptor customChannelInterceptor;
+    private final ChatWebsocketEventListener chatWebsocketEventListener;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -30,6 +30,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(customChannelInterceptor);
+        registration.interceptors(chatWebsocketEventListener);
     }
 }

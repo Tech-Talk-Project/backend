@@ -23,7 +23,7 @@ public class MemberRemoveService {
     public void removeMember(Long memberId) {
         ChatMember chatMember = chatMemberRepository.findById(memberId);
         for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
-            chatMemberService.exitChatRoom(joinedChatRoom.getChatRoomId(), memberId);
+            chatMemberService.outChatRoom(memberId, joinedChatRoom.getChatRoomId());
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -32,7 +32,7 @@ public class MemberRemoveService {
         }
         memberAuthorityRepository.deleteAuthoritiesByMemberId(memberId);
         memberRepository.deleteById(memberId);
-        chatMemberRepository.deleteById(memberId);
+        chatMemberRepository.removeById(memberId);
         followingRepository.deleteById(memberId);
     }
 }
