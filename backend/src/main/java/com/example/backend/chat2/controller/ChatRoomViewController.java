@@ -1,5 +1,6 @@
 package com.example.backend.chat2.controller;
 
+import com.example.backend.chat2.dto.response.ChatRoomListViewDto;
 import com.example.backend.chat2.dto.response.ChatRoomViewResponseDto;
 import com.example.backend.chat2.service.ChatRoomViewService;
 import lombok.RequiredArgsConstructor;
@@ -19,5 +20,11 @@ public class ChatRoomViewController {
     ) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(chatRoomViewService.viewChatRoom(memberId, chatRoomId));
+    }
+
+    @GetMapping("/rooms")
+    public ResponseEntity<ChatRoomListViewDto> viewChatRoomList() {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(chatRoomViewService.viewChatRoomList(memberId));
     }
 }
