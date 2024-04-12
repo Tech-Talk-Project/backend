@@ -13,7 +13,7 @@ public class ChatMemberValidator {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
 
-    public void isMemberOfChatRoom(String chatRoomId, Long memberId) {
+    public void validateMember(String chatRoomId, Long memberId) {
         ChatMember chatMember = chatMemberRepository.findById(memberId);
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
 

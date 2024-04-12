@@ -31,7 +31,7 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
                 type == WebSocketConnectionType.CHAT_ROOM_LIST) {
                 Long memberId = jwtClaimReader.getMemberId(accessToken);
                 String chatRoomId = accessor.getFirstNativeHeader("chatRoomId");
-                chatMemberValidator.isMemberOfChatRoom(chatRoomId, memberId);
+                chatMemberValidator.validateMember(chatRoomId, memberId);
             }
         }
         return message;
