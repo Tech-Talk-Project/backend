@@ -3,6 +3,7 @@ package com.example.backend.chat.domain;
 import com.example.backend.chat.dto.websocket.ChatMessageReceiveDto;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -23,6 +24,7 @@ public class ChatRoom {
     private List<Message> messages = new ArrayList<>();
 
     @Getter
+    @NoArgsConstructor
     public static class Message {
         private Long senderId;
         private LocalDateTime sendTime;
