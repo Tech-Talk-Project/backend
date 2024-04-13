@@ -101,8 +101,10 @@ public class ChatRoomManageService {
         validateInviteMemberId(chatRoom, memberId);
         chatRoomRepository.appendMemberId(chatRoomId, memberId);
         ChatMember.JoinedChatRoom joinedChatRoom = chatMemberRepository.appendJoinedChatRoom(memberId, chatRoomId);
-        addInviteMessage(chatRoom, memberId);
+        ChatRoom.Message inviteMessage = addInviteMessage(chatRoom, memberId);
+
         publishChatRoomInviteNotification(chatRoom, memberId, joinedChatRoom.getLastAccessTime());
+        publishNotification(chatRoom.getId(), inviteMessage);
     }
 
     private void validateInviteMemberId(ChatRoom chatRoom, Long memberId) {
@@ -114,12 +116,13 @@ public class ChatRoomManageService {
         }
     }
 
-    private void addInviteMessage(ChatRoom chatRoom, Long memberId) {
+    private ChatRoom.Message addInviteMessage(ChatRoom chatRoom, Long memberId) {
         String content = memberRepository.findNameById(memberId) + " 님이 초대되었습니다.";
         ChatRoom.Message inviteMessage = new ChatRoom.Message(AdminId.INVITE.getValue(), content);
         chatRoom.getMessages().add(inviteMessage);
         chatRoomRepository.appendMessage(chatRoom.getId(), inviteMessage);
         backupMessagesRepository.appendMessage(chatRoom.getId(), inviteMessage);
+        return inviteMessage;
     }
 
     public void leaveChatRoom(Long memberId, ChatRoomLeaveRequestDto dto) {
@@ -137,32 +140,41 @@ public class ChatRoomManageService {
             return;
         }
 
-        addLeaveMessage(chatRoomId, memberId);
+        ChatRoom.Message leaveMessage = addLeaveMessage(chatRoomId, memberId);
+        publishNotification(chatRoom.getId(), leaveMessage);
 
         // 방장이 나가면 새로운 방장 지정
         if (chatRoom.getOwnerId().equals(memberId)) {
             Long newOwnerId = chatRoom.getMemberIds().get(0);
             chatRoomRepository.updateOwnerId(chatRoom.getId(), newOwnerId);
+
+            ChatRoom.Message newOwnerMessage = addNewOwnerNotificationMessage(chatRoom.getId(), newOwnerId);
             // 웹소켓 전송 메세지 사이의 시간 간격이 너무 짧으면 프론트에서 데이터를 받지 못하는 경우가 있어서 0.5초 대기
             waitHalfSecond();
-            addNewOwnerNotificationMessage(chatRoom.getId(), newOwnerId);
+            publishNotification(chatRoom.getId(), newOwnerMessage);
         }
     }
 
-    private void addLeaveMessage(String chatRoomId, Long memberId) {
+    private void publishNotification(String topic, ChatRoom.Message message) {
+        chatPublishService.publishMessage(topic, message);
+    }
+
+    private ChatRoom.Message addLeaveMessage(String chatRoomId, Long memberId) {
         String memberName = memberRepository.findNameById(memberId);
         String content = memberName + "님이 퇴장하셨습니다.";
         ChatRoom.Message leaveMessage = new ChatRoom.Message(AdminId.LEAVE.getValue(), content);
         chatRoomRepository.appendMessage(chatRoomId, leaveMessage);
         backupMessagesRepository.appendMessage(chatRoomId, leaveMessage);
+        return leaveMessage;
     }
 
-    private void addNewOwnerNotificationMessage(String chatRoomId, Long newOwnerId) {
+    private ChatRoom.Message addNewOwnerNotificationMessage(String chatRoomId, Long newOwnerId) {
         String newOwnerName = memberRepository.findNameById(newOwnerId);
         String content = newOwnerName + "님이 방장이 되었습니다.";
         ChatRoom.Message newOwnerMessage = new ChatRoom.Message(AdminId.NEW_OWNER.getValue(), content);
         chatRoomRepository.appendMessage(chatRoomId, newOwnerMessage);
         backupMessagesRepository.appendMessage(chatRoomId, newOwnerMessage);
+        return newOwnerMessage;
     }
 
     private void waitHalfSecond() {
