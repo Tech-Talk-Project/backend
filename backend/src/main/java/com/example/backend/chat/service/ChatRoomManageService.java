@@ -175,7 +175,7 @@ public class ChatRoomManageService {
 
     public void changeTitle(Long memberId, ChatRoomTitleUpdateRequestDto dto) {
         String chatRoomId = dto.getChatRoomId();
-        String title = dto.getTitle();
+        String title = dto.getNewTitle();
 
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         validateChatRoomOwner(memberId, chatRoom);
