@@ -89,8 +89,13 @@ public class ChatRoomViewService {
             Integer unreadCount = countUnread(chatRoom.getMessages(), joinedChatRoom.getLastAccessTime());
             chatRoomList.add(new ChatRoomInfoWhenListDto(chatRoom, unreadCount));
         }
+        sortChatRoomListByLastMessageTime(chatRoomList);
 
         return new ChatRoomListViewDto(chatRoomList);
+    }
+
+    private void sortChatRoomListByLastMessageTime(List<ChatRoomInfoWhenListDto> chatRoomList) {
+        chatRoomList.sort((o1, o2) -> o2.getLastMessage().getSendTime().compareTo(o1.getLastMessage().getSendTime()));
     }
 
     private Integer countUnread(List<ChatRoom.Message> messages, LocalDateTime lastAccessTime) {
