@@ -41,8 +41,22 @@ public class ChatRoomViewService {
         if (messages.size() < 100) {
             messages = chatRoom.getMessages();
         }
+        messages = addUnreadNotification(messages, lastAccessTime);
 
         return new ChatRoomViewResponseDto(chatRoom, simpleProfiles, messages, unreadCount);
+    }
+
+    private List<ChatRoom.Message> addUnreadNotification(List<ChatRoom.Message> messages, LocalDateTime lastAccessTime) {
+        List<ChatRoom.Message> result = new ArrayList<>();
+        boolean ck = true;
+        for (ChatRoom.Message message : messages) {
+            if (message.getSendTime().isAfter(lastAccessTime) && ck) {
+                ck = false;
+                result.add(new ChatRoom.Message(AdminId.TEMP.getValue(), "여기까지 읽었습니다."));
+            }
+            result.add(message);
+        }
+        return result;
     }
 
     private List<SimpleMemberProfileDto> getSimpleProfile(List<Long> memberIds) {

@@ -36,6 +36,12 @@ public class ChatRoom {
             this.sendTime = LocalDateTime.now();
         }
 
+        public Message(Long senderId, String content, LocalDateTime sendTime) {
+            this.senderId = senderId;
+            this.content = content;
+            this.sendTime = sendTime;
+        }
+
         public Message(ChatMessageReceiveDto dto) {
             this.senderId = dto.getMemberId();
             this.content = dto.getContent();
