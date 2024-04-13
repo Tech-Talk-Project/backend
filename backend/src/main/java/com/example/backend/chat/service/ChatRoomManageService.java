@@ -95,7 +95,7 @@ public class ChatRoomManageService {
 
     public void inviteMember(ChatRoomInviteRequestDto dto) {
         String chatRoomId = dto.getChatRoomId();
-        Long memberId = dto.getMemberId();
+        Long memberId = dto.getInvitedMemberId();
 
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         validateInviteMemberId(chatRoom, memberId);

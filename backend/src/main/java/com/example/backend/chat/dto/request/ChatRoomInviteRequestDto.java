@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ChatRoomInviteRequestDto {
     private String chatRoomId;
-    private Long memberId;
+    private Long invitedMemberId;
 }
