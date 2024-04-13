@@ -4,6 +4,7 @@ import com.example.backend.chat.validation.ChatMemberValidator;
 import com.example.backend.security.jwt.JwtClaimReader;
 import com.example.backend.security.jwt.JwtValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ChatChannelInterceptor implements ChannelInterceptor {
     private final JwtClaimReader jwtClaimReader;
     private final JwtValidator jwtValidator;
@@ -32,6 +34,7 @@ public class ChatChannelInterceptor implements ChannelInterceptor {
                 Long memberId = jwtClaimReader.getMemberId(accessToken);
                 String chatRoomId = accessor.getFirstNativeHeader("chatRoomId");
                 chatMemberValidator.validateMember(chatRoomId, memberId);
+                log.info("MemberId: " + memberId + " is validated for chatRoomId: " + chatRoomId);
             }
         }
         return message;

@@ -8,7 +8,7 @@ import com.example.backend.chat.dto.response.ChatRoomViewResponseDto;
 import com.example.backend.chat.repository.BackupMessageRepository;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
-import com.example.backend.repository.member.MemberQuerydsl;
+import com.example.backend.repository.member.MemberRepository;
 import com.example.backend.service.profile.dto.SimpleMemberProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class ChatRoomViewService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final BackupMessageRepository backupMessageRepository;
-    private final MemberQuerydsl memberQuerydsl;
+    private final MemberRepository memberRepository;
     public ChatRoomViewResponseDto viewChatRoom(Long memberId, String chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
         ChatMember chatMember = chatMemberRepository.findById(memberId);
@@ -60,7 +60,7 @@ public class ChatRoomViewService {
     }
 
     private List<SimpleMemberProfileDto> getSimpleProfile(List<Long> memberIds) {
-        return memberQuerydsl.findByIdIn(memberIds).stream()
+        return memberRepository.findByIdIn(memberIds).stream()
                 .map(SimpleMemberProfileDto::new)
                 .collect(Collectors.toList());
     }

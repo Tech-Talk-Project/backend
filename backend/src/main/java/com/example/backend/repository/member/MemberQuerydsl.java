@@ -1,58 +1,15 @@
 package com.example.backend.repository.member;
 
 import com.example.backend.entity.member.Member;
-import com.example.backend.entity.member.QMember;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.example.backend.entity.member.QMember.*;
+public interface MemberQuerydsl {
+    List<Member> findByEmailStartsWithLimit(String email, int limit);
 
-@Repository
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class MemberQuerydsl {
-    private final JPAQueryFactory query;
+    List<Member> findByEmailContainsLimit(String email, int limit);
 
-    public List<Member> findByEmailStartsWithLimit(String email, int limit) {
-        return query
-                .selectFrom(member)
-                .where(member.email.startsWith(email))
-                .limit(limit)
-                .fetch();
-    }
+    String findNameById(Long memberId);
 
-    public List<Member> findByEmailContainsLimit(String email, int limit) {
-        return query
-                .selectFrom(member)
-                .where(member.email.contains(email))
-                .limit(limit)
-                .fetch();
-    }
-
-    public String findNameById(Long memberId) {
-        return query
-                .select(member.name)
-                .from(member)
-                .where(member.id.eq(memberId))
-                .fetchOne();
-    }
-
-    public boolean existsByMemberId(Long memberId) {
-        return query
-                .selectOne()
-                .from(member)
-                .where(member.id.eq(memberId))
-                .fetchFirst() != null;
-    }
-
-    public List<Member> findByIdIn(List<Long> memberIds) {
-        return query
-                .selectFrom(member)
-                .where(member.id.in(memberIds))
-                .fetch();
-    }
+    List<Member> findByIdIn(List<Long> memberIds);
 }

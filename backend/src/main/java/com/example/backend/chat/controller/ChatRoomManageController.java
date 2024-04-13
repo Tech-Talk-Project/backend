@@ -50,5 +50,4 @@ public class ChatRoomManageController {
         chatRoomManageService.changeTitle(memberId,  requestDto);
         return ResponseEntity.ok("채팅방 제목을 변경했습니다.");
     }
-
 }

@@ -10,7 +10,7 @@ import com.example.backend.chat.dto.request.ChatRoomLeaveRequestDto;
 import com.example.backend.chat.repository.BackupMessageRepository;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
-import com.example.backend.repository.member.MemberQuerydsl;
+import com.example.backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ public class ChatRoomManageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final BackupMessageRepository backupMessagesRepository;
-    private final MemberQuerydsl memberQuerydsl;
+    private final MemberRepository memberRepository;
     private final ChatPublishService chatPublishService;
 
     public String createChatRoom(Long ownerId, ChatRoomCreateRequestDto chatRoomCreateRequestDto) {
@@ -72,7 +72,7 @@ public class ChatRoomManageService {
     private String concatNames(List<Long> memberIds) {
         StringBuilder content = new StringBuilder();
         for (int i=0;i<memberIds.size();i++) {
-            content.append(memberQuerydsl.findNameById(memberIds.get(i)));
+            content.append(memberRepository.findNameById(memberIds.get(i)));
             if (i < memberIds.size() - 1) {
                 content.append(", ");
             }
@@ -106,7 +106,7 @@ public class ChatRoomManageService {
     }
 
     private void validateInviteMemberId(ChatRoom chatRoom, Long memberId) {
-        if (!memberQuerydsl.existsByMemberId(memberId)) {
+        if (!memberRepository.existsById(memberId)) {
             throw new IllegalArgumentException("존재하지 않는 멤버입니다.");
         }
         if (chatRoom.getMemberIds().contains(memberId)) {
@@ -115,7 +115,7 @@ public class ChatRoomManageService {
     }
 
     private void addInviteMessage(ChatRoom chatRoom, Long memberId) {
-        String content = memberQuerydsl.findNameById(memberId) + " 님이 초대되었습니다.";
+        String content = memberRepository.findNameById(memberId) + " 님이 초대되었습니다.";
         ChatRoom.Message inviteMessage = new ChatRoom.Message(AdminId.INVITE.getValue(), content);
         chatRoom.getMessages().add(inviteMessage);
         chatRoomRepository.appendMessage(chatRoom.getId(), inviteMessage);
@@ -150,7 +150,7 @@ public class ChatRoomManageService {
     }
 
     private void addLeaveMessage(String chatRoomId, Long memberId) {
-        String memberName = memberQuerydsl.findNameById(memberId);
+        String memberName = memberRepository.findNameById(memberId);
         String content = memberName + "님이 퇴장하셨습니다.";
         ChatRoom.Message leaveMessage = new ChatRoom.Message(AdminId.LEAVE.getValue(), content);
         chatRoomRepository.appendMessage(chatRoomId, leaveMessage);
@@ -158,7 +158,7 @@ public class ChatRoomManageService {
     }
 
     private void addNewOwnerNotificationMessage(String chatRoomId, Long newOwnerId) {
-        String newOwnerName = memberQuerydsl.findNameById(newOwnerId);
+        String newOwnerName = memberRepository.findNameById(newOwnerId);
         String content = newOwnerName + "님이 방장이 되었습니다.";
         ChatRoom.Message newOwnerMessage = new ChatRoom.Message(AdminId.NEW_OWNER.getValue(), content);
         chatRoomRepository.appendMessage(chatRoomId, newOwnerMessage);
