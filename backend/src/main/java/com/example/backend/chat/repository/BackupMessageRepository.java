@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -42,7 +43,7 @@ public class BackupMessageRepository {
         Aggregation aggregation = Aggregation.newAggregation(
                 matchOperation,
                 Aggregation.unwind("messages"),
-                Aggregation.match(Criteria.where("messages.sendTime").lt(cursor)),
+                Aggregation.match(Criteria.where("messages.sendTime").gt(cursor)),
                 Aggregation.sort(Sort.Direction.ASC, "messages.sendTime"),
                 Aggregation.project().and("messages.senderId").as("senderId")
                         .and("messages.sendTime").as("sendTime")
@@ -60,7 +61,7 @@ public class BackupMessageRepository {
         Aggregation aggregation = Aggregation.newAggregation(
                 matchOperation,
                 Aggregation.unwind("messages"),
-                Aggregation.match(Criteria.where("messages.sendTime").gt(cursor)),
+                Aggregation.match(Criteria.where("messages.sendTime").lt(cursor)),
                 Aggregation.sort(Sort.Direction.DESC, "messages.sendTime"),
                 Aggregation.limit(MESSAGE_LIMIT),
                 Aggregation.project().and("messages.senderId").as("senderId")
@@ -68,8 +69,17 @@ public class BackupMessageRepository {
                         .and("messages.content").as("content")
         );
 
-        return mongoTemplate
+        List<ChatRoom.Message> unmodifiableList = mongoTemplate
                 .aggregate(aggregation, BackupMessage.class, ChatRoom.Message.class)
                 .getMappedResults();
+        return getReverse(unmodifiableList);
+    }
+
+    private List<ChatRoom.Message> getReverse(List<ChatRoom.Message> lst) {
+        List<ChatRoom.Message> reversed = new ArrayList<>(lst);
+        for (int i = lst.size()-1 ; i >= 0 ; i--) {
+            reversed.add(lst.get(i));
+        }
+        return reversed;
     }
 }
