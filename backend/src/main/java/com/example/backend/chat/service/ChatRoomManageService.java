@@ -117,8 +117,7 @@ public class ChatRoomManageService {
         String chatRoomId = dto.getChatRoomId();
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
 
-        chatRoom.getMemberIds().remove(memberId);
-        chatRoomRepository.pullMemberId(chatRoomId, memberId);
+        chatRoomRepository.pullMemberId(chatRoom, memberId);
         chatMemberRepository.pullJoinedChatRoom(memberId, chatRoomId);
 
         // 채팅방이 비어 있으면 삭제합니다.
