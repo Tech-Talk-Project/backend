@@ -39,7 +39,7 @@ public class ChatRoomManageService {
         appendJoinedChatRoom(memberIds, chatRoom.getId());
         addWelcomeMessage(chatRoom, memberIds);
         for (Long memberId : memberIds) {
-            publishChatRoomCreateNotification(chatRoom, memberId);
+            chatPublishService.publishCreateNotification(memberId.toString(), chatRoom);
         }
 
         return chatRoom.getId();
@@ -49,16 +49,6 @@ public class ChatRoomManageService {
         for (Long memberId : memberIds) {
             chatMemberRepository.appendJoinedChatRoom(memberId, chatRoomId);
         }
-    }
-
-    private void publishChatRoomCreateNotification(ChatRoom chatRoom, Long memberId) {
-        String notificationTopic = memberId.toString();
-        chatPublishService.publishCreateNotification(notificationTopic, chatRoom);
-    }
-
-    private void publishChatRoomInviteNotification(ChatRoom chatRoom, Long memberId, LocalDateTime inviteTime) {
-        String notificationTopic = memberId.toString();
-        chatPublishService.publishInviteNotification(notificationTopic, chatRoom, inviteTime);
     }
 
     private void addWelcomeMessage(ChatRoom chatRoom, List<Long> memberIds) {
@@ -103,8 +93,8 @@ public class ChatRoomManageService {
         ChatMember.JoinedChatRoom joinedChatRoom = chatMemberRepository.appendJoinedChatRoom(memberId, chatRoomId);
         ChatRoom.Message inviteMessage = addInviteMessage(chatRoom, memberId);
 
-        publishChatRoomInviteNotification(chatRoom, memberId, joinedChatRoom.getLastAccessTime());
-        publishNotification(chatRoom.getId(), inviteMessage);
+        chatPublishService.publishInviteNotification(memberId.toString(), chatRoom, joinedChatRoom.getLastAccessTime());
+        chatPublishService.publishMessage(chatRoomId, inviteMessage);
     }
 
     private void validateInviteMemberId(ChatRoom chatRoom, Long memberId) {
@@ -141,7 +131,7 @@ public class ChatRoomManageService {
         }
 
         ChatRoom.Message leaveMessage = addLeaveMessage(chatRoomId, memberId);
-        publishNotification(chatRoom.getId(), leaveMessage);
+        chatPublishService.publishMessage(chatRoomId, leaveMessage);
 
         // 방장이 나가면 새로운 방장 지정
         if (chatRoom.getOwnerId().equals(memberId)) {
@@ -151,12 +141,8 @@ public class ChatRoomManageService {
             ChatRoom.Message newOwnerMessage = addNewOwnerNotificationMessage(chatRoom.getId(), newOwnerId);
             // 웹소켓 전송 메세지 사이의 시간 간격이 너무 짧으면 프론트에서 데이터를 받지 못하는 경우가 있어서 0.5초 대기
             waitHalfSecond();
-            publishNotification(chatRoom.getId(), newOwnerMessage);
+            chatPublishService.publishMessage(chatRoomId, newOwnerMessage);
         }
-    }
-
-    private void publishNotification(String topic, ChatRoom.Message message) {
-        chatPublishService.publishMessage(topic, message);
     }
 
     private ChatRoom.Message addLeaveMessage(String chatRoomId, Long memberId) {
