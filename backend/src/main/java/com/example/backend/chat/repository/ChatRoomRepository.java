@@ -20,6 +20,13 @@ public class ChatRoomRepository {
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }
 
+    public void appendMemberId(ChatRoom chatRoom, Long memberId) {
+        chatRoom.getMemberIds().add(memberId);
+        Query query = new Query(Criteria.where("_id").is(chatRoom.getId()));
+        Update update = new Update().addToSet("memberIds", memberId);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
+
     public void appendMessage(String chatRoomId, ChatRoom.Message message) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         Update update = new Update()
@@ -29,8 +36,25 @@ public class ChatRoomRepository {
         mongoTemplate.upsert(query, update, ChatRoom.class);
     }
 
-    public void pullMemberIdFromMemberIds(String chatRoomId, Long memberId) {
+    public void appendMessage(ChatRoom chatRoom, ChatRoom.Message message) {
+        chatRoom.getMessages().add(message);
+        Query query = new Query(Criteria.where("_id").is(chatRoom.getId()));
+        Update update = new Update()
+                .push("messages")
+                .slice(MESSAGE_LIMIT)
+                .each(message);
+        mongoTemplate.upsert(query, update, ChatRoom.class);
+    }
+
+    public void pullMemberId(String chatRoomId, Long memberId) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
+        Update update = new Update().pull("memberIds", memberId);
+        mongoTemplate.updateFirst(query, update, ChatRoom.class);
+    }
+
+    public void pullMemberId(ChatRoom chatRoom, Long memberId) {
+        chatRoom.getMemberIds().remove(memberId);
+        Query query = new Query(Criteria.where("_id").is(chatRoom.getId()));
         Update update = new Update().pull("memberIds", memberId);
         mongoTemplate.updateFirst(query, update, ChatRoom.class);
     }

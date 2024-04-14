@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -120,7 +119,7 @@ public class ChatRoomManageService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
 
         chatRoom.getMemberIds().remove(memberId);
-        chatRoomRepository.pullMemberIdFromMemberIds(chatRoomId, memberId);
+        chatRoomRepository.pullMemberId(chatRoomId, memberId);
         chatMemberRepository.pullJoinedChatRoom(memberId, chatRoomId);
 
         // 채팅방이 비어 있으면 삭제합니다.
