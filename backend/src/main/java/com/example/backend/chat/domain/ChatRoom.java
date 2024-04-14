@@ -1,12 +1,14 @@
 package com.example.backend.chat.domain;
 
+import com.example.backend.chat.dto.websocket.ChatMessageReceiveDto;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Document
@@ -14,34 +16,42 @@ import java.util.List;
 public class ChatRoom {
     @Id
     private String id;
+    @CreatedDate
+    private LocalDateTime createdAt;
     private String title;
     private Long ownerId;
-    private List<Long> joinedMemberIds = new ArrayList<>();
-
-    // 100개 까지만 저장
-    private List<LastMessage> lastMessages = new ArrayList<>();
-
-    public ChatRoom(String title, Long ownerId, List<Long> joinedMemberIds) {
-        this.title = title;
-        this.ownerId = ownerId;
-        this.joinedMemberIds = joinedMemberIds;
-    }
+    private List<Long> memberIds = new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
 
     @Getter
-    @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-    public static class LastMessage {
+    @NoArgsConstructor
+    public static class Message {
         private Long senderId;
-        private Date sendTime;
+        private LocalDateTime sendTime;
         private String content;
 
-        public LastMessage(Long senderId, Date sendTime, String content) {
+        public Message(Long senderId, String content) {
             this.senderId = senderId;
-            this.sendTime = sendTime;
             this.content = content;
+            this.sendTime = LocalDateTime.now();
+        }
+
+        public Message(Long senderId, String content, LocalDateTime sendTime) {
+            this.senderId = senderId;
+            this.content = content;
+            this.sendTime = sendTime;
+        }
+
+        public Message(ChatMessageReceiveDto dto) {
+            this.senderId = dto.getMemberId();
+            this.content = dto.getContent();
+            this.sendTime = LocalDateTime.now();
         }
     }
 
-    public void setOwnerId(Long ownerId) {
+    public ChatRoom(String title, Long ownerId, List<Long> memberIds) {
+        this.title = title;
         this.ownerId = ownerId;
+        this.memberIds = memberIds;
     }
 }
