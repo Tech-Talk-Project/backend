@@ -30,13 +30,13 @@ public class ProjectBoard extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member author;
 
-    private Long viewCount;
+    private Long viewCount = 0L;
 
-    private Long likeCount;
+    private Long likeCount = 0L;
 
-    private Long dislikeCount;
+    private Long dislikeCount = 0L;
 
-    private boolean recruitmentActive;
+    private boolean recruitmentActive = true;
 
     @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjectBoardSkill> projectBoardSkills = new HashSet<>();
