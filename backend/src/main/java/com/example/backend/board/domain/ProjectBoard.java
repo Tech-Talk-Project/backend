@@ -34,7 +34,6 @@ public class ProjectBoard extends BaseEntity {
 
     private Long likeCount = 0L;
 
-    private Long dislikeCount = 0L;
 
     private boolean recruitmentActive = true;
 

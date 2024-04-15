@@ -19,7 +19,6 @@ public class ProjectViewResponseDto {
     private LocalDateTime updatedAt;
     private Long viewCount;
     private Long likeCount;
-    private Long dislikeCount;
     private boolean recruitmentActive;
     private List<CommentDto> comments;
     private List<String> tags;
@@ -33,7 +32,6 @@ public class ProjectViewResponseDto {
         this.updatedAt = projectBoard.getUpdatedAt();
         this.viewCount = projectBoard.getViewCount();
         this.likeCount = projectBoard.getLikeCount();
-        this.dislikeCount = projectBoard.getDislikeCount();
         this.recruitmentActive = projectBoard.isRecruitmentActive();
         this.comments = CommentDto.listOf(projectBoard.getComments());
         this.tags = projectBoard.getTags().stream().map(Tag::getName).toList();
