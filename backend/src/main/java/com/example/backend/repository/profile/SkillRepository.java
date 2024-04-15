@@ -31,14 +31,8 @@ public class SkillRepository  {
                 .fetchOne();
     }
 
-    public Skill findByName(String name) {
-        return query
-                .selectFrom(skill)
-                .where(skill.name.eq(name))
-                .fetchOne();
-    }
-
-    public List<Skill> findAllByName(List<String> names) {
+    public List<Skill> findAllByName(List<ESkill> eSkills) {
+        List<String> names = eSkills.stream().map(ESkill::getName).toList();
         return query
                 .selectFrom(skill)
                 .where(skill.name.in(names))

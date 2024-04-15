@@ -1,6 +1,7 @@
 package com.example.backend.entity.profile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public enum ESkill {
@@ -80,6 +81,10 @@ public enum ESkill {
 
     ESkill(String name) {
         this.name = name;
+    }
+
+    public static List<ESkill> fromNames(List<String> skills) {
+        return skills.stream().map(ESkill::from).toList();
     }
 
     public String getName() {
