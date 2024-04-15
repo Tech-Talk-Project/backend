@@ -76,7 +76,7 @@ public class BackupMessageRepository {
     }
 
     private List<ChatRoom.Message> getReverse(List<ChatRoom.Message> lst) {
-        List<ChatRoom.Message> reversed = new ArrayList<>(lst);
+        List<ChatRoom.Message> reversed = new ArrayList<>();
         for (int i = lst.size()-1 ; i >= 0 ; i--) {
             reversed.add(lst.get(i));
         }
