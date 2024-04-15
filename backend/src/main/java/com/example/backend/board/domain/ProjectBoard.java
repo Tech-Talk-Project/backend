@@ -19,12 +19,11 @@ public class ProjectBoard extends BaseEntity {
 
     private String title;
 
-    private String position;
+    private String recruitPosition;
 
     @Lob
     @Column(columnDefinition = "MEDIUMTEXT")
     private String content;
-
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -39,8 +38,8 @@ public class ProjectBoard extends BaseEntity {
     private boolean recruitmentActive = true;
 
     @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProjectBoardSkill> projectBoardSkills = new HashSet<>();
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    private List<Tag> tags = new ArrayList<>();
 }
