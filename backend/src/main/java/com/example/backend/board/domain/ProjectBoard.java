@@ -5,7 +5,9 @@ import com.example.backend.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,6 +18,8 @@ public class ProjectBoard extends BaseEntity {
     private Long id;
 
     private String title;
+
+    private String position;
 
     @Lob
     @Column(columnDefinition = "MEDIUMTEXT")
@@ -32,9 +36,11 @@ public class ProjectBoard extends BaseEntity {
 
     private Long dislikeCount;
 
-    private boolean isRecruiting;
+    private boolean recruitmentActive;
 
     @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjectBoardSkill> projectBoardSkills = new HashSet<>();
 
+    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 }
