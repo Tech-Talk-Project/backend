@@ -31,7 +31,7 @@ public class ChatRoomRepository {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         Update update = new Update()
                 .push("messages")
-                .slice(MESSAGE_LIMIT)
+                .slice(-MESSAGE_LIMIT)
                 .each(message);
         mongoTemplate.upsert(query, update, ChatRoom.class);
     }
@@ -41,7 +41,7 @@ public class ChatRoomRepository {
         Query query = new Query(Criteria.where("_id").is(chatRoom.getId()));
         Update update = new Update()
                 .push("messages")
-                .slice(MESSAGE_LIMIT)
+                .slice(-MESSAGE_LIMIT)
                 .each(message);
         mongoTemplate.upsert(query, update, ChatRoom.class);
     }
