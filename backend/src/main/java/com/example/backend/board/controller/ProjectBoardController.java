@@ -1,14 +1,12 @@
 package com.example.backend.board.controller;
 
 import com.example.backend.board.dto.request.ProjectCreateRequestDto;
+import com.example.backend.board.dto.response.ProjectViewResponseDto;
 import com.example.backend.board.service.ProjectBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,4 +20,12 @@ public class ProjectBoardController {
         projectBoardService.createProject(memberId, dto);
         return ResponseEntity.ok("프로젝트 생성 완료");
     }
+
+    @GetMapping("/view")
+    public ResponseEntity<ProjectViewResponseDto> viewProject(
+            @RequestParam Long projectBoardId ) {
+
+    }
+
+
 }

@@ -1,10 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.controller.dto.request.MembersViewRequestDto;
-import com.example.backend.controller.dto.response.AuthProfilePaginationDto;
-import com.example.backend.controller.dto.response.AuthSelectedProfileResponseDto;
-import com.example.backend.controller.dto.response.ProfileCursorPaginationResponseDto;
-import com.example.backend.controller.dto.response.SelectedProfileResponseDto;
+import com.example.backend.controller.dto.response.*;
 import com.example.backend.service.profile.ProfilePaginationService;
 import com.example.backend.service.profile.ProfileViewService;
 import jakarta.validation.Valid;
@@ -48,14 +45,14 @@ public class MemberViewController {
     }
 
     @GetMapping("/member")
-    public ResponseEntity<SelectedProfileResponseDto> getProfile(
+    public ResponseEntity<ProfileResponseDto> getProfile(
             @RequestParam Long selectedMemberId
     ) {
         return ResponseEntity.ok(profileViewService.getSelectedProfile(selectedMemberId));
     }
 
     @GetMapping("/user/member")
-    public ResponseEntity<AuthSelectedProfileResponseDto> getProfileWhenLogin(
+    public ResponseEntity<AuthProfileResponseDto> getProfileWhenLogin(
             @RequestParam Long selectedMemberId
     ) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

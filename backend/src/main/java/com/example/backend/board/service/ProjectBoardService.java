@@ -2,6 +2,7 @@ package com.example.backend.board.service;
 
 import com.example.backend.board.domain.ProjectBoard;
 import com.example.backend.board.dto.request.ProjectCreateRequestDto;
+import com.example.backend.board.dto.response.ProjectViewResponseDto;
 import com.example.backend.board.repository.ProjectBoardRepository;
 import com.example.backend.entity.member.Member;
 import com.example.backend.repository.member.MemberRepository;
@@ -23,5 +24,10 @@ public class ProjectBoardService {
 
         ProjectBoard projectBoard = new ProjectBoard(member, dto);
         projectBoardRepository.save(projectBoard);
+    }
+
+    public ProjectViewResponseDto viewProject(Long projectBoardId) {
+        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(projectBoardId);
+        return new ProjectViewResponseDto(projectBoard);
     }
 }
