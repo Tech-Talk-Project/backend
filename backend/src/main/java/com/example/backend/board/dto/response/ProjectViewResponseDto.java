@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class ProjectViewResponseDto {
     private String title;
-    private String recruitmentPostion;
+    private String recruitmentPosition;
     private SimpleMemberProfileDto author;
     private String content;
     private LocalDateTime createdAt;
@@ -26,7 +26,7 @@ public class ProjectViewResponseDto {
 
     public ProjectViewResponseDto(ProjectBoard projectBoard) {
         this.title = projectBoard.getTitle();
-        this.recruitmentPostion = projectBoard.getRecruitPosition();
+        this.recruitmentPosition = projectBoard.getRecruitPosition();
         this.author = new SimpleMemberProfileDto(projectBoard.getAuthor());
         this.content = projectBoard.getContent();
         this.createdAt = projectBoard.getCreatedAt();
