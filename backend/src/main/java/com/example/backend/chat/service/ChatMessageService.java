@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ChatMessageService {
-    private final ChatRoomRepository chatRoomRepository;
     private final BackupMessageRepository backupMessageRepository;
     private final ChatMemberValidator chatMemberValidator;
 
