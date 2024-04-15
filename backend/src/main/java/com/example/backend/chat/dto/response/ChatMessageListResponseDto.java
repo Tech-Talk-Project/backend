@@ -13,7 +13,7 @@ public class ChatMessageListResponseDto {
     public ChatMessageListResponseDto(List<ChatRoom.Message> messages) {
         this.messages = messages;
         if (!messages.isEmpty()) {
-            this.nextCursor = messages.get(messages.size() - 1).getSendTime();
+            this.nextCursor = messages.get(0).getSendTime();
         }
     }
 }
