@@ -24,7 +24,7 @@ public class ProjectBoardController {
     @GetMapping("/view")
     public ResponseEntity<ProjectViewResponseDto> viewProject(
             @RequestParam Long projectBoardId ) {
-
+        return ResponseEntity.ok(projectBoardService.viewProject(projectBoardId));
     }
 
 
