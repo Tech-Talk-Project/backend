@@ -13,14 +13,9 @@ public class Skill {
     @Column(name = "skill_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private ESkill eSkill;
-
-    public String getName() {
-        return eSkill.getName();
-    }
+    private String name;
 
     public Skill(ESkill eSkill) {
-        this.eSkill = eSkill;
+        this.name = eSkill.getName();
     }
 }

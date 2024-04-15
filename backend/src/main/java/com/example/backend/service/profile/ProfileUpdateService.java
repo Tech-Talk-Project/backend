@@ -47,9 +47,7 @@ public class ProfileUpdateService {
                         () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
                 );
 
-        List<ESkill> eSkills =
-                updateSkillsRequestDto.getSkills().stream().map(ESkill::from).toList();
-        List<Skill> skills = eSkills.stream().map(skillRepository::findByESkill).toList();
+        List<Skill> skills = skillRepository.findAllByName(updateSkillsRequestDto.getSkills());
         member.getProfile().updateProfileSkills(skills);
     }
 }

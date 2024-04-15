@@ -33,7 +33,7 @@ public class ProfilePaginationRepository {
                 .from(profile)
                 .innerJoin(profile.profileSkills, profileSkill)
                 .innerJoin(profileSkill.skill, skill)
-                .where(skill.eSkill.in(eSkills))
+                .where(skill.name.in(eSkills.stream().map(ESkill::getName).toList()))
                 .groupBy(profile.id)
                 .having(profile.count().goe((long) eSkills.size()));
 
