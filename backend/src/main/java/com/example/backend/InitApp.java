@@ -29,7 +29,7 @@ public class InitApp {
     public void init() {
         initAuthority.init();
         initSkill.init();
-        initMember.init();
+//        initMember.init();
     }
 
     @Component
