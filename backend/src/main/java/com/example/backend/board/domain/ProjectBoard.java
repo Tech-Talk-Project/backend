@@ -21,7 +21,8 @@ public class ProjectBoard extends BoardEntity {
 
     private String recruitPosition;
 
-    private Long likeCount = 0L;
+    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     private boolean recruitmentActive = true;
 
