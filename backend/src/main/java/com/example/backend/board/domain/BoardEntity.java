@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @MappedSuperclass
 @Getter
@@ -42,10 +40,4 @@ public abstract class BoardEntity {
     public void increaseViewCount() {
         viewCount++;
     }
-
-    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Tag> tags = new ArrayList<>();
 }

@@ -25,6 +25,12 @@ public class ProjectBoard extends BoardEntity {
 
     private boolean recruitmentActive = true;
 
+    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tag> tags = new ArrayList<>();
+
     public ProjectBoard(Member member, ProjectCreateRequestDto dto) {
         this.author = member;
         this.title = dto.getTitle();
