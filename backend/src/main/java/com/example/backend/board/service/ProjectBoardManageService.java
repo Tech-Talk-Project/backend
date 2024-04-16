@@ -4,6 +4,7 @@ import com.example.backend.board.domain.Comment;
 import com.example.backend.board.domain.Like;
 import com.example.backend.board.domain.ProjectBoard;
 import com.example.backend.board.dto.request.*;
+import com.example.backend.board.repository.LikeRepository;
 import com.example.backend.board.repository.ProjectBoardRepository;
 import com.example.backend.board.validator.BoardValidator;
 import com.example.backend.entity.member.Member;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectBoardManageService {
     private final ProjectBoardRepository projectBoardRepository;
     private final MemberRepository memberRepository;
+    private final LikeRepository likeRepository;
     private final BoardValidator boardValidator;
     private final EntityManager em;
 
@@ -56,9 +58,13 @@ public class ProjectBoardManageService {
         projectBoard.addComment(new Comment(dto.getContent(), member));
     }
 
-    public void addLike(Long memberId, LikeAddRequestDto dto) {
+    public void addLike(Long memberId, LikeRequestDto dto) {
         ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
         Member member = em.getReference(Member.class, memberId);
         projectBoard.addLike(new Like(member));
+    }
+
+    public void removeLike(Long memberId, LikeRequestDto dto) {
+        likeRepository.removeProjectLikeByMemberId(dto.getBoardId(), memberId);
     }
 }

@@ -70,4 +70,8 @@ public class ProjectBoard extends BoardEntity {
     public void toggleRecruitment() {
         recruitmentActive = !recruitmentActive;
     }
+
+    public void removeLike(Like like) {
+        likes.remove(like);
+    }
 }

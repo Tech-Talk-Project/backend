@@ -3,6 +3,6 @@ package com.example.backend.board.dto.request;
 import lombok.Data;
 
 @Data
-public class LikeAddRequestDto {
+public class LikeRequestDto {
     private Long boardId;
 }
