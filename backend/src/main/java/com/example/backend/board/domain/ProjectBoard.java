@@ -48,4 +48,9 @@ public class ProjectBoard extends BoardEntity {
         this.content = dto.getContent();
         updateTags(dto.getTags().stream().map(Tag::new).toList());
     }
+
+
+    public void toggleRecruitment() {
+        recruitmentActive = !recruitmentActive;
+    }
 }

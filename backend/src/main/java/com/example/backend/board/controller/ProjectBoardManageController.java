@@ -29,4 +29,12 @@ public class ProjectBoardManageController {
         return ResponseEntity.ok("프로젝트 수정 완료");
     }
 
+    @PostMapping("/toggle-recruitment")
+    public ResponseEntity<String> toggleRecruitment(
+            @RequestBody ProjectUpdateRequestDto dto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        projectBoardManageService.toggleRecruitment(memberId, dto);
+        return ResponseEntity.ok("모집 상태 변경 완료");
+    }
+
 }

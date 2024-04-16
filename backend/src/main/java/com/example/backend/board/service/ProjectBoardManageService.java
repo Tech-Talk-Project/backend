@@ -35,4 +35,10 @@ public class ProjectBoardManageService {
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoard.update(dto);
     }
+
+    public void toggleRecruitment(Long memberId, ProjectUpdateRequestDto dto) {
+        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getProjectBoardId());
+        boardValidator.validateAuthor(memberId, projectBoard);
+        projectBoard.toggleRecruitment();
+    }
 }
