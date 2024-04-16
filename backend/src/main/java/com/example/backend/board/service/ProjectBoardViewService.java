@@ -15,6 +15,7 @@ public class ProjectBoardViewService {
 
     public ProjectViewResponseDto viewProject(Long projectBoardId) {
         ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(projectBoardId);
+        projectBoard.increaseViewCount();
         return new ProjectViewResponseDto(projectBoard);
     }
 }

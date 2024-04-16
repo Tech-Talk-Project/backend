@@ -39,6 +39,10 @@ public abstract class BoardEntity {
 
     private Long viewCount = 0L;
 
+    public void increaseViewCount() {
+        viewCount++;
+    }
+
     @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 

@@ -21,8 +21,6 @@ public class ProjectBoardManageController {
         return ResponseEntity.ok("프로젝트 생성 완료");
     }
 
-
-
     @PostMapping("/update")
     public ResponseEntity<String> updateProject(
             @RequestBody ProjectUpdateRequestDto dto) {
