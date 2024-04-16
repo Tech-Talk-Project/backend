@@ -10,12 +10,14 @@ import java.util.List;
 @Data
 public class CommentDto {
     private SimpleMemberProfileDto author;
+    private Long commentId;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public CommentDto(Comment comment) {
         this.author = new SimpleMemberProfileDto(comment.getAuthor());
+        this.commentId = comment.getId();
         this.content = comment.getContent();
         this.createdAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();

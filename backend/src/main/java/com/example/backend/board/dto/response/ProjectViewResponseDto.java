@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data
 public class ProjectViewResponseDto {
+    private Long projectBoardId;
     private String title;
     private String recruitmentPosition;
     private SimpleMemberProfileDto author;
@@ -24,6 +25,7 @@ public class ProjectViewResponseDto {
     private List<String> tags;
 
     public ProjectViewResponseDto(ProjectBoard projectBoard) {
+        this.projectBoardId = projectBoard.getId();
         this.title = projectBoard.getTitle();
         this.recruitmentPosition = projectBoard.getRecruitPosition();
         this.author = new SimpleMemberProfileDto(projectBoard.getAuthor());
