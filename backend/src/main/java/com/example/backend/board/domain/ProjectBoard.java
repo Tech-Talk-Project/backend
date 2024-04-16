@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -22,7 +24,7 @@ public class ProjectBoard extends BoardEntity {
     private String recruitPosition;
 
     @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
+    private Set<Like> likes = new HashSet<>();
 
     private boolean recruitmentActive = true;
 
@@ -65,13 +67,8 @@ public class ProjectBoard extends BoardEntity {
         this.content = dto.getContent();
         updateTags(dto.getTags().stream().map(Tag::new).toList());
     }
-
-
+    
     public void toggleRecruitment() {
         recruitmentActive = !recruitmentActive;
-    }
-
-    public void removeLike(Like like) {
-        likes.remove(like);
     }
 }
