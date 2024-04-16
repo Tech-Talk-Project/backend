@@ -1,5 +1,6 @@
 package com.example.backend.board.domain;
 
+import com.example.backend.board.dto.request.CommentUpdateRequestDto;
 import com.example.backend.entity.BaseEntity;
 import com.example.backend.entity.member.Member;
 import jakarta.persistence.*;
@@ -24,6 +25,10 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_board_id")
     private ProjectBoard projectBoard;
+
+    public void update(CommentUpdateRequestDto dto) {
+        this.content = dto.getContent();
+    }
 
     public Comment(String content, Member author) {
         this.content = content;

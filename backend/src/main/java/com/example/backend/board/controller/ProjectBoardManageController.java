@@ -54,6 +54,4 @@ public class ProjectBoardManageController {
         projectBoardManageService.addComment(memberId, dto);
         return ResponseEntity.ok("댓글이 추가되었습니다.");
     }
-
-
 }
