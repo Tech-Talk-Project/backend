@@ -2,6 +2,7 @@ package com.example.backend.board.service;
 
 import com.example.backend.board.domain.ProjectBoard;
 import com.example.backend.board.dto.request.ProjectCreateRequestDto;
+import com.example.backend.board.dto.request.ProjectRemoveRequestDto;
 import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
 import com.example.backend.board.dto.response.ProjectViewResponseDto;
 import com.example.backend.board.repository.ProjectBoardRepository;
@@ -34,6 +35,12 @@ public class ProjectBoardManageService {
         ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getProjectBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoard.update(dto);
+    }
+
+    public void removeProject(Long memberId, ProjectRemoveRequestDto dto) {
+        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getProjectBoardId());
+        boardValidator.validateAuthor(memberId, projectBoard);
+        projectBoardRepository.remove(projectBoard);
     }
 
     public void toggleRecruitment(Long memberId, ProjectUpdateRequestDto dto) {

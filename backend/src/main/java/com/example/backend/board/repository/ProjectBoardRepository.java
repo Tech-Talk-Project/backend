@@ -31,4 +31,9 @@ public class ProjectBoardRepository {
                 .where(projectBoard.id.eq(projectBoardId))
                 .fetchOne();
     }
+
+    @Transactional
+    public void remove(ProjectBoard projectBoard) {
+        em.remove(projectBoard);
+    }
 }

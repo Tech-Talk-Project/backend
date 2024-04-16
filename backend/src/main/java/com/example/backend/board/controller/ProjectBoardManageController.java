@@ -1,6 +1,7 @@
 package com.example.backend.board.controller;
 
 import com.example.backend.board.dto.request.ProjectCreateRequestDto;
+import com.example.backend.board.dto.request.ProjectRemoveRequestDto;
 import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
 import com.example.backend.board.service.ProjectBoardManageService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,14 @@ public class ProjectBoardManageController {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         projectBoardManageService.toggleRecruitment(memberId, dto);
         return ResponseEntity.ok("모집 상태 변경 완료");
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteProject(
+            @RequestBody ProjectRemoveRequestDto dto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        projectBoardManageService.removeProject(memberId, dto);
+        return ResponseEntity.ok("프로젝트 삭제 완료");
     }
 
 }
