@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/project")
+@RequestMapping("/view")
 public class ProjectBoardViewController {
     private final ProjectBoardViewService projectBoardService;
 
-    @GetMapping("/view")
+    @GetMapping("/project")
     public ResponseEntity<ProjectViewResponseDto> viewProject(
             @RequestParam Long projectBoardId ) {
         return ResponseEntity.ok(projectBoardService.viewProject(projectBoardId));
