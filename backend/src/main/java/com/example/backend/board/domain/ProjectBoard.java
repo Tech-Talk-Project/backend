@@ -44,6 +44,11 @@ public class ProjectBoard extends BoardEntity {
         tag.setProjectBoard(this);
     }
 
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setProjectBoard(this);
+    }
+
     public void updateTags(List<Tag> tags) {
         this.tags.clear();
         tags.forEach(this::addTag);

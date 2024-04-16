@@ -1,5 +1,6 @@
 package com.example.backend.board.controller;
 
+import com.example.backend.board.dto.request.CommentAddRequestDto;
 import com.example.backend.board.dto.request.ProjectCreateRequestDto;
 import com.example.backend.board.dto.request.ProjectRemoveRequestDto;
 import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
@@ -45,5 +46,14 @@ public class ProjectBoardManageController {
         projectBoardManageService.removeProject(memberId, dto);
         return ResponseEntity.ok("프로젝트 삭제 완료");
     }
+
+    @PostMapping("/add-comment")
+    public ResponseEntity<String> addComment(
+            @RequestBody CommentAddRequestDto dto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        projectBoardManageService.addComment(memberId, dto);
+        return ResponseEntity.ok("댓글이 추가되었습니다.");
+    }
+
 
 }

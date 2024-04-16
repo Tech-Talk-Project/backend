@@ -22,4 +22,13 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_board_id")
     private ProjectBoard projectBoard;
+
+    public Comment(String content, Member author) {
+        this.content = content;
+        this.author = author;
+    }
+
+    public void setProjectBoard(ProjectBoard projectBoard) {
+        this.projectBoard = projectBoard;
+    }
 }

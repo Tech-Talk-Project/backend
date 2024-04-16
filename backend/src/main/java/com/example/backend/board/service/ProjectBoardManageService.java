@@ -1,10 +1,11 @@
 package com.example.backend.board.service;
 
+import com.example.backend.board.domain.Comment;
 import com.example.backend.board.domain.ProjectBoard;
+import com.example.backend.board.dto.request.CommentAddRequestDto;
 import com.example.backend.board.dto.request.ProjectCreateRequestDto;
 import com.example.backend.board.dto.request.ProjectRemoveRequestDto;
 import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
-import com.example.backend.board.dto.response.ProjectViewResponseDto;
 import com.example.backend.board.repository.ProjectBoardRepository;
 import com.example.backend.board.validator.BoardValidator;
 import com.example.backend.entity.member.Member;
@@ -47,5 +48,13 @@ public class ProjectBoardManageService {
         ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getProjectBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoard.toggleRecruitment();
+    }
+
+    public void addComment(Long memberId, CommentAddRequestDto dto) {
+        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getBoardId());
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
+        );
+        projectBoard.addComment(new Comment(dto.getContent(), member));
     }
 }
