@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
-public class ProjectBoardService {
+public class ProjectBoardManageService {
     private final ProjectBoardRepository projectBoardRepository;
     private final MemberRepository memberRepository;
     private final BoardValidator boardValidator;
@@ -29,10 +29,6 @@ public class ProjectBoardService {
         projectBoardRepository.save(projectBoard);
     }
 
-    public ProjectViewResponseDto viewProject(Long projectBoardId) {
-        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(projectBoardId);
-        return new ProjectViewResponseDto(projectBoard);
-    }
 
     public void updateProject(Long memberId, ProjectUpdateRequestDto dto) {
         ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getProjectBoardId());
