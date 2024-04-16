@@ -1,6 +1,7 @@
 package com.example.backend.board.domain;
 
 import com.example.backend.board.dto.request.ProjectCreateRequestDto;
+import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
 import com.example.backend.entity.BaseEntity;
 import com.example.backend.entity.member.Member;
 import jakarta.persistence.*;
@@ -40,5 +41,11 @@ public class ProjectBoard extends BoardEntity {
     public void updateTags(List<Tag> tags) {
         this.tags.clear();
         tags.forEach(this::addTag);
+    }
+
+    public void update(ProjectUpdateRequestDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        updateTags(dto.getTags().stream().map(Tag::new).toList());
     }
 }

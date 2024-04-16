@@ -1,6 +1,7 @@
 package com.example.backend.board.controller;
 
 import com.example.backend.board.dto.request.ProjectCreateRequestDto;
+import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
 import com.example.backend.board.dto.response.ProjectViewResponseDto;
 import com.example.backend.board.service.ProjectBoardService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("user/board/project")
+@RequestMapping("user/project")
 public class ProjectBoardController {
     private final ProjectBoardService projectBoardService;
 
@@ -27,5 +28,12 @@ public class ProjectBoardController {
         return ResponseEntity.ok(projectBoardService.viewProject(projectBoardId));
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<String> updateProject(
+            @RequestBody ProjectUpdateRequestDto dto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        projectBoardService.updateProject(memberId, dto);
+        return ResponseEntity.ok("프로젝트 수정 완료");
+    }
 
 }
