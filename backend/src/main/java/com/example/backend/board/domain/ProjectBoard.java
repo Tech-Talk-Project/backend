@@ -13,35 +13,16 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-public class ProjectBoard extends BaseEntity {
+public class ProjectBoard extends BoardEntity {
     @Id @GeneratedValue
     @Column(name = "project_board_id")
     private Long id;
 
-    private String title;
-
     private String recruitPosition;
-
-    @Lob
-    @Column(columnDefinition = "MEDIUMTEXT")
-    private String content;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member author;
-
-    private Long viewCount = 0L;
 
     private Long likeCount = 0L;
 
-
     private boolean recruitmentActive = true;
-
-    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Tag> tags = new ArrayList<>();
 
     public ProjectBoard(Member member, ProjectCreateRequestDto dto) {
         this.author = member;
@@ -54,5 +35,10 @@ public class ProjectBoard extends BaseEntity {
     public void addTag(Tag tag) {
         tags.add(tag);
         tag.setProjectBoard(this);
+    }
+
+    public void updateTags(List<Tag> tags) {
+        this.tags.clear();
+        tags.forEach(this::addTag);
     }
 }
