@@ -22,6 +22,13 @@ public class ProjectBoardRepository {
         em.flush();
     }
 
+    public ProjectBoard findById(Long projectBoardId) {
+        return query
+                .selectFrom(projectBoard)
+                .where(projectBoard.id.eq(projectBoardId))
+                .fetchOne();
+    }
+
 
     public ProjectBoard findByIdWithAll(Long projectBoardId) {
         // 일대다로 매핑된 comments, tags 는 batch size 로 처리

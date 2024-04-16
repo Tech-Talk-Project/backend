@@ -1,11 +1,9 @@
 package com.example.backend.board.service;
 
 import com.example.backend.board.domain.Comment;
+import com.example.backend.board.domain.Like;
 import com.example.backend.board.domain.ProjectBoard;
-import com.example.backend.board.dto.request.CommentAddRequestDto;
-import com.example.backend.board.dto.request.ProjectCreateRequestDto;
-import com.example.backend.board.dto.request.ProjectRemoveRequestDto;
-import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
+import com.example.backend.board.dto.request.*;
 import com.example.backend.board.repository.ProjectBoardRepository;
 import com.example.backend.board.validator.BoardValidator;
 import com.example.backend.entity.member.Member;
@@ -35,26 +33,32 @@ public class ProjectBoardManageService {
 
 
     public void updateProject(Long memberId, ProjectUpdateRequestDto dto) {
-        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getProjectBoardId());
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getProjectBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoard.update(dto);
     }
 
     public void removeProject(Long memberId, ProjectRemoveRequestDto dto) {
-        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getProjectBoardId());
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getProjectBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoardRepository.remove(projectBoard);
     }
 
     public void toggleRecruitment(Long memberId, ProjectUpdateRequestDto dto) {
-        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getProjectBoardId());
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getProjectBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoard.toggleRecruitment();
     }
 
     public void addComment(Long memberId, CommentAddRequestDto dto) {
-        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(dto.getBoardId());
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
         Member member = em.getReference(Member.class, memberId);
         projectBoard.addComment(new Comment(dto.getContent(), member));
+    }
+
+    public void addLike(Long memberId, LikeAddRequestDto dto) {
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
+        Member member = em.getReference(Member.class, memberId);
+        projectBoard.addLike(new Like(member));
     }
 }

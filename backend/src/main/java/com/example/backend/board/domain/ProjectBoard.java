@@ -50,6 +50,11 @@ public class ProjectBoard extends BoardEntity {
         comment.setProjectBoard(this);
     }
 
+    public void addLike(Like like) {
+        likes.add(like);
+        like.setProjectBoard(this);
+    }
+
     public void updateTags(List<Tag> tags) {
         this.tags.clear();
         tags.forEach(this::addTag);

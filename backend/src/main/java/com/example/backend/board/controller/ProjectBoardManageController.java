@@ -1,9 +1,6 @@
 package com.example.backend.board.controller;
 
-import com.example.backend.board.dto.request.CommentAddRequestDto;
-import com.example.backend.board.dto.request.ProjectCreateRequestDto;
-import com.example.backend.board.dto.request.ProjectRemoveRequestDto;
-import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
+import com.example.backend.board.dto.request.*;
 import com.example.backend.board.service.ProjectBoardManageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +50,13 @@ public class ProjectBoardManageController {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         projectBoardManageService.addComment(memberId, dto);
         return ResponseEntity.ok("댓글이 추가되었습니다.");
+    }
+
+    @PostMapping ("/add-like")
+    public ResponseEntity<String> addLike(
+            @RequestBody LikeAddRequestDto dto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        projectBoardManageService.addLike(memberId, dto);
+        return ResponseEntity.ok("좋아요가 추가되었습니다.");
     }
 }
