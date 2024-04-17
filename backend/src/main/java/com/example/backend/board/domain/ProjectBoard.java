@@ -2,7 +2,6 @@ package com.example.backend.board.domain;
 
 import com.example.backend.board.dto.request.ProjectCreateRequestDto;
 import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
-import com.example.backend.entity.BaseEntity;
 import com.example.backend.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -67,7 +66,7 @@ public class ProjectBoard extends BoardEntity {
         this.content = dto.getContent();
         updateTags(dto.getTags().stream().map(Tag::new).toList());
     }
-    
+
     public void toggleRecruitment() {
         recruitmentActive = !recruitmentActive;
     }
