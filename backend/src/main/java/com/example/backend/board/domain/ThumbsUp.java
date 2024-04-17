@@ -6,8 +6,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-public class Like {
+public class ThumbsUp {
     @Id @GeneratedValue
+    @Column(name = "thumbs_up_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -22,7 +23,7 @@ public class Like {
         this.projectBoard = projectBoard;
     }
 
-    public Like(Member member) {
+    public ThumbsUp(Member member) {
         this.member = member;
     }
 }

@@ -5,18 +5,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.example.backend.board.domain.QLike.like;
+import static com.example.backend.board.domain.QThumbsUp.thumbsUp;
 
 @Repository
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class LikeRepository {
+public class ThumbsUpRepository {
     private final JPAQueryFactory query;
 
-    public void removeProjectLikeByMemberId(Long projectBoardId, Long memberId) {
-        query.delete(like)
-                .where(like.projectBoard.id.eq(projectBoardId)
-                        .and(like.member.id.eq(memberId)))
+    public void removeProjectThumbsUpByMemberId(Long projectBoardId, Long memberId) {
+        query.delete(thumbsUp)
+                .where(thumbsUp.projectBoard.id.eq(projectBoardId)
+                        .and(thumbsUp.member.id.eq(memberId)))
                 .execute();
     }
 }

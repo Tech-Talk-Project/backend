@@ -23,7 +23,7 @@ public class ProjectBoard extends BoardEntity {
     private String recruitPosition;
 
     @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Like> likes = new HashSet<>();
+    private Set<ThumbsUp> thumbsUps = new HashSet<>();
 
     private boolean recruitmentActive = true;
 
@@ -51,9 +51,9 @@ public class ProjectBoard extends BoardEntity {
         comment.setProjectBoard(this);
     }
 
-    public void addLike(Like like) {
-        likes.add(like);
-        like.setProjectBoard(this);
+    public void addLike(ThumbsUp thumbsUp) {
+        thumbsUps.add(thumbsUp);
+        thumbsUp.setProjectBoard(this);
     }
 
     public void updateTags(List<Tag> tags) {

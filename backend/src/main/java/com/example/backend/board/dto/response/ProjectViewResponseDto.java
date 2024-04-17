@@ -33,7 +33,7 @@ public class ProjectViewResponseDto {
         this.createdAt = projectBoard.getCreatedAt();
         this.updatedAt = projectBoard.getUpdatedAt();
         this.viewCount = projectBoard.getViewCount();
-        this.likeCount = projectBoard.getLikes().size();
+        this.likeCount = projectBoard.getThumbsUps().size();
         this.recruitmentActive = projectBoard.isRecruitmentActive();
         this.comments = CommentDto.listOf(projectBoard.getComments());
         this.tags = projectBoard.getTags().stream().map(Tag::getName).toList();
