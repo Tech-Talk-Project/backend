@@ -19,7 +19,6 @@ public class ProjectBoardRepository {
     @Transactional
     public void save(ProjectBoard projectBoard) {
         em.persist(projectBoard);
-        em.flush();
     }
 
     public ProjectBoard findById(Long projectBoardId) {

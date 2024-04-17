@@ -22,10 +22,11 @@ public class ProjectBoardManageService {
     private final BoardValidator boardValidator;
     private final EntityManager em;
 
-    public void createProject(Long memberId, ProjectCreateRequestDto dto) {
+    public Long createProject(Long memberId, ProjectCreateRequestDto dto) {
         Member member = em.getReference(Member.class, memberId);
         ProjectBoard projectBoard = new ProjectBoard(member, dto);
         projectBoardRepository.save(projectBoard);
+        return projectBoard.getId();
     }
 
 

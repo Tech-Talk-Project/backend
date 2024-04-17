@@ -1,6 +1,7 @@
 package com.example.backend.board.controller;
 
 import com.example.backend.board.dto.request.*;
+import com.example.backend.board.dto.response.ProjectCreateResponseDto;
 import com.example.backend.board.service.ProjectBoardManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +17,11 @@ public class ProjectBoardManageController {
     private final ProjectBoardManageService projectBoardManageService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createProject(@RequestBody ProjectCreateRequestDto dto) {
+    public ResponseEntity<ProjectCreateResponseDto> createProject(@RequestBody ProjectCreateRequestDto dto) {
         log.info("createProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        projectBoardManageService.createProject(memberId, dto);
-        return ResponseEntity.ok("프로젝트 생성 완료");
+        Long projectBoardId = projectBoardManageService.createProject(memberId, dto);
+        return ResponseEntity.ok(new ProjectCreateResponseDto(projectBoardId));
     }
 
     @PostMapping("/update")
