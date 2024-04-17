@@ -19,16 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProjectBoardManageService {
     private final ProjectBoardRepository projectBoardRepository;
-    private final MemberRepository memberRepository;
     private final LikeRepository likeRepository;
     private final BoardValidator boardValidator;
     private final EntityManager em;
 
     public void createProject(Long memberId, ProjectCreateRequestDto dto) {
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 유저입니다.")
-        );
-
+        Member member = em.getReference(Member.class, memberId);
         ProjectBoard projectBoard = new ProjectBoard(member, dto);
         projectBoardRepository.save(projectBoard);
     }
