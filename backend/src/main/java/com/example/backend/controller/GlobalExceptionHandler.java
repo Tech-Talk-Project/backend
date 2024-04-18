@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.auth.exception.DuplicateOAuth2ProviderException;
+import com.example.backend.board.exception.AuthorForbiddenException;
 import com.example.backend.chat.exception.MemberAlreadyInvitedException;
 import com.example.backend.oauth2.exception.OAuth2InvalidEmailException;
 import com.example.backend.security.exception.InvalidJwtException;
@@ -44,6 +45,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleUnAuthorizedException(Exception ex) {
         log.error("Unauthorized", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    //403
+    @ExceptionHandler({
+            AuthorForbiddenException.class
+    })
+    @ResponseBody
+    public ResponseEntity<Object> handleForbiddenException(Exception ex) {
+        log.error("Forbidden", ex);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     //409
