@@ -1,8 +1,10 @@
 package com.example.backend.service.member;
 
 import com.example.backend.chat.domain.ChatMember;
+import com.example.backend.chat.dto.request.ChatRoomLeaveRequestDto;
 import com.example.backend.chat.repository.ChatMemberRepository;
 import com.example.backend.chat.service.ChatMemberService;
+import com.example.backend.chat.service.ChatRoomManageService;
 import com.example.backend.repository.follow.FollowingRepository;
 import com.example.backend.repository.member.MemberAuthorityRepository;
 import com.example.backend.repository.member.MemberRepository;
@@ -17,13 +19,13 @@ public class MemberRemoveService {
     private final MemberRepository memberRepository;
     private final ChatMemberRepository chatMemberRepository;
     private final MemberAuthorityRepository memberAuthorityRepository;
-    private final ChatMemberService chatMemberService;
     private final FollowingRepository followingRepository;
+    private final ChatRoomManageService chatRoomManageService;
 
     public void removeMember(Long memberId) {
         ChatMember chatMember = chatMemberRepository.findById(memberId);
         for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
-            chatMemberService.outChatRoom(memberId, joinedChatRoom.getChatRoomId());
+            chatRoomManageService.leaveChatRoom(memberId, joinedChatRoom.getChatRoomId());
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
