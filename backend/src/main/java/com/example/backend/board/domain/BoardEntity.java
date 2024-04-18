@@ -31,7 +31,7 @@ public abstract class BoardEntity {
     @Column(columnDefinition = "MEDIUMTEXT")
     String content;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     Member author;
 
