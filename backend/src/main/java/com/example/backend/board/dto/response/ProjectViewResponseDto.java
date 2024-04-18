@@ -27,7 +27,7 @@ public class ProjectViewResponseDto {
     public ProjectViewResponseDto(ProjectBoard projectBoard) {
         this.projectBoardId = projectBoard.getId();
         this.title = projectBoard.getTitle();
-        this.recruitmentPosition = projectBoard.getRecruitPosition();
+        this.recruitmentPosition = projectBoard.getRecruitmentPosition();
         this.author = new SimpleMemberProfileDto(projectBoard.getAuthor());
         this.content = projectBoard.getContent();
         this.createdAt = projectBoard.getCreatedAt();

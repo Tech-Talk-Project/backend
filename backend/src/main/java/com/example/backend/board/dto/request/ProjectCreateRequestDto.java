@@ -8,6 +8,6 @@ import java.util.List;
 public class ProjectCreateRequestDto {
     private String title;
     private String content;
-    private String recruitPosition;
+    private String recruitmentPosition;
     private List<String> tags;
 }

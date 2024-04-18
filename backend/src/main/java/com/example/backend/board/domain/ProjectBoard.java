@@ -20,7 +20,7 @@ public class ProjectBoard extends BoardEntity {
     @Column(name = "project_board_id")
     private Long id;
 
-    private String recruitPosition;
+    private String recruitmentPosition;
 
     @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ThumbsUp> thumbsUps = new HashSet<>();
@@ -36,7 +36,7 @@ public class ProjectBoard extends BoardEntity {
     public ProjectBoard(Member member, ProjectCreateRequestDto dto) {
         this.author = member;
         this.title = dto.getTitle();
-        this.recruitPosition = dto.getRecruitPosition();
+        this.recruitmentPosition = dto.getRecruitmentPosition();
         this.content = dto.getContent();
         dto.getTags().forEach(tag -> addTag(new Tag(tag)));
     }
