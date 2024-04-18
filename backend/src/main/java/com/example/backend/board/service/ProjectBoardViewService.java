@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectBoardViewService {
     private final ProjectBoardRepository projectBoardRepository;
 
+    @Transactional
     public ProjectViewResponseDto viewProject(Long projectBoardId) {
         ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(projectBoardId);
         projectBoard.increaseViewCount();

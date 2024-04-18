@@ -30,7 +30,6 @@ public class ProjectBoardRepository {
 
 
     public ProjectBoard findByIdWithAll(Long projectBoardId) {
-        // 일대다로 매핑된 comments, tags 는 batch size 로 처리
         return query
                 .selectFrom(projectBoard)
                 .join(projectBoard.author).fetchJoin()
