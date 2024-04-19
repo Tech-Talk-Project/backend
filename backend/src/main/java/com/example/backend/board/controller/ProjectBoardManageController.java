@@ -1,6 +1,7 @@
 package com.example.backend.board.controller;
 
 import com.example.backend.board.dto.request.*;
+import com.example.backend.board.dto.response.CheckLikeResponseDto;
 import com.example.backend.board.dto.response.ProjectCreateResponseDto;
 import com.example.backend.board.service.ProjectBoardManageService;
 import lombok.RequiredArgsConstructor;
@@ -71,5 +72,14 @@ public class ProjectBoardManageController {
         } else {
             return ResponseEntity.ok("좋아요가 삭제되었습니다.");
         }
+    }
+
+    @GetMapping("/check-like")
+    public ResponseEntity<CheckLikeResponseDto> checkLike(
+            @RequestParam Long boardId) {
+        log.info("checkLike api called");
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        boolean result = projectBoardManageService.checkLike(memberId, boardId);
+        return ResponseEntity.ok(new CheckLikeResponseDto(result));
     }
 }

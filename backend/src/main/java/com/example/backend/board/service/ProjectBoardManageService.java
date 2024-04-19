@@ -72,6 +72,11 @@ public class ProjectBoardManageService {
         }
     }
 
+    public boolean checkLike(Long memberId, Long boardId) {
+        ProjectBoard projectBoard = projectBoardRepository.findById(boardId);
+        return existLike(memberId, projectBoard);
+    }
+
     private boolean existLike(Long memberId, ProjectBoard projectBoard) {
         return projectBoard.getThumbsUps().stream().anyMatch(thumbsUp -> thumbsUp.getMember().getId().equals(memberId));
     }
