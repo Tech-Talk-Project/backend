@@ -51,7 +51,7 @@ public class ProjectBoard extends BoardEntity {
         comment.setProjectBoard(this);
     }
 
-    public void addLike(ThumbsUp thumbsUp) {
+    public void addThumbsUp(ThumbsUp thumbsUp) {
         thumbsUps.add(thumbsUp);
         thumbsUp.setProjectBoard(this);
     }

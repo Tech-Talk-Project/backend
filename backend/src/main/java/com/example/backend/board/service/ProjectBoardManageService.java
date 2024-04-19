@@ -54,13 +54,34 @@ public class ProjectBoardManageService {
         projectBoard.addComment(new Comment(dto.getContent(), member));
     }
 
-    public void addLike(Long memberId, LikeRequestDto dto) {
+    /**
+     * 좋아요 토글 <br>
+     * 이미 좋아요가 눌려있으면 좋아요 취소 후 false 반환, 아니면 좋아요 추가 후 true 반환
+     * @param memberId
+     * @param dto
+     * @return
+     */
+    public boolean toggleLike(Long memberId, LikeRequestDto dto) {
         ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
-        Member member = em.getReference(Member.class, memberId);
-        projectBoard.addLike(new ThumbsUp(member));
+        if (existLike(memberId, projectBoard)) {
+            removeLike(memberId, projectBoard);
+            return false;
+        } else {
+            addLike(memberId, projectBoard);
+            return true;
+        }
     }
 
-    public void removeLike(Long memberId, LikeRequestDto dto) {
-        thumbsUpRepository.removeProjectThumbsUpByMemberId(dto.getBoardId(), memberId);
+    private boolean existLike(Long memberId, ProjectBoard projectBoard) {
+        return projectBoard.getThumbsUps().stream().anyMatch(thumbsUp -> thumbsUp.getMember().getId().equals(memberId));
+    }
+
+    private void removeLike(Long memberId, ProjectBoard projectBoard) {
+        projectBoard.getThumbsUps().removeIf(thumbsUp -> thumbsUp.getMember().getId().equals(memberId));
+    }
+
+    private void addLike(Long memberId, ProjectBoard projectBoard) {
+        Member member = em.getReference(Member.class, memberId);
+        projectBoard.addThumbsUp(new ThumbsUp(member));
     }
 }

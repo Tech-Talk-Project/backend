@@ -2,9 +2,11 @@ package com.example.backend.board.domain;
 
 import com.example.backend.entity.member.Member;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class ThumbsUp {
     @Id @GeneratedValue

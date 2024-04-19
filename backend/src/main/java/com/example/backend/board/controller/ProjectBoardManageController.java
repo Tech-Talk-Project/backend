@@ -60,21 +60,16 @@ public class ProjectBoardManageController {
         return ResponseEntity.ok("댓글이 추가되었습니다.");
     }
 
-    @PostMapping ("/add-like")
-    public ResponseEntity<String> addLike(
+    @PostMapping("/toggle-like")
+    public ResponseEntity<String> toggleLike(
             @RequestBody LikeRequestDto dto) {
-        log.info("addLike api called");
+        log.info("toggleLike api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        projectBoardManageService.addLike(memberId, dto);
-        return ResponseEntity.ok("좋아요가 추가되었습니다.");
-    }
-
-    @PostMapping("/remove-like")
-    public ResponseEntity<String> removeLike(
-            @RequestBody LikeRequestDto dto) {
-        log.info("removeLike api called");
-        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        projectBoardManageService.removeLike(memberId, dto);
-        return ResponseEntity.ok("좋아요가 삭제되었습니다.");
+        boolean result = projectBoardManageService.toggleLike(memberId, dto);
+        if (result) {
+            return ResponseEntity.ok("좋아요가 추가되었습니다.");
+        } else {
+            return ResponseEntity.ok("좋아요가 삭제되었습니다.");
+        }
     }
 }
