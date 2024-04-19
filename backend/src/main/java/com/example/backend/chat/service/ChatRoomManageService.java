@@ -113,8 +113,7 @@ public class ChatRoomManageService {
         return inviteMessage;
     }
 
-    public void leaveChatRoom(Long memberId, ChatRoomLeaveRequestDto dto) {
-        String chatRoomId = dto.getChatRoomId();
+    public void leaveChatRoom(Long memberId, String chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId);
 
         chatRoomRepository.pullMemberId(chatRoom, memberId);

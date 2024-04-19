@@ -1,8 +1,7 @@
 package com.example.backend.service.profile;
 
-import com.example.backend.controller.dto.response.AuthSelectedProfileResponseDto;
-import com.example.backend.controller.dto.response.MyProfileResponseDto;
-import com.example.backend.controller.dto.response.SelectedProfileResponseDto;
+import com.example.backend.controller.dto.response.AuthProfileResponseDto;
+import com.example.backend.controller.dto.response.ProfileResponseDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.repository.profile.MemberProfileRepository;
 import com.example.backend.service.follow.FollowService;
@@ -15,19 +14,19 @@ public class ProfileViewService {
     private final MemberProfileRepository memberProfileRepository;
     private final FollowService followService;
 
-    public MyProfileResponseDto getProfile(Long memberId) {
+    public ProfileResponseDto getProfile(Long memberId) {
         Member member = memberProfileRepository.findByIdWithProfileWithAll(memberId);
-        return new MyProfileResponseDto(member);
+        return new ProfileResponseDto(member);
     }
 
-    public SelectedProfileResponseDto getSelectedProfile(Long selectedMemberId) {
+    public ProfileResponseDto getSelectedProfile(Long selectedMemberId) {
         Member member = memberProfileRepository.findByIdWithProfileWithAll(selectedMemberId);
-        return new SelectedProfileResponseDto(member);
+        return new ProfileResponseDto(member);
     }
 
-    public AuthSelectedProfileResponseDto getSelectedProfileWhenLogin(Long memberId, Long selectedMemberId) {
+    public AuthProfileResponseDto getSelectedProfileWhenLogin(Long memberId, Long selectedMemberId) {
         Member member = memberProfileRepository.findByIdWithProfileWithAll(selectedMemberId);
         boolean isFollowing = followService.isFollowing(memberId, selectedMemberId);
-        return new AuthSelectedProfileResponseDto(member, isFollowing);
+        return new AuthProfileResponseDto(member, isFollowing);
     }
 }

@@ -1,5 +1,9 @@
 package com.example.backend.entity.profile;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public enum ESkill {
     // Frontend
     JAVASCRIPT("JavaScript"),
@@ -79,17 +83,27 @@ public enum ESkill {
         this.name = name;
     }
 
+    public static List<ESkill> fromNames(List<String> skills) {
+        return skills.stream().map(ESkill::from).toList();
+    }
+
     public String getName() {
         return name;
     }
 
-    public static ESkill from(String name) {
+    private static final Map<String, ESkill> NAME_MAP = new HashMap<>();
+
+    static {
         for (ESkill skill : ESkill.values()) {
-            if (skill.getName().equalsIgnoreCase(name)) {
-                return skill;
-            }
+            NAME_MAP.put(skill.name.toLowerCase(), skill);
         }
-        throw new IllegalArgumentException("there is no skill about " + name);
+    }
+
+    public static ESkill from(String name) {
+        if (name == null || !NAME_MAP.containsKey(name.toLowerCase())) {
+            throw new IllegalArgumentException("There is no skill associated with the name '" + name + "'");
+        }
+        return NAME_MAP.get(name.toLowerCase());
     }
 }
 

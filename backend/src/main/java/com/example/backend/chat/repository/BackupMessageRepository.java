@@ -21,7 +21,8 @@ import java.util.List;
 public class BackupMessageRepository {
     private final MongoTemplate mongoTemplate;
 
-    private static final Integer MESSAGE_LIMIT = 10000;
+    private static final Integer MESSAGE_STORE_LIMIT = 10000;
+    private static final Integer MESSAGE_FETCH_LIMIT = 100;
 
     public void removeById(String chatRoomId) {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
@@ -32,7 +33,7 @@ public class BackupMessageRepository {
         Query query = new Query(Criteria.where("_id").is(chatRoomId));
         Update update = new Update()
                 .push("messages")
-                .slice(MESSAGE_LIMIT)
+                .slice(MESSAGE_STORE_LIMIT)
                 .each(message);
         mongoTemplate.upsert(query, update, BackupMessage.class);
     }
@@ -63,7 +64,7 @@ public class BackupMessageRepository {
                 Aggregation.unwind("messages"),
                 Aggregation.match(Criteria.where("messages.sendTime").lt(cursor)),
                 Aggregation.sort(Sort.Direction.DESC, "messages.sendTime"),
-                Aggregation.limit(MESSAGE_LIMIT),
+                Aggregation.limit(MESSAGE_FETCH_LIMIT),
                 Aggregation.project().and("messages.senderId").as("senderId")
                         .and("messages.sendTime").as("sendTime")
                         .and("messages.content").as("content")
@@ -76,7 +77,7 @@ public class BackupMessageRepository {
     }
 
     private List<ChatRoom.Message> getReverse(List<ChatRoom.Message> lst) {
-        List<ChatRoom.Message> reversed = new ArrayList<>(lst);
+        List<ChatRoom.Message> reversed = new ArrayList<>();
         for (int i = lst.size()-1 ; i >= 0 ; i--) {
             reversed.add(lst.get(i));
         }

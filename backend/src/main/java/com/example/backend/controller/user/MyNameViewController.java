@@ -1,8 +1,8 @@
-package com.example.backend.controller.user.profile;
+package com.example.backend.controller.user;
 
-import com.example.backend.controller.dto.response.ProfileResponseDto;
-import com.example.backend.service.profile.ProfileViewService;
+import com.example.backend.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user/profile")
 @RequiredArgsConstructor
-public class ProfileViewController {
-    private final ProfileViewService profileViewService;
-
-    @GetMapping
-    public ResponseEntity<ProfileResponseDto> getProfile() {
+@RequestMapping("/user")
+@Slf4j
+public class MyNameViewController {
+    private final MemberRepository memberRepository;
+    @GetMapping("/my-name")
+    public ResponseEntity<String> getMyName() {
+        log.info("getMyName api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(profileViewService.getProfile(memberId));
+        return ResponseEntity.ok(memberRepository.findNameById(memberId));
     }
 }

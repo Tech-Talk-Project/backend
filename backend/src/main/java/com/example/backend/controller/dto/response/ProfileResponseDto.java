@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
-public class MyProfileResponseDto {
+public class ProfileResponseDto {
 
     private InfoDto info;
 
@@ -24,7 +24,7 @@ public class MyProfileResponseDto {
 
     private String detailedDescription;
 
-    public MyProfileResponseDto(Member member) {
+    public ProfileResponseDto(Member member) {
         this.info = new InfoDto(member.getName(), member.getProfile().getJob(), member.getEmail());
         this.imageUrl = member.getImageUrl();
         this.introduction = member.getProfile().getIntroduction();
