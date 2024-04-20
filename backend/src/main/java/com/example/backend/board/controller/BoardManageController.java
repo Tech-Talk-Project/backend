@@ -48,7 +48,6 @@ public class BoardManageController {
     @PostMapping("/update")
     public ResponseEntity<String> updateProject(
             @RequestBody BoardUpdateRequestDto dto) {
-        log.info("updateProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         switch (dto.getCategory()) {
             case PROJECT:
@@ -77,7 +76,6 @@ public class BoardManageController {
     @PostMapping("/toggle-recruitment")
     public ResponseEntity<String> toggleRecruitment(
             @RequestBody BoardUpdateRequestDto dto) {
-        log.info("toggleRecruitment api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         switch (dto.getCategory()) {
             case PROJECT:
@@ -97,7 +95,6 @@ public class BoardManageController {
     @PostMapping("/delete")
     public ResponseEntity<String> deleteProject(
             @RequestBody BoardDeleteRequestDto dto) {
-        log.info("deleteProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         switch (dto.getCategory()) {
             case PROJECT:
@@ -126,7 +123,6 @@ public class BoardManageController {
     @PostMapping("/add-comment")
     public ResponseEntity<String> addComment(
             @RequestBody CommentAddRequestDto dto) {
-        log.info("addComment api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         switch (dto.getCategory()) {
             case PROJECT:
@@ -155,14 +151,29 @@ public class BoardManageController {
     @PostMapping("/toggle-like")
     public ResponseEntity<String> toggleLike(
             @RequestBody LikeRequestDto dto) {
-        log.info("toggleLike api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boolean result = projectBoardManageService.toggleLike(memberId, dto);
-        if (result) {
-            return ResponseEntity.ok("좋아요가 추가되었습니다.");
-        } else {
-            return ResponseEntity.ok("좋아요가 삭제되었습니다.");
+        switch (dto.getCategory()) {
+            case PROJECT:
+                log.info("PROJECT : toggleLike api called");
+                boolean result = projectBoardManageService.toggleLike(memberId, dto);
+                return ResponseEntity.ok(result ? "좋아요 추가" : "좋아요 취소");
+            case STUDY:
+                log.info("STUDY : toggleLike api called");
+                break;
+            case QUESTION:
+                log.info("QUESTION : toggleLike api called");
+                break;
+            case PROMOTION:
+                log.info("PROMOTION : toggleLike api called");
+                break;
+            case FREE:
+                log.info("FREE : toggleLike api called");
+                break;
+            default:
+                log.warn("Invalid category: {}", dto.getCategory());
+                return ResponseEntity.badRequest().body("Invalid category");
         }
+        return ResponseEntity.badRequest().body("Invalid category");
     }
 
     @GetMapping("/check-like")
