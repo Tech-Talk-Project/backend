@@ -1,13 +1,14 @@
 package com.example.backend.board.dto.request;
 
+import com.example.backend.board.service.BoardCategory;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ProjectCreateRequestDto {
+public class BoardCreateRequestDto {
+    private BoardCategory category;
     private String title;
     private String content;
-    private String recruitmentPosition;
     private List<String> tags;
 }

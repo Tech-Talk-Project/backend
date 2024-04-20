@@ -16,51 +16,41 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ProjectBoardManageService {
+public class ProjectBoardManageService implements BoardManageService{
     private final ProjectBoardRepository projectBoardRepository;
-    private final ThumbsUpRepository thumbsUpRepository;
     private final BoardValidator boardValidator;
     private final EntityManager em;
 
-    public Long createProject(Long memberId, ProjectCreateRequestDto dto) {
+    @Override
+    public Long create(Long memberId, BoardCreateRequestDto dto) {
         Member member = em.getReference(Member.class, memberId);
         ProjectBoard projectBoard = new ProjectBoard(member, dto);
         projectBoardRepository.save(projectBoard);
         return projectBoard.getId();
     }
 
-
-    public void updateProject(Long memberId, ProjectUpdateRequestDto dto) {
-        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getProjectBoardId());
+    @Override
+    public void update(Long memberId, BoardUpdateRequestDto dto) {
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoard.update(dto);
     }
 
-    public void removeProject(Long memberId, ProjectRemoveRequestDto dto) {
-        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getProjectBoardId());
+    @Override
+    public void delete(Long memberId, BoardDeleteRequestDto dto) {
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoardRepository.remove(projectBoard);
     }
 
-    public void toggleRecruitment(Long memberId, ProjectUpdateRequestDto dto) {
-        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getProjectBoardId());
-        boardValidator.validateAuthor(memberId, projectBoard);
-        projectBoard.toggleRecruitment();
-    }
-
+    @Override
     public void addComment(Long memberId, CommentAddRequestDto dto) {
         ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
         Member member = em.getReference(Member.class, memberId);
         projectBoard.addComment(new Comment(dto.getContent(), member));
     }
 
-    /**
-     * 좋아요 토글 <br>
-     * 이미 좋아요가 눌려있으면 좋아요 취소 후 false 반환, 아니면 좋아요 추가 후 true 반환
-     * @param memberId
-     * @param dto
-     * @return
-     */
+    @Override
     public boolean toggleLike(Long memberId, LikeRequestDto dto) {
         ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
         if (existLike(memberId, projectBoard)) {
@@ -72,9 +62,26 @@ public class ProjectBoardManageService {
         }
     }
 
+    @Override
     public boolean checkLike(Long memberId, Long boardId) {
         ProjectBoard projectBoard = projectBoardRepository.findById(boardId);
         return existLike(memberId, projectBoard);
+    }
+
+    @Override
+    public boolean toggleDislike(Long memberId, LikeRequestDto dto) {
+        return false;
+    }
+
+    @Override
+    public boolean checkDislike(Long memberId, Long boardId) {
+        return false;
+    }
+
+    public void toggleRecruitment(Long memberId, BoardUpdateRequestDto dto) {
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
+        boardValidator.validateAuthor(memberId, projectBoard);
+        projectBoard.toggleRecruitment();
     }
 
     private boolean existLike(Long memberId, ProjectBoard projectBoard) {
