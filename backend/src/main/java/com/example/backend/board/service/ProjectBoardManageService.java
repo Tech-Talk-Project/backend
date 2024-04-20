@@ -22,7 +22,7 @@ public class ProjectBoardManageService {
     private final BoardValidator boardValidator;
     private final EntityManager em;
 
-    public Long createProject(Long memberId, ProjectCreateRequestDto dto) {
+    public Long createProject(Long memberId, BoardCreateRequestDto dto) {
         Member member = em.getReference(Member.class, memberId);
         ProjectBoard projectBoard = new ProjectBoard(member, dto);
         projectBoardRepository.save(projectBoard);
@@ -30,8 +30,8 @@ public class ProjectBoardManageService {
     }
 
 
-    public void updateProject(Long memberId, ProjectUpdateRequestDto dto) {
-        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getProjectBoardId());
+    public void updateProject(Long memberId, BoardUpdateRequestDto dto) {
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoard.update(dto);
     }
@@ -42,8 +42,8 @@ public class ProjectBoardManageService {
         projectBoardRepository.remove(projectBoard);
     }
 
-    public void toggleRecruitment(Long memberId, ProjectUpdateRequestDto dto) {
-        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getProjectBoardId());
+    public void toggleRecruitment(Long memberId, BoardUpdateRequestDto dto) {
+        ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);
         projectBoard.toggleRecruitment();
     }

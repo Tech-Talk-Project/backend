@@ -18,7 +18,7 @@ public class ProjectBoardManageController {
     private final ProjectBoardManageService projectBoardManageService;
 
     @PostMapping("/create")
-    public ResponseEntity<ProjectCreateResponseDto> createProject(@RequestBody ProjectCreateRequestDto dto) {
+    public ResponseEntity<ProjectCreateResponseDto> createProject(@RequestBody BoardCreateRequestDto dto) {
         log.info("createProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long projectBoardId = projectBoardManageService.createProject(memberId, dto);
@@ -27,7 +27,7 @@ public class ProjectBoardManageController {
 
     @PostMapping("/update")
     public ResponseEntity<String> updateProject(
-            @RequestBody ProjectUpdateRequestDto dto) {
+            @RequestBody BoardUpdateRequestDto dto) {
         log.info("updateProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         projectBoardManageService.updateProject(memberId, dto);
@@ -36,7 +36,7 @@ public class ProjectBoardManageController {
 
     @PostMapping("/toggle-recruitment")
     public ResponseEntity<String> toggleRecruitment(
-            @RequestBody ProjectUpdateRequestDto dto) {
+            @RequestBody BoardUpdateRequestDto dto) {
         log.info("toggleRecruitment api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         projectBoardManageService.toggleRecruitment(memberId, dto);

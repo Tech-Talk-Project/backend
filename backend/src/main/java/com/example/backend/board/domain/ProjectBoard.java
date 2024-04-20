@@ -1,7 +1,7 @@
 package com.example.backend.board.domain;
 
-import com.example.backend.board.dto.request.ProjectCreateRequestDto;
-import com.example.backend.board.dto.request.ProjectUpdateRequestDto;
+import com.example.backend.board.dto.request.BoardCreateRequestDto;
+import com.example.backend.board.dto.request.BoardUpdateRequestDto;
 import com.example.backend.entity.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class ProjectBoard extends BoardEntity {
     @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tag> tags = new ArrayList<>();
 
-    public ProjectBoard(Member member, ProjectCreateRequestDto dto) {
+    public ProjectBoard(Member member, BoardCreateRequestDto dto) {
         this.author = member;
         this.title = dto.getTitle();
         this.recruitmentPosition = dto.getRecruitmentPosition();
@@ -61,7 +61,7 @@ public class ProjectBoard extends BoardEntity {
         tags.forEach(this::addTag);
     }
 
-    public void update(ProjectUpdateRequestDto dto) {
+    public void update(BoardUpdateRequestDto dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
         updateTags(dto.getTags().stream().map(Tag::new).toList());

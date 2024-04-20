@@ -5,7 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ProjectCreateRequestDto {
+public class BoardCreateRequestDto {
+
     private String title;
     private String content;
     private String recruitmentPosition;
