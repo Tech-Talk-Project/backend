@@ -9,7 +9,4 @@ import java.util.List;
 public class BoardUpdateRequestDto {
     private BoardCategory category;
     private Long boardId;
-    private String title;
-    private String content;
-    private List<String> tags;
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class ProjectBoardViewController {
+public class BoardViewController {
     private final ProjectBoardViewService projectBoardService;
 
     @GetMapping("/project")

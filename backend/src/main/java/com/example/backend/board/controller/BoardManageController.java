@@ -50,8 +50,28 @@ public class BoardManageController {
             @RequestBody BoardUpdateRequestDto dto) {
         log.info("updateProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        projectBoardManageService.update(memberId, dto);
-        return ResponseEntity.ok("프로젝트 수정 완료");
+        switch (dto.getCategory()) {
+            case PROJECT:
+                log.info("PROJECT : updateBoard api called");
+                projectBoardManageService.update(memberId, dto);
+                return ResponseEntity.ok("프로젝트 수정 완료");
+            case STUDY:
+                log.info("STUDY : updateBoard api called");
+                break;
+            case QUESTION:
+                log.info("QUESTION : updateBoard api called");
+                break;
+            case PROMOTION:
+                log.info("PROMOTION : updateBoard api called");
+                break;
+            case FREE:
+                log.info("FREE : updateBoard api called");
+                break;
+            default:
+                log.warn("Invalid category: {}", dto.getCategory());
+                return ResponseEntity.badRequest().body("Invalid category");
+        }
+        return ResponseEntity.badRequest().body("Invalid category");
     }
 
     @PostMapping("/toggle-recruitment")
@@ -59,8 +79,19 @@ public class BoardManageController {
             @RequestBody BoardUpdateRequestDto dto) {
         log.info("toggleRecruitment api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        projectBoardManageService.toggleRecruitment(memberId, dto);
-        return ResponseEntity.ok("모집 상태 변경 완료");
+        switch (dto.getCategory()) {
+            case PROJECT:
+                log.info("PROJECT : toggleRecruitment api called");
+                projectBoardManageService.toggleRecruitment(memberId, dto);
+                return ResponseEntity.ok("모집 상태가 변경되었습니다.");
+            case STUDY:
+                log.info("STUDY : toggleRecruitment api called");
+                break;
+            default:
+                log.warn("Invalid category: {}", dto.getCategory());
+                return ResponseEntity.badRequest().body("Invalid category");
+        }
+        return ResponseEntity.badRequest().body("Invalid category");
     }
 
     @PostMapping("/delete")
@@ -68,8 +99,28 @@ public class BoardManageController {
             @RequestBody BoardDeleteRequestDto dto) {
         log.info("deleteProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        projectBoardManageService.delete(memberId, dto);
-        return ResponseEntity.ok("프로젝트 삭제 완료");
+        switch (dto.getCategory()) {
+            case PROJECT:
+                log.info("PROJECT : deleteBoard api called");
+                projectBoardManageService.delete(memberId, dto);
+                return ResponseEntity.ok("프로젝트 삭제 완료");
+            case STUDY:
+                log.info("STUDY : deleteBoard api called");
+                break;
+            case QUESTION:
+                log.info("QUESTION : deleteBoard api called");
+                break;
+            case PROMOTION:
+                log.info("PROMOTION : deleteBoard api called");
+                break;
+            case FREE:
+                log.info("FREE : deleteBoard api called");
+                break;
+            default:
+                log.warn("Invalid category: {}", dto.getCategory());
+                return ResponseEntity.badRequest().body("Invalid category");
+        }
+        return ResponseEntity.badRequest().body("Invalid category");
     }
 
     @PostMapping("/add-comment")
@@ -77,8 +128,28 @@ public class BoardManageController {
             @RequestBody CommentAddRequestDto dto) {
         log.info("addComment api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        projectBoardManageService.addComment(memberId, dto);
-        return ResponseEntity.ok("댓글이 추가되었습니다.");
+        switch (dto.getCategory()) {
+            case PROJECT:
+                log.info("PROJECT : addComment api called");
+                projectBoardManageService.addComment(memberId, dto);
+                return ResponseEntity.ok("댓글 추가 완료");
+            case STUDY:
+                log.info("STUDY : addComment api called");
+                break;
+            case QUESTION:
+                log.info("QUESTION : addComment api called");
+                break;
+            case PROMOTION:
+                log.info("PROMOTION : addComment api called");
+                break;
+            case FREE:
+                log.info("FREE : addComment api called");
+                break;
+            default:
+                log.warn("Invalid category: {}", dto.getCategory());
+                return ResponseEntity.badRequest().body("Invalid category");
+        }
+        return ResponseEntity.badRequest().body("Invalid category");
     }
 
     @PostMapping("/toggle-like")
