@@ -2,7 +2,8 @@ package com.example.backend.board.controller;
 
 import com.example.backend.board.dto.request.*;
 import com.example.backend.board.dto.response.CheckLikeResponseDto;
-import com.example.backend.board.dto.response.ProjectCreateResponseDto;
+import com.example.backend.board.dto.response.BoardCreateResponseDto;
+import com.example.backend.board.service.BoardCategory;
 import com.example.backend.board.service.ProjectBoardManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,17 +13,36 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/project")
+@RequestMapping("/user/board")
 @Slf4j
-public class ProjectBoardManageController {
+public class BoardManageController {
     private final ProjectBoardManageService projectBoardManageService;
 
     @PostMapping("/create")
-    public ResponseEntity<ProjectCreateResponseDto> createProject(@RequestBody BoardCreateRequestDto dto) {
-        log.info("createProject api called");
+    public ResponseEntity<BoardCreateResponseDto> createProject(@RequestBody BoardCreateRequestDto dto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long projectBoardId = projectBoardManageService.create(memberId, dto);
-        return ResponseEntity.ok(new ProjectCreateResponseDto(projectBoardId));
+        switch (dto.getCategory()) {
+            case PROJECT:
+                log.info("PROJECT : createBoard api called");
+                Long projectBoardId = projectBoardManageService.create(memberId, dto);
+                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.PROJECT, projectBoardId));
+            case STUDY:
+                log.info("STUDY : createBoard api called");
+                break;
+            case QUESTION:
+                log.info("QUESTION : createBoard api called");
+                break;
+            case PROMOTION:
+                log.info("PROMOTION : createBoard api called");
+                break;
+            case FREE:
+                log.info("FREE : createBoard api called");
+                break;
+            default:
+                log.warn("Invalid category: {}", dto.getCategory());
+                return ResponseEntity.badRequest().body(new BoardCreateResponseDto(null, null));
+        }
+        return ResponseEntity.badRequest().body(new BoardCreateResponseDto(null, null));
     }
 
     @PostMapping("/update")
@@ -48,7 +68,7 @@ public class ProjectBoardManageController {
             @RequestBody BoardDeleteRequestDto dto) {
         log.info("deleteProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        projectBoardManageService.removeProject(memberId, dto);
+        projectBoardManageService.delete(memberId, dto);
         return ResponseEntity.ok("프로젝트 삭제 완료");
     }
 
