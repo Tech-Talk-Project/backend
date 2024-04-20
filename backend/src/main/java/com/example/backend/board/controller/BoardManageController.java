@@ -178,10 +178,30 @@ public class BoardManageController {
 
     @GetMapping("/check-like")
     public ResponseEntity<CheckLikeResponseDto> checkLike(
-            @RequestParam Long boardId) {
-        log.info("checkLike api called");
+            @RequestParam Long boardId,
+            @RequestParam BoardCategory category) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boolean result = projectBoardManageService.checkLike(memberId, boardId);
-        return ResponseEntity.ok(new CheckLikeResponseDto(result));
+        switch (category) {
+            case PROJECT:
+                log.info("PROJECT : checkLike api called");
+                boolean result = projectBoardManageService.checkLike(memberId, boardId);
+                return ResponseEntity.ok(new CheckLikeResponseDto(result));
+            case STUDY:
+                log.info("STUDY : checkLike api called");
+                break;
+            case QUESTION:
+                log.info("QUESTION : checkLike api called");
+                break;
+            case PROMOTION:
+                log.info("PROMOTION : checkLike api called");
+                break;
+            case FREE:
+                log.info("FREE : checkLike api called");
+                break;
+            default:
+                log.warn("Invalid category: {}", category);
+                return ResponseEntity.badRequest().body(new CheckLikeResponseDto(false));
+        }
+        return ResponseEntity.badRequest().body(new CheckLikeResponseDto(false));
     }
 }
