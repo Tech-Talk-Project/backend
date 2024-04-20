@@ -9,6 +9,5 @@ public class BoardCreateRequestDto {
 
     private String title;
     private String content;
-    private String recruitmentPosition;
     private List<String> tags;
 }

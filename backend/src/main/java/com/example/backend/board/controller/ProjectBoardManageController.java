@@ -21,7 +21,7 @@ public class ProjectBoardManageController {
     public ResponseEntity<ProjectCreateResponseDto> createProject(@RequestBody BoardCreateRequestDto dto) {
         log.info("createProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long projectBoardId = projectBoardManageService.createProject(memberId, dto);
+        Long projectBoardId = projectBoardManageService.create(memberId, dto);
         return ResponseEntity.ok(new ProjectCreateResponseDto(projectBoardId));
     }
 
@@ -30,7 +30,7 @@ public class ProjectBoardManageController {
             @RequestBody BoardUpdateRequestDto dto) {
         log.info("updateProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        projectBoardManageService.updateProject(memberId, dto);
+        projectBoardManageService.update(memberId, dto);
         return ResponseEntity.ok("프로젝트 수정 완료");
     }
 
@@ -45,7 +45,7 @@ public class ProjectBoardManageController {
 
     @PostMapping("/delete")
     public ResponseEntity<String> deleteProject(
-            @RequestBody ProjectRemoveRequestDto dto) {
+            @RequestBody BoardDeleteRequestDto dto) {
         log.info("deleteProject api called");
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         projectBoardManageService.removeProject(memberId, dto);
