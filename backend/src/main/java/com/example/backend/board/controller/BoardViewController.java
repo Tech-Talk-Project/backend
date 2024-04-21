@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardViewController {
     private final ProjectBoardViewService projectBoardService;
 
-    @GetMapping("/project")
+    @GetMapping("/board")
     public ResponseEntity<BoardViewResponseDto> viewProject(
             @RequestParam BoardCategory category,
             @RequestParam Long boardId ) {
