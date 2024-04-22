@@ -16,10 +16,17 @@ public class StudyBoardRepository {
     private final JPAQueryFactory queryFactory;
     private final EntityManager em;
 
-    @Transactional(readOnly = true)
     public StudyBoard findById(Long studyBoardId) {
         return queryFactory
                 .selectFrom(studyBoard)
+                .where(studyBoard.id.eq(studyBoardId))
+                .fetchOne();
+    }
+
+    public StudyBoard findByIdWithAll(Long studyBoardId) {
+        return queryFactory
+                .selectFrom(studyBoard)
+                .join(studyBoard.author).fetchJoin()
                 .where(studyBoard.id.eq(studyBoardId))
                 .fetchOne();
     }
@@ -32,5 +39,13 @@ public class StudyBoardRepository {
     @Transactional
     public void remove(StudyBoard studyBoard) {
         em.remove(studyBoard);
+    }
+
+    public void increaseViewCount(Long boardId) {
+        queryFactory
+                .update(studyBoard)
+                .where(studyBoard.id.eq(boardId))
+                .set(studyBoard.viewCount, studyBoard.viewCount.add(1))
+                .execute();
     }
 }

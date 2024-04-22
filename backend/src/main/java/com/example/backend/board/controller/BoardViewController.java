@@ -4,6 +4,7 @@ import com.example.backend.board.dto.request.BoardViewIncreaseRequestDto;
 import com.example.backend.board.dto.response.BoardViewResponseDto;
 import com.example.backend.board.service.BoardCategory;
 import com.example.backend.board.service.ProjectBoardViewService;
+import com.example.backend.board.service.StudyBoardViewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class BoardViewController {
     private final ProjectBoardViewService projectBoardService;
+    private final StudyBoardViewService studyBoardService;
 
     @GetMapping("/board")
     public ResponseEntity<BoardViewResponseDto> viewProject(
@@ -25,7 +27,7 @@ public class BoardViewController {
                 return ResponseEntity.ok(projectBoardService.viewProject(boardId));
             case STUDY:
                 log.info("STUDY : viewProject api called");
-                break;
+                return ResponseEntity.ok(studyBoardService.viewStudy(boardId));
             case QUESTION:
                 log.info("QUESTION : viewProject api called");
                 break;
