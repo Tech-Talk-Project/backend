@@ -14,10 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectBoardViewService {
     private final ProjectBoardRepository projectBoardRepository;
 
-    @Transactional
     public ProjectBoardViewResponseDto viewProject(Long projectBoardId) {
         ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(projectBoardId);
-        projectBoard.increaseViewCount();
         return new ProjectBoardViewResponseDto(projectBoard);
+    }
+
+    @Transactional
+    public void increaseViewCount(Long boardId) {
+        projectBoardRepository.increaseViewCount(boardId);
     }
 }
