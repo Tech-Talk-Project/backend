@@ -26,6 +26,10 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "project_board_id")
     private ProjectBoard projectBoard;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "study_board_id")
+    private StudyBoard studyBoard;
+
     public void update(CommentUpdateRequestDto dto) {
         this.content = dto.getContent();
     }
@@ -37,5 +41,9 @@ public class Comment extends BaseEntity {
 
     public void setProjectBoard(ProjectBoard projectBoard) {
         this.projectBoard = projectBoard;
+    }
+
+    public void setStudyBoard(StudyBoard studyBoard) {
+        this.studyBoard = studyBoard;
     }
 }

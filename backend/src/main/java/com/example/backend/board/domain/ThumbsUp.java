@@ -21,11 +21,19 @@ public class ThumbsUp {
     @JoinColumn(name = "project_board_id")
     private ProjectBoard projectBoard;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "study_board_id")
+    private StudyBoard studyBoard;
+
     public void setProjectBoard(ProjectBoard projectBoard) {
         this.projectBoard = projectBoard;
     }
 
     public ThumbsUp(Member member) {
         this.member = member;
+    }
+
+    public void setStudyBoard(StudyBoard studyBoard) {
+        this.studyBoard = studyBoard;
     }
 }

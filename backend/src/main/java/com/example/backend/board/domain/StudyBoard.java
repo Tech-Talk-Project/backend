@@ -13,25 +13,26 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@NoArgsConstructor
 @Getter
-public class ProjectBoard extends BoardEntity {
-    @Id @GeneratedValue
-    @Column(name = "project_board_id")
+@NoArgsConstructor
+public class StudyBoard extends BoardEntity{
+    @Id
+    @GeneratedValue
+    @Column(name = "study_board_id")
     private Long id;
 
     private boolean recruitmentActive = true;
 
-    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "studyBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ThumbsUp> thumbsUps = new HashSet<>();
 
-    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "studyBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "projectBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "studyBoard", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tag> tags = new ArrayList<>();
 
-    public ProjectBoard(Member member, BoardCreateRequestDto dto) {
+    public StudyBoard(Member member, BoardCreateRequestDto dto) {
         this.author = member;
         this.title = dto.getTitle();
         this.content = dto.getContent();
@@ -40,28 +41,28 @@ public class ProjectBoard extends BoardEntity {
 
     public void addTag(Tag tag) {
         tags.add(tag);
-        tag.setProjectBoard(this);
+        tag.setStudyBoard(this);
     }
 
     public void addComment(Comment comment) {
         comments.add(comment);
-        comment.setProjectBoard(this);
+        comment.setStudyBoard(this);
     }
 
     public void addThumbsUp(ThumbsUp thumbsUp) {
         thumbsUps.add(thumbsUp);
-        thumbsUp.setProjectBoard(this);
-    }
-
-    private void updateTags(List<Tag> tags) {
-        this.tags.clear();
-        tags.forEach(this::addTag);
+        thumbsUp.setStudyBoard(this);
     }
 
     public void update(BoardUpdateRequestDto dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
         updateTags(dto.getTags().stream().map(Tag::new).toList());
+    }
+
+    private void updateTags(List<Tag> tags) {
+        this.tags.clear();
+        tags.forEach(this::addTag);
     }
 
     public void toggleRecruitment() {

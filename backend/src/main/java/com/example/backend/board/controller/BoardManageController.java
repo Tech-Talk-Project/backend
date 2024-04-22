@@ -5,6 +5,7 @@ import com.example.backend.board.dto.response.CheckLikeResponseDto;
 import com.example.backend.board.dto.response.BoardCreateResponseDto;
 import com.example.backend.board.service.BoardCategory;
 import com.example.backend.board.service.ProjectBoardManageService;
+import com.example.backend.board.service.StudyBoardManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class BoardManageController {
     private final ProjectBoardManageService projectBoardManageService;
+    private final StudyBoardManageService studyBoardManageService;
 
     @PostMapping("/create")
     public ResponseEntity<BoardCreateResponseDto> createProject(@RequestBody BoardCreateRequestDto dto) {
@@ -28,7 +30,8 @@ public class BoardManageController {
                 return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.PROJECT, projectBoardId));
             case STUDY:
                 log.info("STUDY : createBoard api called");
-                break;
+                Long studyBoardId = studyBoardManageService.create(memberId, dto);
+                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.STUDY, studyBoardId));
             case QUESTION:
                 log.info("QUESTION : createBoard api called");
                 break;
@@ -56,7 +59,8 @@ public class BoardManageController {
                 return ResponseEntity.ok("프로젝트 수정 완료");
             case STUDY:
                 log.info("STUDY : updateBoard api called");
-                break;
+                studyBoardManageService.update(memberId, dto);
+                return ResponseEntity.ok("스터디 수정 완료");
             case QUESTION:
                 log.info("QUESTION : updateBoard api called");
                 break;
@@ -84,12 +88,12 @@ public class BoardManageController {
                 return ResponseEntity.ok("모집 상태가 변경되었습니다.");
             case STUDY:
                 log.info("STUDY : toggleRecruitment api called");
-                break;
+                studyBoardManageService.toggleRecruitment(memberId, dto);
+                return ResponseEntity.ok("모집 상태가 변경되었습니다.");
             default:
                 log.warn("Invalid category: {}", dto.getCategory());
                 return ResponseEntity.badRequest().body("Invalid category");
         }
-        return ResponseEntity.badRequest().body("Invalid category");
     }
 
     @PostMapping("/delete")
@@ -103,7 +107,8 @@ public class BoardManageController {
                 return ResponseEntity.ok("프로젝트 삭제 완료");
             case STUDY:
                 log.info("STUDY : deleteBoard api called");
-                break;
+                studyBoardManageService.delete(memberId, dto);
+                return ResponseEntity.ok("스터디 삭제 완료");
             case QUESTION:
                 log.info("QUESTION : deleteBoard api called");
                 break;
@@ -131,7 +136,8 @@ public class BoardManageController {
                 return ResponseEntity.ok("댓글 추가 완료");
             case STUDY:
                 log.info("STUDY : addComment api called");
-                break;
+                studyBoardManageService.addComment(memberId, dto);
+                return ResponseEntity.ok("댓글 추가 완료");
             case QUESTION:
                 log.info("QUESTION : addComment api called");
                 break;
@@ -152,13 +158,16 @@ public class BoardManageController {
     public ResponseEntity<String> toggleLike(
             @RequestBody LikeRequestDto dto) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        boolean result = false;
         switch (dto.getCategory()) {
             case PROJECT:
                 log.info("PROJECT : toggleLike api called");
-                boolean result = projectBoardManageService.toggleLike(memberId, dto);
-                return ResponseEntity.ok(result ? "좋아요 추가" : "좋아요 취소");
+                result = projectBoardManageService.toggleLike(memberId, dto);
+                break;
             case STUDY:
                 log.info("STUDY : toggleLike api called");
+                result = studyBoardManageService.toggleLike(memberId, dto);
                 break;
             case QUESTION:
                 log.info("QUESTION : toggleLike api called");
@@ -173,7 +182,7 @@ public class BoardManageController {
                 log.warn("Invalid category: {}", dto.getCategory());
                 return ResponseEntity.badRequest().body("Invalid category");
         }
-        return ResponseEntity.badRequest().body("Invalid category");
+        return result ? ResponseEntity.ok("좋아요 완료") : ResponseEntity.ok("좋아요 취소");
     }
 
     @GetMapping("/check-like")
@@ -181,13 +190,16 @@ public class BoardManageController {
             @RequestParam Long boardId,
             @RequestParam BoardCategory category) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        boolean result = false;
         switch (category) {
             case PROJECT:
                 log.info("PROJECT : checkLike api called");
-                boolean result = projectBoardManageService.checkLike(memberId, boardId);
-                return ResponseEntity.ok(new CheckLikeResponseDto(result));
+                result = projectBoardManageService.checkLike(memberId, boardId);
+                break;
             case STUDY:
                 log.info("STUDY : checkLike api called");
+                result = studyBoardManageService.checkLike(memberId, boardId);
                 break;
             case QUESTION:
                 log.info("QUESTION : checkLike api called");
@@ -202,6 +214,6 @@ public class BoardManageController {
                 log.warn("Invalid category: {}", category);
                 return ResponseEntity.badRequest().body(new CheckLikeResponseDto(false));
         }
-        return ResponseEntity.badRequest().body(new CheckLikeResponseDto(false));
+        return ResponseEntity.ok(new CheckLikeResponseDto(result));
     }
 }

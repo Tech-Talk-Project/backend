@@ -41,4 +41,13 @@ public class ProjectBoardRepository {
     public void remove(ProjectBoard projectBoard) {
         em.remove(projectBoard);
     }
+
+    @Transactional
+    public void increaseViewCount(Long projectBoardId) {
+        query
+                .update(projectBoard)
+                .where(projectBoard.id.eq(projectBoardId))
+                .set(projectBoard.viewCount, projectBoard.viewCount.add(1))
+                .execute();
+    }
 }
