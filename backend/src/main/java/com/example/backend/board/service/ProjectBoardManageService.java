@@ -85,7 +85,8 @@ public class ProjectBoardManageService implements BoardManageService{
     }
 
     private boolean existLike(Long memberId, ProjectBoard projectBoard) {
-        return projectBoard.getThumbsUps().stream().anyMatch(thumbsUp -> thumbsUp.getMember().getId().equals(memberId));
+        return projectBoard.getThumbsUps().stream()
+                .anyMatch(thumbsUp -> thumbsUp.getMember().getId().equals(memberId));
     }
 
     private void removeLike(Long memberId, ProjectBoard projectBoard) {
