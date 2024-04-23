@@ -26,6 +26,14 @@ public class Tag {
     @JoinColumn(name = "question_board_id")
     private QuestionBoard questionBoard;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promotion_board_id")
+    private PromotionBoard promotionBoard;
+
+    public void setPromotionBoard(PromotionBoard promotionBoard) {
+        this.promotionBoard = promotionBoard;
+    }
+
     public Tag(String name) {
         this.name = name;
     }
