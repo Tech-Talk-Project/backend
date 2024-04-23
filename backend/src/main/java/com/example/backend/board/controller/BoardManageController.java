@@ -19,6 +19,7 @@ public class BoardManageController {
     private final StudyBoardManageService studyBoardManageService;
     private final QuestionBoardManageService questionBoardManageService;
     private final PromotionBoardManageService promotionBoardManageService;
+    private final FreeBoardManageService freeBoardManageService;
 
     @PostMapping("/create")
     public ResponseEntity<BoardCreateResponseDto> createProject(@RequestBody BoardCreateRequestDto dto) {
@@ -42,12 +43,12 @@ public class BoardManageController {
                 return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.PROMOTION, promotionBoardId));
             case FREE:
                 log.info("FREE : createBoard api called");
-                break;
+                Long freeBoardId = freeBoardManageService.create(memberId, dto);
+                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.FREE, freeBoardId));
             default:
                 log.warn("Invalid category: {}", dto.getCategory());
                 return ResponseEntity.badRequest().body(new BoardCreateResponseDto(null, null));
         }
-        return ResponseEntity.badRequest().body(new BoardCreateResponseDto(null, null));
     }
 
     @PostMapping("/update")
@@ -73,12 +74,12 @@ public class BoardManageController {
                 return ResponseEntity.ok("홍보 수정 완료");
             case FREE:
                 log.info("FREE : updateBoard api called");
-                break;
+                freeBoardManageService.update(memberId, dto);
+                return ResponseEntity.ok("자유 게시판 수정 완료");
             default:
                 log.warn("Invalid category: {}", dto.getCategory());
                 return ResponseEntity.badRequest().body("Invalid category");
         }
-        return ResponseEntity.badRequest().body("Invalid category");
     }
 
     @PostMapping("/toggle-recruitment")
@@ -123,12 +124,12 @@ public class BoardManageController {
                 return ResponseEntity.ok("홍보 삭제 완료");
             case FREE:
                 log.info("FREE : deleteBoard api called");
-                break;
+                freeBoardManageService.delete(memberId, dto);
+                return ResponseEntity.ok("자유 게시판 삭제 완료");
             default:
                 log.warn("Invalid category: {}", dto.getCategory());
                 return ResponseEntity.badRequest().body("Invalid category");
         }
-        return ResponseEntity.badRequest().body("Invalid category");
     }
 
     @PostMapping("/add-comment")
@@ -154,12 +155,12 @@ public class BoardManageController {
                 return ResponseEntity.ok("댓글 추가 완료");
             case FREE:
                 log.info("FREE : addComment api called");
-                break;
+                freeBoardManageService.addComment(memberId, dto);
+                return ResponseEntity.ok("댓글 추가 완료");
             default:
                 log.warn("Invalid category: {}", dto.getCategory());
                 return ResponseEntity.badRequest().body("Invalid category");
         }
-        return ResponseEntity.badRequest().body("Invalid category");
     }
 
     @PostMapping("/toggle-like")
@@ -187,6 +188,7 @@ public class BoardManageController {
                 break;
             case FREE:
                 log.info("FREE : toggleLike api called");
+                result = freeBoardManageService.toggleLike(memberId, dto);
                 break;
             default:
                 log.warn("Invalid category: {}", dto.getCategory());
@@ -221,6 +223,7 @@ public class BoardManageController {
                 break;
             case FREE:
                 log.info("FREE : checkLike api called");
+                result = freeBoardManageService.checkLike(memberId, boardId);
                 break;
             default:
                 log.warn("Invalid category: {}", category);
@@ -245,6 +248,7 @@ public class BoardManageController {
                 break;
             case FREE:
                 log.info("FREE : toggleDislike api called");
+                result = freeBoardManageService.toggleDislike(memberId, dto);
                 break;
             default:
                 log.warn("Invalid category: {}", dto.getCategory());
@@ -270,6 +274,7 @@ public class BoardManageController {
                 break;
             case FREE:
                 log.info("FREE : checkDislike api called");
+                result = freeBoardManageService.checkDislike(memberId, boardId);
                 break;
             default:
                 log.warn("Invalid category: {}", category);
