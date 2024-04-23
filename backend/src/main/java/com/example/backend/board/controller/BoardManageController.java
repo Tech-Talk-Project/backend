@@ -3,10 +3,7 @@ package com.example.backend.board.controller;
 import com.example.backend.board.dto.request.*;
 import com.example.backend.board.dto.response.CheckLikeResponseDto;
 import com.example.backend.board.dto.response.BoardCreateResponseDto;
-import com.example.backend.board.service.BoardCategory;
-import com.example.backend.board.service.ProjectBoardManageService;
-import com.example.backend.board.service.QuestionBoardManageService;
-import com.example.backend.board.service.StudyBoardManageService;
+import com.example.backend.board.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +18,7 @@ public class BoardManageController {
     private final ProjectBoardManageService projectBoardManageService;
     private final StudyBoardManageService studyBoardManageService;
     private final QuestionBoardManageService questionBoardManageService;
+    private final PromotionBoardManageService promotionBoardManageService;
 
     @PostMapping("/create")
     public ResponseEntity<BoardCreateResponseDto> createProject(@RequestBody BoardCreateRequestDto dto) {
@@ -40,7 +38,8 @@ public class BoardManageController {
                 return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.QUESTION, questionBoardId));
             case PROMOTION:
                 log.info("PROMOTION : createBoard api called");
-                break;
+                Long promotionBoardId = promotionBoardManageService.create(memberId, dto);
+                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.PROMOTION, promotionBoardId));
             case FREE:
                 log.info("FREE : createBoard api called");
                 break;
@@ -70,7 +69,8 @@ public class BoardManageController {
                 return ResponseEntity.ok("질문 수정 완료");
             case PROMOTION:
                 log.info("PROMOTION : updateBoard api called");
-                break;
+                promotionBoardManageService.update(memberId, dto);
+                return ResponseEntity.ok("홍보 수정 완료");
             case FREE:
                 log.info("FREE : updateBoard api called");
                 break;
@@ -119,7 +119,8 @@ public class BoardManageController {
                 return ResponseEntity.ok("질문 삭제 완료");
             case PROMOTION:
                 log.info("PROMOTION : deleteBoard api called");
-                break;
+                promotionBoardManageService.delete(memberId, dto);
+                return ResponseEntity.ok("홍보 삭제 완료");
             case FREE:
                 log.info("FREE : deleteBoard api called");
                 break;
@@ -149,7 +150,8 @@ public class BoardManageController {
                 return ResponseEntity.ok("댓글 추가 완료");
             case PROMOTION:
                 log.info("PROMOTION : addComment api called");
-                break;
+                promotionBoardManageService.addComment(memberId, dto);
+                return ResponseEntity.ok("댓글 추가 완료");
             case FREE:
                 log.info("FREE : addComment api called");
                 break;
@@ -181,6 +183,7 @@ public class BoardManageController {
                 break;
             case PROMOTION:
                 log.info("PROMOTION : toggleLike api called");
+                result = promotionBoardManageService.toggleLike(memberId, dto);
                 break;
             case FREE:
                 log.info("FREE : toggleLike api called");
@@ -214,6 +217,7 @@ public class BoardManageController {
                 break;
             case PROMOTION:
                 log.info("PROMOTION : checkLike api called");
+                result = promotionBoardManageService.checkLike(memberId, boardId);
                 break;
             case FREE:
                 log.info("FREE : checkLike api called");
@@ -237,6 +241,7 @@ public class BoardManageController {
                 break;
             case PROMOTION:
                 log.info("PROMOTION : toggleDislike api called");
+                result = promotionBoardManageService.toggleDislike(memberId, dto);
                 break;
             case FREE:
                 log.info("FREE : toggleDislike api called");
@@ -261,6 +266,7 @@ public class BoardManageController {
                 break;
             case PROMOTION:
                 log.info("PROMOTION : checkDislike api called");
+                result = promotionBoardManageService.checkDislike(memberId, boardId);
                 break;
             case FREE:
                 log.info("FREE : checkDislike api called");
