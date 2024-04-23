@@ -1,4 +1,4 @@
-package com.example.backend.board.service;
+package com.example.backend.board.service.boardView;
 
 import com.example.backend.board.domain.ProjectBoard;
 import com.example.backend.board.dto.response.BoardViewResponseDto;
@@ -11,16 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProjectBoardViewService {
+public class ProjectBoardViewService implements BoardViewService{
     private final ProjectBoardRepository projectBoardRepository;
 
-    public ProjectBoardViewResponseDto viewProject(Long projectBoardId) {
-        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(projectBoardId);
-        return new ProjectBoardViewResponseDto(projectBoard);
-    }
-
+    @Override
     @Transactional
-    public void increaseViewCount(Long boardId) {
-        projectBoardRepository.increaseViewCount(boardId);
+    public ProjectBoardViewResponseDto view(Long projectBoardId) {
+        ProjectBoard projectBoard = projectBoardRepository.findByIdWithAll(projectBoardId);
+        projectBoard.increaseViewCount();
+        return new ProjectBoardViewResponseDto(projectBoard);
     }
 }

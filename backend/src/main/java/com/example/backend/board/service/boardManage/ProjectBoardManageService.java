@@ -1,10 +1,9 @@
-package com.example.backend.board.service;
+package com.example.backend.board.service.boardManage;
 
 import com.example.backend.board.domain.Comment;
 import com.example.backend.board.domain.ThumbsUp;
 import com.example.backend.board.domain.ProjectBoard;
 import com.example.backend.board.dto.request.*;
-import com.example.backend.board.repository.ThumbsUpRepository;
 import com.example.backend.board.repository.ProjectBoardRepository;
 import com.example.backend.board.validator.BoardValidator;
 import com.example.backend.entity.member.Member;
