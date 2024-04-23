@@ -4,6 +4,7 @@ import com.example.backend.board.dto.request.*;
 import com.example.backend.board.dto.response.CheckLikeResponseDto;
 import com.example.backend.board.dto.response.BoardCreateResponseDto;
 import com.example.backend.board.service.*;
+import com.example.backend.board.service.boardManage.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

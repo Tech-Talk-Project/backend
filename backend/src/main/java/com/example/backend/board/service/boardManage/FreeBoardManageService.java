@@ -1,4 +1,4 @@
-package com.example.backend.board.service;
+package com.example.backend.board.service.boardManage;
 
 import com.example.backend.board.domain.Comment;
 import com.example.backend.board.domain.FreeBoard;
