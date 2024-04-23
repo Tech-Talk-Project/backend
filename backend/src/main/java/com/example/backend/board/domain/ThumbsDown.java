@@ -17,4 +17,11 @@ public class ThumbsDown {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_board_id")
+    private QuestionBoard questionBoard;
+
+    public void setQuestionBoard(QuestionBoard questionBoard) {
+        this.questionBoard = questionBoard;
+    }
 }

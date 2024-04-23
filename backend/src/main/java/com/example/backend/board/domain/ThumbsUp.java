@@ -25,6 +25,10 @@ public class ThumbsUp {
     @JoinColumn(name = "study_board_id")
     private StudyBoard studyBoard;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_board_id")
+    private QuestionBoard questionBoard;
+
     public void setProjectBoard(ProjectBoard projectBoard) {
         this.projectBoard = projectBoard;
     }
@@ -35,5 +39,9 @@ public class ThumbsUp {
 
     public void setStudyBoard(StudyBoard studyBoard) {
         this.studyBoard = studyBoard;
+    }
+
+    public void setQuestionBoard(QuestionBoard questionBoard) {
+        this.questionBoard = questionBoard;
     }
 }

@@ -30,6 +30,14 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "study_board_id")
     private StudyBoard studyBoard;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_board_id")
+    private QuestionBoard questionBoard;
+
+    public void setQuestionBoard(QuestionBoard questionBoard) {
+        this.questionBoard = questionBoard;
+    }
+
     public void update(CommentUpdateRequestDto dto) {
         this.content = dto.getContent();
     }
