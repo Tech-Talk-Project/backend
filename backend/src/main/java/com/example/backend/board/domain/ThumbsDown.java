@@ -24,4 +24,8 @@ public class ThumbsDown {
     public void setQuestionBoard(QuestionBoard questionBoard) {
         this.questionBoard = questionBoard;
     }
+
+    public ThumbsDown(Member member) {
+        this.member = member;
+    }
 }
