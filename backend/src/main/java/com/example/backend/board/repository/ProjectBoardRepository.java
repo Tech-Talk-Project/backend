@@ -1,5 +1,6 @@
 package com.example.backend.board.repository;
 
+import com.example.backend.board.domain.BoardEntity;
 import com.example.backend.board.domain.ProjectBoard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -12,15 +13,17 @@ import static com.example.backend.board.domain.QProjectBoard.projectBoard;
 @Repository
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProjectBoardRepository {
+public class ProjectBoardRepository implements BoardRepository {
     private final JPAQueryFactory query;
     private final EntityManager em;
 
     @Transactional
-    public void save(ProjectBoard projectBoard) {
+    @Override
+    public void save(BoardEntity projectBoard) {
         em.persist(projectBoard);
     }
 
+    @Override
     public ProjectBoard findById(Long projectBoardId) {
         return query
                 .selectFrom(projectBoard)
@@ -29,6 +32,7 @@ public class ProjectBoardRepository {
     }
 
 
+    @Override
     public ProjectBoard findByIdWithAll(Long projectBoardId) {
         return query
                 .selectFrom(projectBoard)
@@ -38,11 +42,13 @@ public class ProjectBoardRepository {
     }
 
     @Transactional
-    public void remove(ProjectBoard projectBoard) {
+    @Override
+    public void remove(BoardEntity projectBoard) {
         em.remove(projectBoard);
     }
 
     @Transactional
+    @Override
     public void increaseViewCount(Long projectBoardId) {
         query
                 .update(projectBoard)
