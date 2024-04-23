@@ -5,6 +5,7 @@ import com.example.backend.board.dto.response.CheckLikeResponseDto;
 import com.example.backend.board.dto.response.BoardCreateResponseDto;
 import com.example.backend.board.service.BoardCategory;
 import com.example.backend.board.service.ProjectBoardManageService;
+import com.example.backend.board.service.QuestionBoardManageService;
 import com.example.backend.board.service.StudyBoardManageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class BoardManageController {
     private final ProjectBoardManageService projectBoardManageService;
     private final StudyBoardManageService studyBoardManageService;
+    private final QuestionBoardManageService questionBoardManageService;
 
     @PostMapping("/create")
     public ResponseEntity<BoardCreateResponseDto> createProject(@RequestBody BoardCreateRequestDto dto) {
@@ -34,7 +36,8 @@ public class BoardManageController {
                 return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.STUDY, studyBoardId));
             case QUESTION:
                 log.info("QUESTION : createBoard api called");
-                break;
+                Long questionBoardId = questionBoardManageService.create(memberId, dto);
+                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.QUESTION, questionBoardId));
             case PROMOTION:
                 log.info("PROMOTION : createBoard api called");
                 break;
@@ -63,7 +66,8 @@ public class BoardManageController {
                 return ResponseEntity.ok("스터디 수정 완료");
             case QUESTION:
                 log.info("QUESTION : updateBoard api called");
-                break;
+                questionBoardManageService.update(memberId, dto);
+                return ResponseEntity.ok("질문 수정 완료");
             case PROMOTION:
                 log.info("PROMOTION : updateBoard api called");
                 break;
@@ -111,7 +115,8 @@ public class BoardManageController {
                 return ResponseEntity.ok("스터디 삭제 완료");
             case QUESTION:
                 log.info("QUESTION : deleteBoard api called");
-                break;
+                questionBoardManageService.delete(memberId, dto);
+                return ResponseEntity.ok("질문 삭제 완료");
             case PROMOTION:
                 log.info("PROMOTION : deleteBoard api called");
                 break;
@@ -140,7 +145,8 @@ public class BoardManageController {
                 return ResponseEntity.ok("댓글 추가 완료");
             case QUESTION:
                 log.info("QUESTION : addComment api called");
-                break;
+                questionBoardManageService.addComment(memberId, dto);
+                return ResponseEntity.ok("댓글 추가 완료");
             case PROMOTION:
                 log.info("PROMOTION : addComment api called");
                 break;
@@ -171,6 +177,7 @@ public class BoardManageController {
                 break;
             case QUESTION:
                 log.info("QUESTION : toggleLike api called");
+                result = questionBoardManageService.toggleLike(memberId, dto);
                 break;
             case PROMOTION:
                 log.info("PROMOTION : toggleLike api called");
@@ -203,12 +210,60 @@ public class BoardManageController {
                 break;
             case QUESTION:
                 log.info("QUESTION : checkLike api called");
+                result = questionBoardManageService.checkLike(memberId, boardId);
                 break;
             case PROMOTION:
                 log.info("PROMOTION : checkLike api called");
                 break;
             case FREE:
                 log.info("FREE : checkLike api called");
+                break;
+            default:
+                log.warn("Invalid category: {}", category);
+                return ResponseEntity.badRequest().body(new CheckLikeResponseDto(false));
+        }
+        return ResponseEntity.ok(new CheckLikeResponseDto(result));
+    }
+
+    @PostMapping("/toggle-dislike")
+    public ResponseEntity<String> toggleDislike(
+            @RequestBody LikeRequestDto dto) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        boolean result = false;
+        switch (dto.getCategory()) {
+            case QUESTION:
+                log.info("QUESTION : toggleDislike api called");
+                result = questionBoardManageService.toggleDislike(memberId, dto);
+                break;
+            case PROMOTION:
+                log.info("PROMOTION : toggleDislike api called");
+                break;
+            case FREE:
+                log.info("FREE : toggleDislike api called");
+                break;
+            default:
+                log.warn("Invalid category: {}", dto.getCategory());
+                return ResponseEntity.badRequest().body("Invalid category");
+        }
+        return result ? ResponseEntity.ok("싫어요 완료") : ResponseEntity.ok("싫어요 취소");
+    }
+
+    @GetMapping("/check-dislike")
+    public ResponseEntity<CheckLikeResponseDto> checkDislike(
+            @RequestParam Long boardId,
+            @RequestParam BoardCategory category) {
+        Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        boolean result = false;
+        switch (category) {
+            case QUESTION:
+                log.info("QUESTION : checkDislike api called");
+                result = questionBoardManageService.checkDislike(memberId, boardId);
+                break;
+            case PROMOTION:
+                log.info("PROMOTION : checkDislike api called");
+                break;
+            case FREE:
+                log.info("FREE : checkDislike api called");
                 break;
             default:
                 log.warn("Invalid category: {}", category);
