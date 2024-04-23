@@ -33,6 +33,14 @@ public class ThumbsUp {
     @JoinColumn(name = "promotion_board_id")
     private PromotionBoard promotionBoard;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "free_board_id")
+    private FreeBoard freeBoard;
+
+    public void setFreeBoard(FreeBoard freeBoard) {
+        this.freeBoard = freeBoard;
+    }
+
     public void setPromotionBoard(PromotionBoard promotionBoard) {
         this.promotionBoard = promotionBoard;
     }
