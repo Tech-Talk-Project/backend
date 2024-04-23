@@ -3,8 +3,8 @@ package com.example.backend.board.controller;
 import com.example.backend.board.dto.request.BoardViewIncreaseRequestDto;
 import com.example.backend.board.dto.response.BoardViewResponseDto;
 import com.example.backend.board.service.BoardCategory;
-import com.example.backend.board.service.ProjectBoardViewService;
-import com.example.backend.board.service.StudyBoardViewService;
+import com.example.backend.board.service.boardView.ProjectBoardViewService;
+import com.example.backend.board.service.boardView.StudyBoardViewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +24,10 @@ public class BoardViewController {
         switch (category) {
             case PROJECT:
                 log.info("PROJECT : viewProject api called");
-                return ResponseEntity.ok(projectBoardService.viewProject(boardId));
+                return ResponseEntity.ok(projectBoardService.view(boardId));
             case STUDY:
                 log.info("STUDY : viewProject api called");
-                return ResponseEntity.ok(studyBoardService.viewStudy(boardId));
+                return ResponseEntity.ok(studyBoardService.view(boardId));
             case QUESTION:
                 log.info("QUESTION : viewProject api called");
                 break;
