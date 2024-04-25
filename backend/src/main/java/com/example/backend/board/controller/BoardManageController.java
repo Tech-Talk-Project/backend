@@ -1,6 +1,7 @@
 package com.example.backend.board.controller;
 
 import com.example.backend.board.dto.request.*;
+import com.example.backend.board.dto.response.CheckDislikeResponseDto;
 import com.example.backend.board.dto.response.CheckLikeResponseDto;
 import com.example.backend.board.dto.response.BoardCreateResponseDto;
 import com.example.backend.board.service.*;
@@ -259,7 +260,7 @@ public class BoardManageController {
     }
 
     @GetMapping("/check-dislike")
-    public ResponseEntity<CheckLikeResponseDto> checkDislike(
+    public ResponseEntity<CheckDislikeResponseDto> checkDislike(
             @RequestParam Long boardId,
             @RequestParam BoardCategory category) {
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -279,8 +280,8 @@ public class BoardManageController {
                 break;
             default:
                 log.warn("Invalid category: {}", category);
-                return ResponseEntity.badRequest().body(new CheckLikeResponseDto(false));
+                return ResponseEntity.badRequest().body(new CheckDislikeResponseDto(false));
         }
-        return ResponseEntity.ok(new CheckLikeResponseDto(result));
+        return ResponseEntity.ok(new CheckDislikeResponseDto(result));
     }
 }
