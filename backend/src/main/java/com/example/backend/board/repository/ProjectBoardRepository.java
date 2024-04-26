@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.example.backend.board.domain.QProjectBoard.projectBoard;
 
 @Repository
@@ -55,5 +57,14 @@ public class ProjectBoardRepository implements BoardRepository {
                 .where(projectBoard.id.eq(projectBoardId))
                 .set(projectBoard.viewCount, projectBoard.viewCount.add(1))
                 .execute();
+    }
+
+    public List<ProjectBoard> findAll(int page, int size) {
+        return query
+                .selectFrom(projectBoard)
+                .orderBy(projectBoard.createdAt.desc())
+                .offset((long) page * size)
+                .limit(size)
+                .fetch();
     }
 }

@@ -2,11 +2,14 @@ package com.example.backend.board.repository;
 
 import com.example.backend.board.domain.BoardEntity;
 import com.example.backend.board.domain.FreeBoard;
+import com.example.backend.board.dto.SimpleBoardDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.example.backend.board.domain.QFreeBoard.freeBoard;
 
@@ -54,5 +57,14 @@ public class FreeBoardRepository implements BoardRepository{
                 .where(freeBoard.id.eq(boardId))
                 .set(freeBoard.viewCount, freeBoard.viewCount.add(1))
                 .execute();
+    }
+
+    public List<FreeBoard> findAll(int page, int size) {
+        return query
+                .selectFrom(freeBoard)
+                .orderBy(freeBoard.createdAt.desc())
+                .offset((long) page * size)
+                .limit(size)
+                .fetch();
     }
 }
