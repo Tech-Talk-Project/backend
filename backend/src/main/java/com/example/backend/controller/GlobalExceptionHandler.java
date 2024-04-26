@@ -7,6 +7,7 @@ import com.example.backend.oauth2.exception.OAuth2InvalidEmailException;
 import com.example.backend.security.exception.InvalidJwtException;
 import com.example.backend.security.exception.InvalidRefreshToken;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,6 +24,7 @@ import java.time.format.DateTimeParseException;
 public class GlobalExceptionHandler {
     //400
     @ExceptionHandler({
+            InvalidDataAccessApiUsageException.class,
             IllegalArgumentException.class,
             IllegalStateException.class,
             MissingRequestCookieException.class,
