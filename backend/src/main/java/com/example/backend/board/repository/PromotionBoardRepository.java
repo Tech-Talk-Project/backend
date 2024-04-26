@@ -39,11 +39,15 @@ public class PromotionBoardRepository implements BoardRepository {
 
     @Override
     public PromotionBoard findByIdWithAll(Long boardId) {
-        return query
+        PromotionBoard result = query
                 .selectFrom(promotionBoard)
                 .join(promotionBoard.author).fetchJoin()
                 .where(promotionBoard.id.eq(boardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + boardId);
+        }
+        return result;
     }
 
     @Override
@@ -58,6 +62,13 @@ public class PromotionBoardRepository implements BoardRepository {
                 .where(promotionBoard.id.eq(boardId))
                 .set(promotionBoard.viewCount, promotionBoard.viewCount.add(1))
                 .execute();
+    }
+
+    @Override
+    public Long countAll() {
+        return query
+                .selectFrom(promotionBoard)
+                .fetchCount();
     }
 
     public List<PromotionBoard> findAll(int page, int size) {

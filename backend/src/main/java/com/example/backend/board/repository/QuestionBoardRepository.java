@@ -38,11 +38,15 @@ public class QuestionBoardRepository implements BoardRepository{
 
     @Override
     public QuestionBoard findByIdWithAll(Long boardId) {
-        return query
+        QuestionBoard result = query
                 .selectFrom(questionBoard)
                 .join(questionBoard.author).fetchJoin()
                 .where(questionBoard.id.eq(boardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + boardId);
+        }
+        return result;
     }
 
     @Override
@@ -57,6 +61,13 @@ public class QuestionBoardRepository implements BoardRepository{
                 .where(questionBoard.id.eq(boardId))
                 .set(questionBoard.viewCount, questionBoard.viewCount.add(1))
                 .execute();
+    }
+
+    @Override
+    public Long countAll() {
+        return query
+                .selectFrom(questionBoard)
+                .fetchCount();
     }
 
     public List<QuestionBoard> findAll(int page, int size) {

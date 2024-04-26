@@ -40,11 +40,15 @@ public class FreeBoardRepository implements BoardRepository{
 
     @Override
     public FreeBoard findByIdWithAll(Long boardId) {
-        return query
+        FreeBoard result = query
                 .selectFrom(freeBoard)
                 .leftJoin(freeBoard.author).fetchJoin()
                 .where(freeBoard.id.eq(boardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + boardId);
+        }
+        return result;
     }
 
     @Override
@@ -61,6 +65,13 @@ public class FreeBoardRepository implements BoardRepository{
                 .where(freeBoard.id.eq(boardId))
                 .set(freeBoard.viewCount, freeBoard.viewCount.add(1))
                 .execute();
+    }
+
+    @Override
+    public Long countAll() {
+        return query
+                .selectFrom(freeBoard)
+                .fetchCount();
     }
 
     public List<FreeBoard> findAll(int page, int size) {

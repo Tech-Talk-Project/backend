@@ -33,11 +33,15 @@ public class StudyBoardRepository implements BoardRepository{
 
     @Override
     public StudyBoard findByIdWithAll(Long studyBoardId) {
-        return query
+        StudyBoard result = query
                 .selectFrom(studyBoard)
                 .join(studyBoard.author).fetchJoin()
                 .where(studyBoard.id.eq(studyBoardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + studyBoardId);
+        }
+        return result;
     }
 
     @Transactional
@@ -60,6 +64,13 @@ public class StudyBoardRepository implements BoardRepository{
                 .where(studyBoard.id.eq(boardId))
                 .set(studyBoard.viewCount, studyBoard.viewCount.add(1))
                 .execute();
+    }
+
+    @Override
+    public Long countAll() {
+        return query
+                .selectFrom(studyBoard)
+                .fetchCount();
     }
 
     public List<StudyBoard> findAll(int page, int size) {

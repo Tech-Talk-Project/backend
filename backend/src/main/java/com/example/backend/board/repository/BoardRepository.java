@@ -8,4 +8,5 @@ public interface BoardRepository {
     BoardEntity findByIdWithAll(Long boardId);
     void remove(BoardEntity boardEntity);
     void increaseViewCount(Long boardId);
+    Long countAll();
 }
