@@ -27,10 +27,14 @@ public class ProjectBoardRepository implements BoardRepository {
 
     @Override
     public ProjectBoard findById(Long projectBoardId) {
-        return query
+        ProjectBoard result = query
                 .selectFrom(projectBoard)
                 .where(projectBoard.id.eq(projectBoardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + projectBoardId);
+        }
+        return result;
     }
 
 

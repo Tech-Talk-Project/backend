@@ -26,11 +26,16 @@ public class PromotionBoardRepository implements BoardRepository {
 
     @Override
     public PromotionBoard findById(Long boardId) {
-        return query
+        PromotionBoard result = query
                 .selectFrom(promotionBoard)
                 .where(promotionBoard.id.eq(boardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + boardId);
+        }
+        return result;
     }
+
 
     @Override
     public PromotionBoard findByIdWithAll(Long boardId) {

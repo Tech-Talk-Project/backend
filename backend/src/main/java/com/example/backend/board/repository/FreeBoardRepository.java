@@ -28,10 +28,14 @@ public class FreeBoardRepository implements BoardRepository{
 
     @Override
     public FreeBoard findById(Long boardId) {
-        return query
+        FreeBoard result = query
                 .selectFrom(freeBoard)
                 .where(freeBoard.id.eq(boardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + boardId);
+        }
+        return result;
     }
 
     @Override

@@ -26,10 +26,14 @@ public class QuestionBoardRepository implements BoardRepository{
 
     @Override
     public QuestionBoard findById(Long boardId) {
-        return query
+        QuestionBoard result = query
                 .selectFrom(questionBoard)
                 .where(questionBoard.id.eq(boardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + boardId);
+        }
+        return result;
     }
 
     @Override

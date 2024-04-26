@@ -21,10 +21,14 @@ public class StudyBoardRepository implements BoardRepository{
 
     @Override
     public StudyBoard findById(Long studyBoardId) {
-        return query
+        StudyBoard result = query
                 .selectFrom(studyBoard)
                 .where(studyBoard.id.eq(studyBoardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + studyBoardId);
+        }
+        return result;
     }
 
     @Override
