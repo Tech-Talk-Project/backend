@@ -57,6 +57,9 @@ public class FreeBoardManageService implements BoardManageService{
             removeLike(memberId, freeBoard);
             return false;
         } else {
+            if (existDislike(memberId, freeBoard)) {
+                removeDislike(memberId, freeBoard);
+            }
             addLike(memberId, freeBoard);
             return true;
         }
@@ -89,6 +92,9 @@ public class FreeBoardManageService implements BoardManageService{
             removeDislike(memberId, freeBoard);
             return false;
         } else {
+            if (existLike(memberId, freeBoard)) {
+                removeLike(memberId, freeBoard);
+            }
             addDislike(memberId, freeBoard);
             return true;
         }
