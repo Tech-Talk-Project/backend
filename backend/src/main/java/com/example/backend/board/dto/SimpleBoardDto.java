@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data
 public class SimpleBoardDto {
+    private Long boardId;
     private String title;
     private String content;
     private SimpleMemberProfileDto author;
@@ -25,7 +26,7 @@ public class SimpleBoardDto {
 
     @Builder
     public SimpleBoardDto(BoardEntity board, List<Tag> tags, Integer likeCount
-            , Integer dislikeCount, Integer commentCount, boolean recruitmentActive) {
+            , Integer dislikeCount, Integer commentCount, boolean recruitmentActive, Long boardId) {
         this.title = board.getTitle();
         this.content = HtmlTextExtractor.extract(board.getContent());
         this.author = new SimpleMemberProfileDto(board.getAuthor());
@@ -37,11 +38,13 @@ public class SimpleBoardDto {
         this.dislikeCount = dislikeCount;
         this.commentCount = commentCount;
         this.recruitmentActive = recruitmentActive;
+        this.boardId = boardId;
     }
 
     public static List<SimpleBoardDto> ofFreeBoards(List<FreeBoard> freeBoards) {
         return freeBoards.stream()
                 .map(board -> SimpleBoardDto.builder()
+                        .boardId(board.getId())
                         .board(board)
                         .tags(board.getTags())
                         .likeCount(board.getThumbsUps().size())
@@ -54,6 +57,7 @@ public class SimpleBoardDto {
     public static List<SimpleBoardDto> ofProjectBoards(List<ProjectBoard> boards) {
         return boards.stream()
                 .map(board -> SimpleBoardDto.builder()
+                        .boardId(board.getId())
                         .board(board)
                         .tags(board.getTags())
                         .likeCount(board.getThumbsUps().size())
@@ -66,6 +70,7 @@ public class SimpleBoardDto {
     public static List<SimpleBoardDto> ofStudyBoards(List<StudyBoard> boards) {
         return boards.stream()
                 .map(board -> SimpleBoardDto.builder()
+                        .boardId(board.getId())
                         .board(board)
                         .tags(board.getTags())
                         .likeCount(board.getThumbsUps().size())
@@ -78,6 +83,7 @@ public class SimpleBoardDto {
     public static List<SimpleBoardDto> ofQuestionBoards(List<QuestionBoard> boards) {
         return boards.stream()
                 .map(board -> SimpleBoardDto.builder()
+                        .boardId(board.getId())
                         .board(board)
                         .tags(board.getTags())
                         .likeCount(board.getThumbsUps().size())
@@ -90,6 +96,7 @@ public class SimpleBoardDto {
     public static List<SimpleBoardDto> ofPromotionBoards(List<PromotionBoard> boards) {
         return boards.stream()
                 .map(board -> SimpleBoardDto.builder()
+                        .boardId(board.getId())
                         .board(board)
                         .tags(board.getTags())
                         .likeCount(board.getThumbsUps().size())
