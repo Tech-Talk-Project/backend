@@ -2,7 +2,6 @@ package com.example.backend.board.repository;
 
 import com.example.backend.board.domain.BoardEntity;
 import com.example.backend.board.domain.FreeBoard;
-import com.example.backend.board.dto.SimpleBoardDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

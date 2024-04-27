@@ -75,6 +75,10 @@ dependencies {
 
 	//rabbitmq
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+	// JSoup
+	implementation group: 'org.jsoup', name: 'jsoup', version: '1.17.2'
+
 }
 
 tasks.named('bootBuildImage') {
