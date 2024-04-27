@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.example.backend.board.domain.QQuestionBoard.*;
 
 @Repository
@@ -24,19 +26,27 @@ public class QuestionBoardRepository implements BoardRepository{
 
     @Override
     public QuestionBoard findById(Long boardId) {
-        return query
+        QuestionBoard result = query
                 .selectFrom(questionBoard)
                 .where(questionBoard.id.eq(boardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + boardId);
+        }
+        return result;
     }
 
     @Override
     public QuestionBoard findByIdWithAll(Long boardId) {
-        return query
+        QuestionBoard result = query
                 .selectFrom(questionBoard)
                 .join(questionBoard.author).fetchJoin()
                 .where(questionBoard.id.eq(boardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + boardId);
+        }
+        return result;
     }
 
     @Override
@@ -51,5 +61,21 @@ public class QuestionBoardRepository implements BoardRepository{
                 .where(questionBoard.id.eq(boardId))
                 .set(questionBoard.viewCount, questionBoard.viewCount.add(1))
                 .execute();
+    }
+
+    @Override
+    public Long countAll() {
+        return query
+                .selectFrom(questionBoard)
+                .fetchCount();
+    }
+
+    public List<QuestionBoard> findAll(int page, int size) {
+        return query
+                .selectFrom(questionBoard)
+                .orderBy(questionBoard.createdAt.desc())
+                .offset((long) page * size)
+                .limit(size)
+                .fetch();
     }
 }

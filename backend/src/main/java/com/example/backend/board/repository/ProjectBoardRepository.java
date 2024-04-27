@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.example.backend.board.domain.QProjectBoard.projectBoard;
 
 @Repository
@@ -25,20 +27,28 @@ public class ProjectBoardRepository implements BoardRepository {
 
     @Override
     public ProjectBoard findById(Long projectBoardId) {
-        return query
+        ProjectBoard result = query
                 .selectFrom(projectBoard)
                 .where(projectBoard.id.eq(projectBoardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + projectBoardId);
+        }
+        return result;
     }
 
 
     @Override
     public ProjectBoard findByIdWithAll(Long projectBoardId) {
-        return query
+        ProjectBoard result = query
                 .selectFrom(projectBoard)
                 .join(projectBoard.author).fetchJoin()
                 .where(projectBoard.id.eq(projectBoardId))
                 .fetchOne();
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시물입니다.: " + projectBoardId);
+        }
+        return result;
     }
 
     @Transactional
@@ -55,5 +65,21 @@ public class ProjectBoardRepository implements BoardRepository {
                 .where(projectBoard.id.eq(projectBoardId))
                 .set(projectBoard.viewCount, projectBoard.viewCount.add(1))
                 .execute();
+    }
+
+    @Override
+    public Long countAll() {
+        return query
+                .selectFrom(projectBoard)
+                .fetchCount();
+    }
+
+    public List<ProjectBoard> findAll(int page, int size) {
+        return query
+                .selectFrom(projectBoard)
+                .orderBy(projectBoard.createdAt.desc())
+                .offset((long) page * size)
+                .limit(size)
+                .fetch();
     }
 }

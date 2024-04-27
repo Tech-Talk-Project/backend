@@ -57,6 +57,9 @@ public class FreeBoardManageService implements BoardManageService{
             removeLike(memberId, freeBoard);
             return false;
         } else {
+            if (existDislike(memberId, freeBoard)) {
+                removeDislike(memberId, freeBoard);
+            }
             addLike(memberId, freeBoard);
             return true;
         }
@@ -64,7 +67,7 @@ public class FreeBoardManageService implements BoardManageService{
 
     private void addLike(Long memberId, FreeBoard freeBoard) {
         Member member = em.getReference(Member.class, memberId);
-        freeBoard.getThumbsUps().add(new ThumbsUp(member));
+        freeBoard.addThumbsUp(new ThumbsUp(member));
     }
 
     private void removeLike(Long memberId, FreeBoard freeBoard) {
@@ -89,6 +92,9 @@ public class FreeBoardManageService implements BoardManageService{
             removeDislike(memberId, freeBoard);
             return false;
         } else {
+            if (existLike(memberId, freeBoard)) {
+                removeLike(memberId, freeBoard);
+            }
             addDislike(memberId, freeBoard);
             return true;
         }
@@ -96,7 +102,7 @@ public class FreeBoardManageService implements BoardManageService{
 
     private void addDislike(Long memberId, FreeBoard freeBoard) {
         Member member = em.getReference(Member.class, memberId);
-        freeBoard.getThumbsDowns().add(new ThumbsDown(member));
+        freeBoard.addThumbsDown(new ThumbsDown(member));
     }
 
     private void removeDislike(Long memberId, FreeBoard freeBoard) {

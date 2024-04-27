@@ -56,6 +56,9 @@ public class QuestionBoardManageService implements BoardManageService{
             removeLike(memberId, questionBoard);
             return false;
         } else {
+            if (existDislike(memberId, questionBoard)) {
+                removeDislike(memberId, questionBoard);
+            }
             addLike(memberId, questionBoard);
             return true;
         }
@@ -88,6 +91,9 @@ public class QuestionBoardManageService implements BoardManageService{
             removeDislike(memberId, questionBoard);
             return false;
         } else {
+            if (existLike(memberId, questionBoard)) {
+                removeLike(memberId, questionBoard);
+            }
             addDislike(memberId, questionBoard);
             return true;
         }

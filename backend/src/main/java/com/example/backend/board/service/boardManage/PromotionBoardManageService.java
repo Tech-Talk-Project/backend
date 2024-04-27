@@ -57,6 +57,9 @@ public class PromotionBoardManageService implements BoardManageService{
             removeLike(memberId, promotionBoard);
             return false;
         } else {
+            if (existDisLike(memberId, promotionBoard)) {
+                removeDisLike(memberId, promotionBoard);
+            }
             addLike(memberId, promotionBoard);
             return true;
         }
@@ -89,6 +92,9 @@ public class PromotionBoardManageService implements BoardManageService{
             removeDisLike(memberId, promotionBoard);
             return false;
         } else {
+            if (existLike(memberId, promotionBoard)) {
+                removeLike(memberId, promotionBoard);
+            }
             addDisLike(memberId, promotionBoard);
             return true;
         }

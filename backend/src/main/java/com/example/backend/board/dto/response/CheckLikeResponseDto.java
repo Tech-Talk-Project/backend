@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class CheckLikeResponseDto {
-    private boolean isLiked;
+    private boolean liked;
 
-    public CheckLikeResponseDto(boolean isLiked) {
-        this.isLiked = isLiked;
+    public CheckLikeResponseDto(boolean liked) {
+        this.liked = liked;
     }
 }
