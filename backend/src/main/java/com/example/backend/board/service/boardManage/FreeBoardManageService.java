@@ -67,7 +67,7 @@ public class FreeBoardManageService implements BoardManageService{
 
     private void addLike(Long memberId, FreeBoard freeBoard) {
         Member member = em.getReference(Member.class, memberId);
-        freeBoard.getThumbsUps().add(new ThumbsUp(member));
+        freeBoard.addThumbsUp(new ThumbsUp(member));
     }
 
     private void removeLike(Long memberId, FreeBoard freeBoard) {
@@ -102,7 +102,7 @@ public class FreeBoardManageService implements BoardManageService{
 
     private void addDislike(Long memberId, FreeBoard freeBoard) {
         Member member = em.getReference(Member.class, memberId);
-        freeBoard.getThumbsDowns().add(new ThumbsDown(member));
+        freeBoard.addThumbsDown(new ThumbsDown(member));
     }
 
     private void removeDislike(Long memberId, FreeBoard freeBoard) {
