@@ -1,5 +1,9 @@
 package com.example.backend.controller;
 
+import com.example.backend.board.dto.request.BoardCreateRequestDto;
+import com.example.backend.board.service.BoardCategory;
+import com.example.backend.board.service.boardManage.FreeBoardManageService;
+import com.example.backend.board.service.boardManage.ProjectBoardManageService;
 import com.example.backend.entity.member.Member;
 import com.example.backend.repository.member.MemberRepository;
 import com.example.backend.service.follow.FollowService;
@@ -15,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TestController {
     private final MemberRepository memberRepository;
+    private final ProjectBoardManageService projectBoardManageService;
+    private final FreeBoardManageService freeBoardManageService;
     private final FollowService followService;
 
     @GetMapping("/user")
@@ -37,5 +43,19 @@ public class TestController {
             followService.addFollowing(memberId, member.getId());
         }
         return "follow-test";
+    }
+
+    @GetMapping("/board-test")
+    public String boardTest(@RequestParam Long memberId) {
+        for (int i = 0; i < 105; i++) {
+            BoardCreateRequestDto boardCreateRequestDto = new BoardCreateRequestDto(BoardCategory.PROJECT, "test" + i);
+            projectBoardManageService.create(memberId, boardCreateRequestDto);
+        }
+
+        for (int i = 0; i < 105; i++) {
+            BoardCreateRequestDto boardCreateRequestDto = new BoardCreateRequestDto(BoardCategory.FREE, "test" + i);
+            freeBoardManageService.create(memberId, boardCreateRequestDto);
+        }
+        return "board-test";
     }
 }
