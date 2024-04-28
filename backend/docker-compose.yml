@@ -1,5 +1,11 @@
 version: '3.8'
 services:
+  app:
+    image: hosungahn/techtalk
+    container_name: techtalk
+    ports:
+      - "8080:8080"
+
   mysql:
     image: mysql:8.0
     container_name: mysql_db
@@ -36,7 +42,7 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongodb
 
   rabbitmq:
-    build: ./rabbitmq
+    image : hosungahn/rabbitmq
     ports:
       - 5672:5672
       - 15672:15672

@@ -2,7 +2,7 @@ spring :
   # mysql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/techtalk?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql:3306/techtalk?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: 1234
 
@@ -20,14 +20,14 @@ spring :
   # redis
   data :
     redis:
-      host: localhost
+      host: redis
       port: 6379
 
     # mongodb
     mongodb:
       username: root
       password: root
-      host: localhost
+      host: mongodb
       port: 27017
       database: techtalk
       authentication-database: admin
