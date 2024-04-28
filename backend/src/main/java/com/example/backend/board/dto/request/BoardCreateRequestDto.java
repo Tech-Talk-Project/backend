@@ -11,4 +11,11 @@ public class BoardCreateRequestDto {
     private String title;
     private String content;
     private List<String> tags;
+
+    public BoardCreateRequestDto (BoardCategory category, String title) {
+        this.category = category;
+        this.title = title;
+        this.content = "test";
+        this.tags = List.of("test1", "test2");
+    }
 }
