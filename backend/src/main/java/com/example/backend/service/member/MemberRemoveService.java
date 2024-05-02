@@ -1,9 +1,8 @@
 package com.example.backend.service.member;
 
+import com.example.backend.board.repository.*;
 import com.example.backend.chat.domain.ChatMember;
-import com.example.backend.chat.dto.request.ChatRoomLeaveRequestDto;
 import com.example.backend.chat.repository.ChatMemberRepository;
-import com.example.backend.chat.service.ChatMemberService;
 import com.example.backend.chat.service.ChatRoomManageService;
 import com.example.backend.repository.follow.FollowingRepository;
 import com.example.backend.repository.member.MemberAuthorityRepository;
@@ -22,6 +21,13 @@ public class MemberRemoveService {
     private final FollowingRepository followingRepository;
     private final ChatRoomManageService chatRoomManageService;
 
+    private final FreeBoardRepository freeBoardRepository;
+    private final ProjectBoardRepository projectBoardRepository;
+    private final PromotionBoardRepository promotionBoardRepository;
+    private final QuestionBoardRepository questionBoardRepository;
+    private final StudyBoardRepository studyBoardRepository;
+    private final CommentRepository commentRepository;
+
     public void removeMember(Long memberId) {
         ChatMember chatMember = chatMemberRepository.findById(memberId);
         for (ChatMember.JoinedChatRoom joinedChatRoom : chatMember.getJoinedChatRooms()) {
@@ -36,5 +42,15 @@ public class MemberRemoveService {
         memberRepository.deleteById(memberId);
         chatMemberRepository.removeById(memberId);
         followingRepository.deleteById(memberId);
+        setRemovedMember(memberId);
+    }
+
+    private void setRemovedMember(Long memberId) {
+        freeBoardRepository.setNullMember(memberId);
+        projectBoardRepository.setNullMember(memberId);
+        promotionBoardRepository.setNullMember(memberId);
+        questionBoardRepository.setNullMember(memberId);
+        studyBoardRepository.setNullMember(memberId);
+        commentRepository.setNullMember(memberId);
     }
 }

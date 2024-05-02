@@ -2,6 +2,7 @@ package com.example.backend.board.repository;
 
 import com.example.backend.board.domain.BoardEntity;
 import com.example.backend.board.domain.QuestionBoard;
+import com.example.backend.entity.member.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class QuestionBoardRepository implements BoardRepository{
     public QuestionBoard findByIdWithAll(Long boardId) {
         QuestionBoard result = query
                 .selectFrom(questionBoard)
-                .join(questionBoard.author).fetchJoin()
+                .leftJoin(questionBoard.author).fetchJoin()
                 .where(questionBoard.id.eq(boardId))
                 .fetchOne();
         if (result == null) {
@@ -77,5 +78,13 @@ public class QuestionBoardRepository implements BoardRepository{
                 .offset((long) page * size)
                 .limit(size)
                 .fetch();
+    }
+
+    public void setNullMember(Long memberId) {
+        query
+                .update(questionBoard)
+                .set(questionBoard.author, (Member) null)
+                .where(questionBoard.author.id.eq(memberId))
+                .execute();
     }
 }

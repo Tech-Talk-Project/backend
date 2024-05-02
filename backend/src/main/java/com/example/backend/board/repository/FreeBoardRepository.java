@@ -2,6 +2,7 @@ package com.example.backend.board.repository;
 
 import com.example.backend.board.domain.BoardEntity;
 import com.example.backend.board.domain.FreeBoard;
+import com.example.backend.entity.member.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -80,5 +81,13 @@ public class FreeBoardRepository implements BoardRepository{
                 .offset((long) page * size)
                 .limit(size)
                 .fetch();
+    }
+
+    public void setNullMember(Long memberId) {
+        query
+                .update(freeBoard)
+                .set(freeBoard.author, (Member) null)
+                .where(freeBoard.author.id.eq(memberId))
+                .execute();
     }
 }
