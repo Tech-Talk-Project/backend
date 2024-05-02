@@ -26,8 +26,6 @@ public class MemberRemoveService {
     private final PromotionBoardRepository promotionBoardRepository;
     private final QuestionBoardRepository questionBoardRepository;
     private final StudyBoardRepository studyBoardRepository;
-    private final ThumbsUpRepository thumbsUpRepository;
-    private final ThumbsDownRepository thumbsDownRepository;
 
     public void removeMember(Long memberId) {
         ChatMember chatMember = chatMemberRepository.findById(memberId);
@@ -52,7 +50,5 @@ public class MemberRemoveService {
         promotionBoardRepository.setNullMember(memberId);
         questionBoardRepository.setNullMember(memberId);
         studyBoardRepository.setNullMember(memberId);
-        thumbsUpRepository.setNullMember(memberId);
-        thumbsDownRepository.setNullMember(memberId);
     }
 }
