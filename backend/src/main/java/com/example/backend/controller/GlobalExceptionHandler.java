@@ -16,6 +16,7 @@ import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.format.DateTimeParseException;
 
@@ -30,7 +31,8 @@ public class GlobalExceptionHandler {
             MissingRequestCookieException.class,
             InvalidRefreshToken.class,
             MethodArgumentNotValidException.class,
-            DateTimeParseException.class
+            DateTimeParseException.class,
+            MethodArgumentTypeMismatchException.class
     })
     @ResponseBody
     public ResponseEntity<Object> handleBadRequestException(Exception ex) {
