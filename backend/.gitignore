@@ -37,3 +37,6 @@ out/
 .vscode/
 
 /src/main/resources/
+
+### 보안
+application.yml
