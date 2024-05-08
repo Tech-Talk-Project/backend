@@ -36,12 +36,14 @@ public class ProfileUpdateService {
     }
 
     public void updateLinks(Long memberId, UpdateLinksRequestDto updateLinksRequestDto) {
-        Member member = memberProfileRepository.findByIdWithProfileWithLinks(memberId);
+        Member member = memberProfileRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+        );
         member.getProfile().updateLinks(updateLinksRequestDto.getLinks());
     }
 
     public void updateSkills(Long memberId, UpdateSkillsRequestDto updateSkillsRequestDto) {
-        Member member = memberProfileRepository.findByIdWithProfileWithSkills(memberId)
+        Member member = memberProfileRepository.findByIdWithProfile(memberId)
                 .orElseThrow(
                         () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
                 );

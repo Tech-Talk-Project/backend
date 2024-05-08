@@ -48,7 +48,7 @@ public class MemberViewController {
     public ResponseEntity<ProfileResponseDto> getProfile(
             @RequestParam Long selectedMemberId
     ) {
-        return ResponseEntity.ok(profileViewService.getSelectedProfile(selectedMemberId));
+        return ResponseEntity.ok(profileViewService.getProfile(selectedMemberId));
     }
 
     @GetMapping("/user/member")

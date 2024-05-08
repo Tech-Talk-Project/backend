@@ -17,41 +17,13 @@ import static com.example.backend.entity.profile.QProfile.*;
 @Transactional(readOnly = true)
 public class MemberProfileRepository {
     private final JPAQueryFactory query;
-    public Member findByIdWithProfileWithAll(Long memberId) {
-        return query
-                .selectFrom(member)
-                .innerJoin(member.profile, profile)
-                .leftJoin(profile.links)
-                .leftJoin(profile.skills)
-                .where(member.id.eq(memberId))
-                .fetchOne();
-    }
-
-    public Member findByIdWithProfileInfo(Long memberId) {
-        return query
+    public Optional<Member> findByIdWithProfile(Long memberId) {
+        Member result = query
                 .selectFrom(member)
                 .innerJoin(member.profile, profile).fetchJoin()
                 .where(member.id.eq(memberId))
                 .fetchOne();
-    }
-
-    public Member findByIdWithProfileWithLinks(Long memberId) {
-        return query
-                .selectFrom(member)
-                .innerJoin(member.profile, profile).fetchJoin()
-                .leftJoin(profile.links, link).fetchJoin()
-                .where(member.id.eq(memberId))
-                .fetchOne();
-    }
-
-    public Optional<Member> findByIdWithProfileWithSkills(Long memberId) {
-        Member ret = query
-                .selectFrom(member)
-                .innerJoin(member.profile, profile).fetchJoin()
-                .leftJoin(profile.skills).fetchJoin()
-                .where(member.id.eq(memberId))
-                .fetchOne();
-        return Optional.ofNullable(ret);
+        return Optional.ofNullable(result);
     }
 
     @Transactional
