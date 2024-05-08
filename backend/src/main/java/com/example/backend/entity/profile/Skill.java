@@ -19,7 +19,8 @@ public class Skill {
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    public Skill(ESkill eSkill) {
+    public Skill(ESkill eSkill, Profile profile) {
         this.name = eSkill.getName();
+        this.profile = profile;
     }
 }

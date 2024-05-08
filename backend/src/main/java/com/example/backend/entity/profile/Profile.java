@@ -47,14 +47,14 @@ public class Profile extends BaseEntity {
         this.links.add(new Link(link, this));
     }
 
-    public void updateProfileSkills(List<Skill> skills) {
-        this.profileSkills.clear();
-        for (Skill skill : skills) {
-            addProfileSkill(skill);
+    public void updateProfileSkills(List<ESkill> eSkills) {
+        this.skills.clear();
+        for (ESkill eskill : eSkills) {
+            addSkill(eskill);
         }
     }
 
-    private void addProfileSkill(Skill skill) {
-        this.profileSkills.add(new ProfileSkill(skill, this));
+    private void addSkill(ESkill eSkill) {
+        this.skills.add(new Skill(eSkill, this));
     }
 }

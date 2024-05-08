@@ -48,7 +48,6 @@ public class ProfileUpdateService {
                 );
 
         List<ESkill> eSkills = ESkill.fromNames(updateSkillsRequestDto.getSkills());
-        List<Skill> skills = skillRepository.findAllByName(eSkills);
-        member.getProfile().updateProfileSkills(skills);
+        member.getProfile().updateProfileSkills(eSkills);
     }
 }
