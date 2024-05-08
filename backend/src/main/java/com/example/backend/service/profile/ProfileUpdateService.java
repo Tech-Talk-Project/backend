@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfileUpdateService {
     private final MemberProfileRepository memberProfileRepository;
-    private final SkillRepository skillRepository;
 
     public void updateInfo(Long memberId, UpdateInfoRequestDto updateInfoRequestDto) {
         String name = updateInfoRequestDto.getName();

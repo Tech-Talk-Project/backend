@@ -31,8 +31,7 @@ public class ProfilePaginationRepository {
         // eSKills 를 모두 포함하는 profile id 를 찾는다.
         JPAQuery<Long> subQuery = query.select(profile.id)
                 .from(profile)
-                .innerJoin(profile.profileSkills, profileSkill)
-                .innerJoin(profileSkill.skill, skill)
+                .innerJoin(profile.skills, skill)
                 .where(skill.name.in(eSkills.stream().map(ESkill::getName).toList()))
                 .groupBy(profile.id)
                 .having(profile.count().goe((long) eSkills.size()));

@@ -24,9 +24,8 @@ public class MemberProfileRepository {
         return query
                 .selectFrom(member)
                 .innerJoin(member.profile, profile)
-                .leftJoin(profile.links, link)
-                .leftJoin(profile.profileSkills, profileSkill)
-                .leftJoin(profileSkill.skill, skill)
+                .leftJoin(profile.links)
+                .leftJoin(profile.skills)
                 .where(member.id.eq(memberId))
                 .fetchOne();
     }
@@ -52,7 +51,7 @@ public class MemberProfileRepository {
         Member ret = query
                 .selectFrom(member)
                 .innerJoin(member.profile, profile).fetchJoin()
-                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
+                .leftJoin(profile.skills).fetchJoin()
                 .where(member.id.eq(memberId))
                 .fetchOne();
         return Optional.ofNullable(ret);
