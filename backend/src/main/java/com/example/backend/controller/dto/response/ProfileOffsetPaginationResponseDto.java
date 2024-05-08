@@ -26,7 +26,7 @@ public class ProfileOffsetPaginationResponseDto {
                     .job(member.getProfile().getJob())
                     .introduction(member.getProfile().getIntroduction())
                     .imageUrl(member.getImageUrl())
-                    .skills(member.getProfile().getProfileSkills())
+                    .skills(member.getProfile().getSkills())
                     .build();
             data.add(profileData);
         }
