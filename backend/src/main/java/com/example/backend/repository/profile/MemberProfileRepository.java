@@ -1,7 +1,6 @@
 package com.example.backend.repository.profile;
 
 import com.example.backend.entity.member.Member;
-import com.example.backend.entity.profile.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,8 +11,6 @@ import java.util.Optional;
 import static com.example.backend.entity.member.QMember.*;
 import static com.example.backend.entity.profile.QLink.*;
 import static com.example.backend.entity.profile.QProfile.*;
-import static com.example.backend.entity.profile.QProfileSkill.*;
-import static com.example.backend.entity.profile.QSkill.skill;
 
 @Repository
 @RequiredArgsConstructor

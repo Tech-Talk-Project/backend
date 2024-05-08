@@ -2,15 +2,10 @@ package com.example.backend.controller.dto.response;
 
 import com.example.backend.controller.dto.ProfileDto;
 import com.example.backend.entity.member.Member;
-import com.example.backend.entity.profile.ProfileSkill;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Data
 public class ProfileOffsetPaginationResponseDto {

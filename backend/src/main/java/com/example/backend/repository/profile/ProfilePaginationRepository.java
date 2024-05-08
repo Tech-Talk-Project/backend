@@ -13,7 +13,6 @@ import java.util.List;
 
 import static com.example.backend.entity.member.QMember.member;
 import static com.example.backend.entity.profile.QProfile.*;
-import static com.example.backend.entity.profile.QProfileSkill.profileSkill;
 import static com.example.backend.entity.profile.QSkill.*;
 
 @Transactional(readOnly = true)
