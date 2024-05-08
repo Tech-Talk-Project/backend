@@ -34,7 +34,7 @@ public class Profile extends BaseEntity {
     private List<Link> links = new ArrayList<>();
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProfileSkill> profileSkills = new HashSet<>();
+    private List<Skill> skills = new ArrayList<>();
 
     public void updateLinks(List<String> links) {
         this.links.clear();
