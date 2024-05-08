@@ -15,7 +15,12 @@ public class Skill {
 
     private String name;
 
-    public Skill(ESkill eSkill) {
+    @ManyToOne
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
+    public Skill(ESkill eSkill, Profile profile) {
         this.name = eSkill.getName();
+        this.profile = profile;
     }
 }

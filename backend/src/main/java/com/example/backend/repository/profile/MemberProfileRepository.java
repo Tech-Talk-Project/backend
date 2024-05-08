@@ -1,7 +1,6 @@
 package com.example.backend.repository.profile;
 
 import com.example.backend.entity.member.Member;
-import com.example.backend.entity.profile.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,50 +11,19 @@ import java.util.Optional;
 import static com.example.backend.entity.member.QMember.*;
 import static com.example.backend.entity.profile.QLink.*;
 import static com.example.backend.entity.profile.QProfile.*;
-import static com.example.backend.entity.profile.QProfileSkill.*;
-import static com.example.backend.entity.profile.QSkill.skill;
 
 @Repository
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberProfileRepository {
     private final JPAQueryFactory query;
-    public Member findByIdWithProfileWithAll(Long memberId) {
-        return query
-                .selectFrom(member)
-                .innerJoin(member.profile, profile)
-                .leftJoin(profile.links, link)
-                .leftJoin(profile.profileSkills, profileSkill)
-                .leftJoin(profileSkill.skill, skill)
-                .where(member.id.eq(memberId))
-                .fetchOne();
-    }
-
-    public Member findByIdWithProfileInfo(Long memberId) {
-        return query
+    public Optional<Member> findByIdWithProfile(Long memberId) {
+        Member result = query
                 .selectFrom(member)
                 .innerJoin(member.profile, profile).fetchJoin()
                 .where(member.id.eq(memberId))
                 .fetchOne();
-    }
-
-    public Member findByIdWithProfileWithLinks(Long memberId) {
-        return query
-                .selectFrom(member)
-                .innerJoin(member.profile, profile).fetchJoin()
-                .leftJoin(profile.links, link).fetchJoin()
-                .where(member.id.eq(memberId))
-                .fetchOne();
-    }
-
-    public Optional<Member> findByIdWithProfileWithSkills(Long memberId) {
-        Member ret = query
-                .selectFrom(member)
-                .innerJoin(member.profile, profile).fetchJoin()
-                .leftJoin(profile.profileSkills, profileSkill).fetchJoin()
-                .where(member.id.eq(memberId))
-                .fetchOne();
-        return Optional.ofNullable(ret);
+        return Optional.ofNullable(result);
     }
 
     @Transactional

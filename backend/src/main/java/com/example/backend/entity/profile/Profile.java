@@ -34,7 +34,7 @@ public class Profile extends BaseEntity {
     private List<Link> links = new ArrayList<>();
 
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProfileSkill> profileSkills = new HashSet<>();
+    private List<Skill> skills = new ArrayList<>();
 
     public void updateLinks(List<String> links) {
         this.links.clear();
@@ -47,14 +47,14 @@ public class Profile extends BaseEntity {
         this.links.add(new Link(link, this));
     }
 
-    public void updateProfileSkills(List<Skill> skills) {
-        this.profileSkills.clear();
-        for (Skill skill : skills) {
-            addProfileSkill(skill);
+    public void updateProfileSkills(List<ESkill> eSkills) {
+        this.skills.clear();
+        for (ESkill eskill : eSkills) {
+            addSkill(eskill);
         }
     }
 
-    private void addProfileSkill(Skill skill) {
-        this.profileSkills.add(new ProfileSkill(skill, this));
+    private void addSkill(ESkill eSkill) {
+        this.skills.add(new Skill(eSkill, this));
     }
 }

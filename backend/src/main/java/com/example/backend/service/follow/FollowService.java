@@ -35,7 +35,7 @@ public class FollowService {
 
         List<Member> members = new ArrayList<>();
         for (Long followingId : followingIds.subList(fromIndex, toIndex)) {
-            memberProfileRepository.findByIdWithProfileWithSkills(followingId)
+            memberProfileRepository.findByIdWithProfile(followingId)
                     .ifPresentOrElse(members::add
                             , () -> {followingRepository.removeFollowing(memberId, followingId);});
         }

@@ -22,13 +22,11 @@ import java.util.*;
 @RequiredArgsConstructor
 public class InitApp {
     private final InitAuthority initAuthority;
-    private final InitSkill initSkill;
     private final InitMember initMember;
 
     @PostConstruct
     public void init() {
         initAuthority.init();
-        initSkill.init();
 //        initMember.init();
     }
 
@@ -41,19 +39,6 @@ public class InitApp {
             EAuthority[] authorities = EAuthority.values();
             for (EAuthority authority : authorities) {
                 authorityRepository.save(new Authority(authority));
-            }
-        }
-    }
-
-    @Component
-    @RequiredArgsConstructor
-    static class InitSkill {
-        private final SkillRepository skillRepository;
-
-        public void init() {
-            ESkill[] skills = ESkill.values();
-            for (ESkill skill : skills) {
-                skillRepository.save(new Skill(skill));
             }
         }
     }

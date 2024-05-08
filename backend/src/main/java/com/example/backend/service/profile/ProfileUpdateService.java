@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfileUpdateService {
     private final MemberProfileRepository memberProfileRepository;
-    private final SkillRepository skillRepository;
 
     public void updateInfo(Long memberId, UpdateInfoRequestDto updateInfoRequestDto) {
         String name = updateInfoRequestDto.getName();
@@ -37,18 +36,19 @@ public class ProfileUpdateService {
     }
 
     public void updateLinks(Long memberId, UpdateLinksRequestDto updateLinksRequestDto) {
-        Member member = memberProfileRepository.findByIdWithProfileWithLinks(memberId);
+        Member member = memberProfileRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+        );
         member.getProfile().updateLinks(updateLinksRequestDto.getLinks());
     }
 
     public void updateSkills(Long memberId, UpdateSkillsRequestDto updateSkillsRequestDto) {
-        Member member = memberProfileRepository.findByIdWithProfileWithSkills(memberId)
+        Member member = memberProfileRepository.findByIdWithProfile(memberId)
                 .orElseThrow(
                         () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
                 );
 
         List<ESkill> eSkills = ESkill.fromNames(updateSkillsRequestDto.getSkills());
-        List<Skill> skills = skillRepository.findAllByName(eSkills);
-        member.getProfile().updateProfileSkills(skills);
+        member.getProfile().updateProfileSkills(eSkills);
     }
 }

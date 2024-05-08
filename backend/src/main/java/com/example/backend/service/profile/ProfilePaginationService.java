@@ -59,7 +59,7 @@ public class ProfilePaginationService {
                     .job(member.getProfile().getJob())
                     .introduction(member.getProfile().getIntroduction())
                     .imageUrl(member.getImageUrl())
-                    .skills(member.getProfile().getProfileSkills())
+                    .skills(member.getProfile().getSkills())
                     .isFollowing(Collections.binarySearch(followingIds, member.getId()) >= 0)
                     .build();
             data.add(profile);

@@ -3,6 +3,7 @@ package com.example.backend.controller.dto.response;
 import com.example.backend.controller.dto.InfoDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.profile.Link;
+import com.example.backend.entity.profile.Skill;
 import lombok.Data;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class ProfileResponseDto {
 
     private List<String> links;
 
-    private Set<String> skills;
+    private List<String> skills;
 
     private String detailedDescription;
 
@@ -31,9 +32,7 @@ public class ProfileResponseDto {
         this.links = member.getProfile().getLinks().stream()
                 .map(Link::getUrl)
                 .collect(Collectors.toList());
-        this.skills = member.getProfile().getProfileSkills().stream()
-                .map(profileSkill -> profileSkill.getSkill().getName())
-                .collect(Collectors.toSet());
+        this.skills = member.getProfile().getSkills().stream().map(Skill::getName).toList();
         this.detailedDescription = member.getProfile().getDetailedDescription();
     }
 }
