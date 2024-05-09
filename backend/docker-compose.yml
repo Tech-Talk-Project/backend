@@ -1,17 +1,10 @@
 version: '3.8'
 services:
-#  backend :
-#    image: hosungahn/techtalk
-#    container_name: techtalk-back
-#    ports:
-#      - "8080:8080"
-#  frontend :
-#    image: hosungahn/techtalk-front
-#    container_name: techtalk-front
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - backend
+  backend :
+    build: .
+    container_name: techtalk-back
+    ports:
+      - "8080:8080"
 
   mysql:
     image: mysql:8.0
@@ -49,7 +42,7 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongodb
 
   rabbitmq:
-    build : ./rabbitmq
+    build: ./rabbitmq
     ports:
       - 5672:5672
       - 15672:15672
