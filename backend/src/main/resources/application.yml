@@ -17,6 +17,12 @@ spring :
       ddl-auto: create
     show-sql: true
 
+  # rabbitmq
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
   # redis
   data :
     redis:
