@@ -41,4 +41,8 @@ public class Member extends BaseEntity {
         this.imageUrl = imageUrl;
         this.oAuth2Provider = oAuth2Provider;
     }
+
+    public void addAuthority(EAuthority eAuthority) {
+        this.authorities.add(new Authority(eAuthority, this));
+    }
 }

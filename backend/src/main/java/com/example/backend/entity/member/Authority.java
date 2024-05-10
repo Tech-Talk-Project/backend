@@ -20,9 +20,8 @@ public class Authority {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Authority(EAuthority eAuthority) {
+    public Authority(EAuthority eAuthority, Member member) {
         this.name = eAuthority.name();
+        this.member = member;
     }
-
-
 }
