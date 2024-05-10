@@ -14,14 +14,9 @@ public class Authority {
     @Column(name = "authority_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private EAuthority eAuthority;
-
-    public String getName() {
-        return eAuthority.name();
-    }
+    private String name;
 
     public Authority(EAuthority eAuthority) {
-        this.eAuthority = eAuthority;
+        this.name = eAuthority.name();
     }
 }
