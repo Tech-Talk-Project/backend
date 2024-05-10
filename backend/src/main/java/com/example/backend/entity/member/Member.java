@@ -35,14 +35,15 @@ public class Member extends BaseEntity {
     private Profile profile = new Profile();
 
     @Builder
-    public Member(String name, String email, String imageUrl, OAuth2Provider oAuth2Provider) {
+    public Member(String name, String email, String imageUrl, OAuth2Provider oAuth2Provider, List<EAuthority> eAuthorities) {
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;
         this.oAuth2Provider = oAuth2Provider;
+        eAuthorities.forEach(this::addAuthority);
     }
 
-    public void addAuthority(EAuthority eAuthority) {
+    private void addAuthority(EAuthority eAuthority) {
         this.authorities.add(new Authority(eAuthority, this));
     }
 }
