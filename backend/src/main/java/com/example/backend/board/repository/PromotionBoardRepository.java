@@ -72,6 +72,7 @@ public class PromotionBoardRepository implements BoardRepository {
                 .fetchCount();
     }
 
+    @Override
     public List<PromotionBoard> findAll(int page, int size) {
         return query
                 .selectFrom(promotionBoard)
@@ -81,6 +82,7 @@ public class PromotionBoardRepository implements BoardRepository {
                 .fetch();
     }
 
+    @Override
     public void setNullMember(Long member) {
         query
                 .update(promotionBoard)

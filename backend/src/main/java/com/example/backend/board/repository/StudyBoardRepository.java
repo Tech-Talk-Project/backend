@@ -74,6 +74,7 @@ public class StudyBoardRepository implements BoardRepository{
                 .fetchCount();
     }
 
+    @Override
     public List<StudyBoard> findAll(int page, int size) {
         return query
                 .selectFrom(studyBoard)
@@ -83,6 +84,7 @@ public class StudyBoardRepository implements BoardRepository{
                 .fetch();
     }
 
+    @Override
     public void setNullMember(Long memberId) {
         query
                 .update(studyBoard)

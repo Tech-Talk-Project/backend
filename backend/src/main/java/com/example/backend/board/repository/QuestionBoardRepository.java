@@ -71,6 +71,7 @@ public class QuestionBoardRepository implements BoardRepository{
                 .fetchCount();
     }
 
+    @Override
     public List<QuestionBoard> findAll(int page, int size) {
         return query
                 .selectFrom(questionBoard)
@@ -80,6 +81,7 @@ public class QuestionBoardRepository implements BoardRepository{
                 .fetch();
     }
 
+    @Override
     public void setNullMember(Long memberId) {
         query
                 .update(questionBoard)
