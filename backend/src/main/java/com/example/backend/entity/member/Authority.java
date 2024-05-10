@@ -16,7 +16,13 @@ public class Authority {
 
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     public Authority(EAuthority eAuthority) {
         this.name = eAuthority.name();
     }
+
+
 }
