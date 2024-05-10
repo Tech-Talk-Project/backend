@@ -6,6 +6,7 @@ import com.example.backend.oauth2.OAuth2Provider;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,7 @@ public class Member extends BaseEntity {
     private String imageUrl;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Authority> authorities;
+    private List<Authority> authorities = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private OAuth2Provider oAuth2Provider;
