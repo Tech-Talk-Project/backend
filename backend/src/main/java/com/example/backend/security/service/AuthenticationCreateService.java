@@ -1,6 +1,6 @@
 package com.example.backend.security.service;
 
-import com.example.backend.repository.member.MemberAuthorityRepository;
+import com.example.backend.repository.member.AuthorityRepository;
 import com.example.backend.security.jwt.JwtClaimReader;
 import com.example.backend.security.jwt.JwtValidator;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,14 @@ import java.util.Collection;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationCreateService {
-    private final MemberAuthorityRepository memberAuthorityRepository;
+    private final AuthorityRepository authorityRepository;
     private final JwtValidator jwtValidator;
     private final JwtClaimReader jwtClaimReader;
 
     private Authentication createAuthentication(String token) {
         Long memberId = jwtClaimReader.getMemberId(token);
-        Collection<GrantedAuthority> authorities = memberAuthorityRepository.findAuthoritiesByMemberId(memberId)
+
+        Collection<GrantedAuthority> authorities = authorityRepository.findAllByMemberId(memberId)
                 .stream()
                 .map(authority -> (GrantedAuthority) authority::getName)
                 .toList();
