@@ -118,4 +118,9 @@ public class QuestionBoardManageService implements BoardManageService{
         QuestionBoard questionBoard = questionBoardRepository.findById(boardId);
         return existDislike(memberId, questionBoard);
     }
+
+    @Override
+    public void toggleRecruitment(Long memberId, BoardUpdateRequestDto dto) {
+        return;
+    }
 }

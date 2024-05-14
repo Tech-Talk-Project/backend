@@ -119,4 +119,9 @@ public class PromotionBoardManageService implements BoardManageService{
         PromotionBoard promotionBoard = promotionBoardRepository.findById(boardId);
         return existDisLike(memberId, promotionBoard);
     }
+
+    @Override
+    public void toggleRecruitment(Long memberId, BoardUpdateRequestDto dto) {
+        return;
+    }
 }

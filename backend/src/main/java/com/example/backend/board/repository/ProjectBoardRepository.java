@@ -75,6 +75,7 @@ public class ProjectBoardRepository implements BoardRepository {
                 .fetchCount();
     }
 
+    @Override
     public List<ProjectBoard> findAll(int page, int size) {
         return query
                 .selectFrom(projectBoard)
@@ -84,6 +85,7 @@ public class ProjectBoardRepository implements BoardRepository {
                 .fetch();
     }
 
+    @Override
     public void setNullMember(Long memberId) {
         query
                 .update(projectBoard)

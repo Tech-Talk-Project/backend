@@ -74,6 +74,7 @@ public class FreeBoardRepository implements BoardRepository{
                 .fetchCount();
     }
 
+    @Override
     public List<FreeBoard> findAll(int page, int size) {
         return query
                 .selectFrom(freeBoard)
@@ -83,6 +84,7 @@ public class FreeBoardRepository implements BoardRepository{
                 .fetch();
     }
 
+    @Override
     public void setNullMember(Long memberId) {
         query
                 .update(freeBoard)

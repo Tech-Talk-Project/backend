@@ -119,4 +119,9 @@ public class FreeBoardManageService implements BoardManageService{
         FreeBoard freeBoard = freeBoardRepository.findById(boardId);
         return existDislike(memberId, freeBoard);
     }
+
+    @Override
+    public void toggleRecruitment(Long memberId, BoardUpdateRequestDto dto) {
+        return;
+    }
 }

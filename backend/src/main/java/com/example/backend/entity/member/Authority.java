@@ -14,14 +14,14 @@ public class Authority {
     @Column(name = "authority_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private EAuthority eAuthority;
+    private String name;
 
-    public String getName() {
-        return eAuthority.name();
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    public Authority(EAuthority eAuthority) {
-        this.eAuthority = eAuthority;
+    public Authority(EAuthority eAuthority, Member member) {
+        this.name = eAuthority.name();
+        this.member = member;
     }
 }

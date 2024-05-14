@@ -6,6 +6,9 @@ import com.example.backend.oauth2.OAuth2Provider;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,6 +25,9 @@ public class Member extends BaseEntity {
 
     private String imageUrl;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Authority> authorities = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private OAuth2Provider oAuth2Provider;
 
@@ -30,10 +36,15 @@ public class Member extends BaseEntity {
     private Profile profile = new Profile();
 
     @Builder
-    public Member(String name, String email, String imageUrl, OAuth2Provider oAuth2Provider) {
+    public Member(String name, String email, String imageUrl, OAuth2Provider oAuth2Provider, List<EAuthority> eAuthorities) {
         this.name = name;
         this.email = email;
         this.imageUrl = imageUrl;
         this.oAuth2Provider = oAuth2Provider;
+        eAuthorities.forEach(this::addAuthority);
+    }
+
+    private void addAuthority(EAuthority eAuthority) {
+        this.authorities.add(new Authority(eAuthority, this));
     }
 }

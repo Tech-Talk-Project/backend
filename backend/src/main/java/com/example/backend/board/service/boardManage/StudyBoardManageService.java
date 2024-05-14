@@ -91,6 +91,7 @@ public class StudyBoardManageService implements BoardManageService{
         return false;
     }
 
+    @Override
     public void toggleRecruitment(Long memberId, BoardUpdateRequestDto dto) {
         StudyBoard studyBoard = studyBoardRepository.findById(dto.getBoardId());
         boardValidator.validateAuthor(memberId, studyBoard);

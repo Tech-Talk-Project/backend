@@ -13,36 +13,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 public class BoardViewController {
-    private final ProjectBoardViewService projectBoardService;
-    private final StudyBoardViewService studyBoardService;
-    private final QuestionBoardViewService questionBoardService;
-    private final PromotionBoardViewService promotionBoardService;
-    private final FreeBoardViewService freeBoardService;
+    private final BoardViewServiceFactory boardViewServiceFactory;
 
     @GetMapping("/board")
     public ResponseEntity<BoardViewResponseDto> viewProject(
             @RequestParam BoardCategory category,
             @RequestParam Long boardId ) {
-        switch (category) {
-            case PROJECT:
-                log.info("PROJECT : viewProject api called");
-                return ResponseEntity.ok(projectBoardService.getBoard(boardId));
-            case STUDY:
-                log.info("STUDY : viewProject api called");
-                return ResponseEntity.ok(studyBoardService.getBoard(boardId));
-            case QUESTION:
-                log.info("QUESTION : viewProject api called");
-                return ResponseEntity.ok(questionBoardService.getBoard(boardId));
-            case PROMOTION:
-                log.info("PROMOTION : viewProject api called");
-                return ResponseEntity.ok(promotionBoardService.getBoard(boardId));
-            case FREE:
-                log.info("FREE : viewProject api called");
-                return ResponseEntity.ok(freeBoardService.getBoard(boardId));
-            default:
-                log.warn("Invalid category: {}", category);
-                return ResponseEntity.badRequest().body(null);
-        }
+        log.info("viewProject called : category={}, boardId={}", category, boardId);
+        BoardViewService boardViewService = boardViewServiceFactory.get(category);
+        return ResponseEntity.ok(boardViewService.getBoard(boardId));
     }
 
     @GetMapping("/boards")
@@ -51,26 +30,9 @@ public class BoardViewController {
             @RequestParam(required = false, defaultValue = "1") int page,
             @RequestParam(required = false, defaultValue = "20") int size) {
 
+        log.info("getBoards called : category={}, page={}, size={}", category, page, size);
         page -= 1;
-        switch (category) {
-            case PROJECT:
-                log.info("PROJECT : getBoards api called");
-                return ResponseEntity.ok(projectBoardService.getBoards(page, size));
-            case STUDY:
-                log.info("STUDY : getBoards api called");
-                return ResponseEntity.ok(studyBoardService.getBoards(page, size));
-            case QUESTION:
-                log.info("QUESTION : getBoards api called");
-                return ResponseEntity.ok(questionBoardService.getBoards(page, size));
-            case PROMOTION:
-                log.info("PROMOTION : getBoards api called");
-                return ResponseEntity.ok(promotionBoardService.getBoards(page, size));
-            case FREE:
-                log.info("FREE : getBoards api called");
-                return ResponseEntity.ok(freeBoardService.getBoards(page, size));
-            default:
-                log.warn("Invalid category: {}", category);
-                return ResponseEntity.badRequest().body(null);
-        }
+        BoardViewService boardViewService = boardViewServiceFactory.get(category);
+        return ResponseEntity.ok(boardViewService.getBoards(page, size));
     }
 }

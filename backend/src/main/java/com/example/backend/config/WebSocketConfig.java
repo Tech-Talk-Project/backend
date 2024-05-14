@@ -2,6 +2,7 @@ package com.example.backend.config;
 
 import com.example.backend.chat.websocket.ChatWebsocketEventListener;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -13,11 +14,16 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    @Value("${spring.rabbitmq.host}")
+    private String rabbitHost;
+
     private final ChatWebsocketEventListener chatWebsocketEventListener;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableStompBrokerRelay("/topic");
+        registry.enableStompBrokerRelay("/topic")
+                .setRelayHost(rabbitHost)
+                .setRelayPort(61613);
         registry.setApplicationDestinationPrefixes("/pub");
     }
 

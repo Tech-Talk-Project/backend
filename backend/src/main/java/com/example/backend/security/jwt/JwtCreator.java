@@ -1,7 +1,7 @@
 package com.example.backend.security.jwt;
 
 import com.example.backend.entity.member.Authority;
-import com.example.backend.repository.member.MemberAuthorityRepository;
+import com.example.backend.repository.member.AuthorityRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -27,7 +27,7 @@ public class JwtCreator {
     private Long refreshTokenValidityInSeconds;
     private Key key;
 
-    private final MemberAuthorityRepository memberAuthorityRepository;
+    private final AuthorityRepository authorityRepository;
 
     @PostConstruct
     protected void init() {
@@ -50,7 +50,7 @@ public class JwtCreator {
     }
 
     private String createToken(Long memberId, Date validity) {
-        List<Authority> authorities = memberAuthorityRepository.findAuthoritiesByMemberId(memberId);
+        List<Authority> authorities = authorityRepository.findAllByMemberId(memberId);
         return Jwts.builder()
                 .claim("memberId", memberId)
                 .claim("authorities", authorities.stream()

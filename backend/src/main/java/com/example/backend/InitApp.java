@@ -21,26 +21,11 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class InitApp {
-    private final InitAuthority initAuthority;
     private final InitMember initMember;
 
     @PostConstruct
     public void init() {
-        initAuthority.init();
 //        initMember.init();
-    }
-
-    @Component
-    @RequiredArgsConstructor
-    static class InitAuthority {
-        private final AuthorityRepository authorityRepository;
-
-        public void init() {
-            EAuthority[] authorities = EAuthority.values();
-            for (EAuthority authority : authorities) {
-                authorityRepository.save(new Authority(authority));
-            }
-        }
     }
 
     @Component
