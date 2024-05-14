@@ -17,185 +17,67 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user/board")
 @Slf4j
 public class BoardManageController {
-    private final ProjectBoardManageService projectBoardManageService;
-    private final StudyBoardManageService studyBoardManageService;
-    private final QuestionBoardManageService questionBoardManageService;
-    private final PromotionBoardManageService promotionBoardManageService;
-    private final FreeBoardManageService freeBoardManageService;
+    private final BoardManageServiceFactory boardManageServiceFactory;
 
     @PostMapping("/create")
     public ResponseEntity<BoardCreateResponseDto> createProject(@RequestBody BoardCreateRequestDto dto) {
+        log.info("createBoard called");
+        BoardManageService boardManageService = boardManageServiceFactory.get(dto.getCategory());
+
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        switch (dto.getCategory()) {
-            case PROJECT:
-                log.info("PROJECT : createBoard api called");
-                Long projectBoardId = projectBoardManageService.create(memberId, dto);
-                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.PROJECT, projectBoardId));
-            case STUDY:
-                log.info("STUDY : createBoard api called");
-                Long studyBoardId = studyBoardManageService.create(memberId, dto);
-                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.STUDY, studyBoardId));
-            case QUESTION:
-                log.info("QUESTION : createBoard api called");
-                Long questionBoardId = questionBoardManageService.create(memberId, dto);
-                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.QUESTION, questionBoardId));
-            case PROMOTION:
-                log.info("PROMOTION : createBoard api called");
-                Long promotionBoardId = promotionBoardManageService.create(memberId, dto);
-                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.PROMOTION, promotionBoardId));
-            case FREE:
-                log.info("FREE : createBoard api called");
-                Long freeBoardId = freeBoardManageService.create(memberId, dto);
-                return ResponseEntity.ok(new BoardCreateResponseDto(BoardCategory.FREE, freeBoardId));
-            default:
-                log.warn("Invalid category: {}", dto.getCategory());
-                return ResponseEntity.badRequest().body(new BoardCreateResponseDto(null, null));
-        }
+        Long boardId = boardManageService.create(memberId, dto);
+        return ResponseEntity.ok(new BoardCreateResponseDto(dto.getCategory(), boardId));
     }
 
     @PostMapping("/update")
     public ResponseEntity<String> updateProject(
             @RequestBody BoardUpdateRequestDto dto) {
+        log.info("updateBoard called");
+        BoardManageService boardManageService = boardManageServiceFactory.get(dto.getCategory());
+
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        switch (dto.getCategory()) {
-            case PROJECT:
-                log.info("PROJECT : updateBoard api called");
-                projectBoardManageService.update(memberId, dto);
-                return ResponseEntity.ok("프로젝트 수정 완료");
-            case STUDY:
-                log.info("STUDY : updateBoard api called");
-                studyBoardManageService.update(memberId, dto);
-                return ResponseEntity.ok("스터디 수정 완료");
-            case QUESTION:
-                log.info("QUESTION : updateBoard api called");
-                questionBoardManageService.update(memberId, dto);
-                return ResponseEntity.ok("질문 수정 완료");
-            case PROMOTION:
-                log.info("PROMOTION : updateBoard api called");
-                promotionBoardManageService.update(memberId, dto);
-                return ResponseEntity.ok("홍보 수정 완료");
-            case FREE:
-                log.info("FREE : updateBoard api called");
-                freeBoardManageService.update(memberId, dto);
-                return ResponseEntity.ok("자유 게시판 수정 완료");
-            default:
-                log.warn("Invalid category: {}", dto.getCategory());
-                return ResponseEntity.badRequest().body("Invalid category");
-        }
+        boardManageService.update(memberId, dto);
+        return ResponseEntity.ok("수정 완료");
     }
 
     @PostMapping("/toggle-recruitment")
     public ResponseEntity<String> toggleRecruitment(
             @RequestBody BoardUpdateRequestDto dto) {
+        log.info("toggleRecruitment called");
+        BoardManageService boardManageService = boardManageServiceFactory.getRecruitBoard(dto.getCategory());
+
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        switch (dto.getCategory()) {
-            case PROJECT:
-                log.info("PROJECT : toggleRecruitment api called");
-                projectBoardManageService.toggleRecruitment(memberId, dto);
-                return ResponseEntity.ok("모집 상태가 변경되었습니다.");
-            case STUDY:
-                log.info("STUDY : toggleRecruitment api called");
-                studyBoardManageService.toggleRecruitment(memberId, dto);
-                return ResponseEntity.ok("모집 상태가 변경되었습니다.");
-            default:
-                log.warn("Invalid category: {}", dto.getCategory());
-                return ResponseEntity.badRequest().body("Invalid category");
-        }
+        boardManageService.toggleRecruitment(memberId, dto);
+        return ResponseEntity.ok("모집 상태 변경 완료");
     }
 
     @PostMapping("/delete")
     public ResponseEntity<String> deleteProject(
             @RequestBody BoardDeleteRequestDto dto) {
+        BoardManageService boardManageService = boardManageServiceFactory.get(dto.getCategory());
+
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        switch (dto.getCategory()) {
-            case PROJECT:
-                log.info("PROJECT : deleteBoard api called");
-                projectBoardManageService.delete(memberId, dto);
-                return ResponseEntity.ok("프로젝트 삭제 완료");
-            case STUDY:
-                log.info("STUDY : deleteBoard api called");
-                studyBoardManageService.delete(memberId, dto);
-                return ResponseEntity.ok("스터디 삭제 완료");
-            case QUESTION:
-                log.info("QUESTION : deleteBoard api called");
-                questionBoardManageService.delete(memberId, dto);
-                return ResponseEntity.ok("질문 삭제 완료");
-            case PROMOTION:
-                log.info("PROMOTION : deleteBoard api called");
-                promotionBoardManageService.delete(memberId, dto);
-                return ResponseEntity.ok("홍보 삭제 완료");
-            case FREE:
-                log.info("FREE : deleteBoard api called");
-                freeBoardManageService.delete(memberId, dto);
-                return ResponseEntity.ok("자유 게시판 삭제 완료");
-            default:
-                log.warn("Invalid category: {}", dto.getCategory());
-                return ResponseEntity.badRequest().body("Invalid category");
-        }
+        boardManageService.delete(memberId, dto);
+        return ResponseEntity.ok("게시글 삭제 완료");
     }
 
     @PostMapping("/add-comment")
     public ResponseEntity<String> addComment(
             @RequestBody CommentAddRequestDto dto) {
+        BoardManageService boardManageService = boardManageServiceFactory.get(dto.getCategory());
+
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        switch (dto.getCategory()) {
-            case PROJECT:
-                log.info("PROJECT : addComment api called");
-                projectBoardManageService.addComment(memberId, dto);
-                return ResponseEntity.ok("댓글 추가 완료");
-            case STUDY:
-                log.info("STUDY : addComment api called");
-                studyBoardManageService.addComment(memberId, dto);
-                return ResponseEntity.ok("댓글 추가 완료");
-            case QUESTION:
-                log.info("QUESTION : addComment api called");
-                questionBoardManageService.addComment(memberId, dto);
-                return ResponseEntity.ok("댓글 추가 완료");
-            case PROMOTION:
-                log.info("PROMOTION : addComment api called");
-                promotionBoardManageService.addComment(memberId, dto);
-                return ResponseEntity.ok("댓글 추가 완료");
-            case FREE:
-                log.info("FREE : addComment api called");
-                freeBoardManageService.addComment(memberId, dto);
-                return ResponseEntity.ok("댓글 추가 완료");
-            default:
-                log.warn("Invalid category: {}", dto.getCategory());
-                return ResponseEntity.badRequest().body("Invalid category");
-        }
+        boardManageService.addComment(memberId, dto);
+        return ResponseEntity.ok("댓글 추가 완료");
     }
 
     @PostMapping("/toggle-like")
     public ResponseEntity<String> toggleLike(
             @RequestBody LikeRequestDto dto) {
+        BoardManageService boardManageService = boardManageServiceFactory.get(dto.getCategory());
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        boolean result = false;
-        switch (dto.getCategory()) {
-            case PROJECT:
-                log.info("PROJECT : toggleLike api called");
-                result = projectBoardManageService.toggleLike(memberId, dto);
-                break;
-            case STUDY:
-                log.info("STUDY : toggleLike api called");
-                result = studyBoardManageService.toggleLike(memberId, dto);
-                break;
-            case QUESTION:
-                log.info("QUESTION : toggleLike api called");
-                result = questionBoardManageService.toggleLike(memberId, dto);
-                break;
-            case PROMOTION:
-                log.info("PROMOTION : toggleLike api called");
-                result = promotionBoardManageService.toggleLike(memberId, dto);
-                break;
-            case FREE:
-                log.info("FREE : toggleLike api called");
-                result = freeBoardManageService.toggleLike(memberId, dto);
-                break;
-            default:
-                log.warn("Invalid category: {}", dto.getCategory());
-                return ResponseEntity.badRequest().body("Invalid category");
-        }
+        boolean result = boardManageService.toggleLike(memberId, dto);
         return result ? ResponseEntity.ok("좋아요 완료") : ResponseEntity.ok("좋아요 취소");
     }
 
@@ -203,59 +85,19 @@ public class BoardManageController {
     public ResponseEntity<CheckLikeResponseDto> checkLike(
             @RequestParam Long boardId,
             @RequestParam BoardCategory category) {
+        BoardManageService boardManageService = boardManageServiceFactory.get(category);
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        boolean result = false;
-        switch (category) {
-            case PROJECT:
-                log.info("PROJECT : checkLike api called");
-                result = projectBoardManageService.checkLike(memberId, boardId);
-                break;
-            case STUDY:
-                log.info("STUDY : checkLike api called");
-                result = studyBoardManageService.checkLike(memberId, boardId);
-                break;
-            case QUESTION:
-                log.info("QUESTION : checkLike api called");
-                result = questionBoardManageService.checkLike(memberId, boardId);
-                break;
-            case PROMOTION:
-                log.info("PROMOTION : checkLike api called");
-                result = promotionBoardManageService.checkLike(memberId, boardId);
-                break;
-            case FREE:
-                log.info("FREE : checkLike api called");
-                result = freeBoardManageService.checkLike(memberId, boardId);
-                break;
-            default:
-                log.warn("Invalid category: {}", category);
-                return ResponseEntity.badRequest().body(new CheckLikeResponseDto(false));
-        }
+        boolean result = boardManageService.checkLike(memberId, boardId);
         return ResponseEntity.ok(new CheckLikeResponseDto(result));
     }
 
     @PostMapping("/toggle-dislike")
     public ResponseEntity<String> toggleDislike(
             @RequestBody LikeRequestDto dto) {
+        BoardManageService boardManageService = boardManageServiceFactory.get(dto.getCategory());
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boolean result = false;
-        switch (dto.getCategory()) {
-            case QUESTION:
-                log.info("QUESTION : toggleDislike api called");
-                result = questionBoardManageService.toggleDislike(memberId, dto);
-                break;
-            case PROMOTION:
-                log.info("PROMOTION : toggleDislike api called");
-                result = promotionBoardManageService.toggleDislike(memberId, dto);
-                break;
-            case FREE:
-                log.info("FREE : toggleDislike api called");
-                result = freeBoardManageService.toggleDislike(memberId, dto);
-                break;
-            default:
-                log.warn("Invalid category: {}", dto.getCategory());
-                return ResponseEntity.badRequest().body("Invalid category");
-        }
+        boolean result = boardManageService.toggleDislike(memberId, dto);
         return result ? ResponseEntity.ok("싫어요 완료") : ResponseEntity.ok("싫어요 취소");
     }
 
@@ -263,25 +105,10 @@ public class BoardManageController {
     public ResponseEntity<CheckDislikeResponseDto> checkDislike(
             @RequestParam Long boardId,
             @RequestParam BoardCategory category) {
+        BoardManageService boardManageService = boardManageServiceFactory.get(category);
         Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boolean result = false;
-        switch (category) {
-            case QUESTION:
-                log.info("QUESTION : checkDislike api called");
-                result = questionBoardManageService.checkDislike(memberId, boardId);
-                break;
-            case PROMOTION:
-                log.info("PROMOTION : checkDislike api called");
-                result = promotionBoardManageService.checkDislike(memberId, boardId);
-                break;
-            case FREE:
-                log.info("FREE : checkDislike api called");
-                result = freeBoardManageService.checkDislike(memberId, boardId);
-                break;
-            default:
-                log.warn("Invalid category: {}", category);
-                return ResponseEntity.badRequest().body(new CheckDislikeResponseDto(false));
-        }
+
+        boolean result = boardManageService.checkDislike(memberId, boardId);
         return ResponseEntity.ok(new CheckDislikeResponseDto(result));
     }
 }

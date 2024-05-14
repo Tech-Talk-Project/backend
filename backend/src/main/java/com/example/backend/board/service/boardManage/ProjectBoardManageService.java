@@ -77,6 +77,7 @@ public class ProjectBoardManageService implements BoardManageService{
         return false;
     }
 
+    @Override
     public void toggleRecruitment(Long memberId, BoardUpdateRequestDto dto) {
         ProjectBoard projectBoard = projectBoardRepository.findById(dto.getBoardId());
         boardValidator.validateAuthor(memberId, projectBoard);

@@ -25,4 +25,6 @@ public interface BoardManageService {
     boolean toggleDislike(Long memberId, LikeRequestDto dto);
 
     boolean checkDislike(Long memberId, Long boardId);
+
+    void toggleRecruitment(Long memberId, BoardUpdateRequestDto dto);
 }
