@@ -1,6 +1,7 @@
 package com.example.backend.service.profile;
 
 import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
+import com.example.backend.controller.dto.request.UpdateIntroductionRequestDto;
 import com.example.backend.entity.member.Member;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
@@ -67,5 +68,26 @@ class ProfileUpdateServiceTest {
         );
         Assertions.assertThat(updatedMember.getName()).isEqualTo("new name");
         Assertions.assertThat(updatedMember.getProfile().getJob()).isEqualTo("new job");
+    }
+
+    @Test
+    void updateProfileIntroduction() {
+        // given
+        // setUp()
+
+        Member member = memberProfileRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+        );
+        Assertions.assertThat(member.getProfile().getIntroduction()).isEqualTo(null);
+
+        // when
+        profileUpdateService.updateIntroduction(memberId, new UpdateIntroductionRequestDto("new introduction"));
+        clear();
+
+        // then
+        Member updatedMember = memberProfileRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+        );
+        Assertions.assertThat(updatedMember.getProfile().getIntroduction()).isEqualTo("new introduction");
     }
 }

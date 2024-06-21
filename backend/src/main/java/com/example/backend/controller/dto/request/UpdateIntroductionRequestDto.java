@@ -7,4 +7,8 @@ import lombok.Data;
 public class UpdateIntroductionRequestDto {
     @NotNull
     private String introduction;
+
+    public UpdateIntroductionRequestDto(String introduction) {
+        this.introduction = introduction;
+    }
 }
