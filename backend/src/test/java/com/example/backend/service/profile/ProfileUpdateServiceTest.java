@@ -1,5 +1,6 @@
 package com.example.backend.service.profile;
 
+import com.example.backend.controller.dto.request.UpdateDescRequestDto;
 import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
 import com.example.backend.controller.dto.request.UpdateIntroductionRequestDto;
 import com.example.backend.entity.member.Member;
@@ -89,5 +90,26 @@ class ProfileUpdateServiceTest {
                 () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
         );
         Assertions.assertThat(updatedMember.getProfile().getIntroduction()).isEqualTo("new introduction");
+    }
+
+    @Test
+    void updateProfileDescription() {
+        // given
+        // setUp()
+
+        Member member = memberProfileRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+        );
+        Assertions.assertThat(member.getProfile().getDetailedDescription()).isEqualTo(null);
+
+        // when
+        profileUpdateService.updateDescription(memberId, new UpdateDescRequestDto("new description"));
+        clear();
+
+        // then
+        Member updatedMember = memberProfileRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+        );
+        Assertions.assertThat(updatedMember.getProfile().getDetailedDescription()).isEqualTo("new description");
     }
 }

@@ -7,4 +7,8 @@ import lombok.Data;
 public class UpdateDescRequestDto {
     @NotNull
     String detailedDescription;
+
+    public UpdateDescRequestDto(String detailedDescription) {
+        this.detailedDescription = detailedDescription;
+    }
 }
