@@ -3,7 +3,9 @@ package com.example.backend.service.profile;
 import com.example.backend.controller.dto.request.UpdateDescRequestDto;
 import com.example.backend.controller.dto.request.UpdateInfoRequestDto;
 import com.example.backend.controller.dto.request.UpdateIntroductionRequestDto;
+import com.example.backend.controller.dto.request.UpdateLinksRequestDto;
 import com.example.backend.entity.member.Member;
+import com.example.backend.entity.profile.Link;
 import com.example.backend.oauth2.OAuth2Provider;
 import com.example.backend.oauth2.dto.UserProfileDto;
 import com.example.backend.repository.profile.MemberProfileRepository;
@@ -15,6 +17,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -111,5 +115,28 @@ class ProfileUpdateServiceTest {
                 () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
         );
         Assertions.assertThat(updatedMember.getProfile().getDetailedDescription()).isEqualTo("new description");
+    }
+
+    @Test
+    void updateProfileLinks() {
+        // given
+        // setUp()
+
+        Member member = memberProfileRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+        );
+        Assertions.assertThat(member.getProfile().getLinks()).isEmpty();
+
+        // when
+        profileUpdateService.updateLinks(memberId, new UpdateLinksRequestDto(List.of("new link1", "new link2")));
+        clear();
+
+        // then
+        Member updatedMember = memberProfileRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+        );
+
+        List<String> links = updatedMember.getProfile().getLinks().stream().map(Link::getUrl).toList();
+        Assertions.assertThat(links).containsExactly("new link1", "new link2");
     }
 }
