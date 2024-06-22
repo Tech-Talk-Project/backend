@@ -43,10 +43,9 @@ public class ProfileUpdateService {
     }
 
     public void updateSkills(Long memberId, UpdateSkillsRequestDto updateSkillsRequestDto) {
-        Member member = memberProfileRepository.findByIdWithProfile(memberId)
-                .orElseThrow(
-                        () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
-                );
+        Member member = memberProfileRepository.findByIdWithProfile(memberId).orElseThrow(
+                () -> new IllegalArgumentException("Member not found with memberId: " + memberId)
+        );
 
         List<ESkill> eSkills = ESkill.fromNames(updateSkillsRequestDto.getSkills());
         member.getProfile().updateProfileSkills(eSkills);

@@ -42,7 +42,7 @@ public class InitApp {
                 int skillCount = getSkillCount();
                 List<String> skills = getRandomSkills(skillCount).stream().map(ESkill::getName).toList();
 
-                UpdateSkillsRequestDto updateSkillsRequestDto = new UpdateSkillsRequestDto();
+                UpdateSkillsRequestDto updateSkillsRequestDto = new UpdateSkillsRequestDto(List.of());
                 updateSkillsRequestDto.setSkills(skills);
 
                 profileUpdateService.updateSkills(user.getId(), updateSkillsRequestDto);
