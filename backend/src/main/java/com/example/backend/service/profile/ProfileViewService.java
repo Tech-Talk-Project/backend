@@ -21,13 +21,6 @@ public class ProfileViewService {
         return new ProfileResponseDto(member);
     }
 
-    public ProfileResponseDto getSelectedProfile(Long selectedMemberId) {
-        Member member = memberProfileRepository.findByIdWithProfile(selectedMemberId).orElseThrow(
-                () -> new IllegalArgumentException("Member not found with memberId: " + selectedMemberId)
-        );
-        return new ProfileResponseDto(member);
-    }
-
     public AuthProfileResponseDto getSelectedProfileWhenLogin(Long memberId, Long selectedMemberId) {
         Member member = memberProfileRepository.findByIdWithProfile(selectedMemberId).orElseThrow(
                 () -> new IllegalArgumentException("Member not found with memberId: " + selectedMemberId)
